@@ -75,6 +75,7 @@ internal sealed class BlockCraftGame : Game
         IsFixedTimeStep = false;
         Window.Title = "BlockCraft";
         Window.AllowUserResizing = true;
+        Exiting += HandleExiting;
     }
 
     protected override void Initialize()
@@ -738,7 +739,7 @@ internal sealed class BlockCraftGame : Game
 
     private static XVector3 ToXna(NVector3 vector) => new(vector.X, vector.Y, vector.Z);
 
-    protected override void OnExiting(object sender, EventArgs args)
+    private void HandleExiting(object? sender, EventArgs args)
     {
         SaveWorld();
         _ambientSound?.Stop();
@@ -749,7 +750,6 @@ internal sealed class BlockCraftGame : Game
         _pixel?.Dispose();
         _spriteBatch?.Dispose();
         _effect?.Dispose();
-        base.OnExiting(sender, args);
     }
 
     private sealed record PlayerSaveData(float X, float Y, float Z, float Yaw, float Pitch, ItemStack[] Inventory);
