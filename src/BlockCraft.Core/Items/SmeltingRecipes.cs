@@ -9,8 +9,10 @@ public sealed record SmeltingRecipe(ushort InputItemId, ItemStack Result, float 
 public sealed class SmeltingRecipeRegistry
 {
     private readonly Dictionary<ushort, SmeltingRecipe> _byInput;
-    private SmeltingRecipeRegistry(IEnumerable<SmeltingRecipe> recipes)
+    /// <summary>Creates a registry from already resolved, validated recipe values.</summary>
+    public SmeltingRecipeRegistry(IEnumerable<SmeltingRecipe> recipes)
     {
+        ArgumentNullException.ThrowIfNull(recipes);
         _byInput = [];
         foreach (var recipe in recipes)
         {
