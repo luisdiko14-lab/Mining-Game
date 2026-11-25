@@ -21,7 +21,7 @@ public sealed class InventoryTests
         Assert.Equal(new ItemStack(1, 36), inventory[1]);
         Assert.Equal(0, inventory.Add(1, 5));
         Assert.Equal(new ItemStack(1, 41), inventory[1]);
-        Assert.Equal(23, inventory.Add(1, 50));
+        Assert.Equal(27, inventory.Add(1, 50));
     }
 
     [Fact]

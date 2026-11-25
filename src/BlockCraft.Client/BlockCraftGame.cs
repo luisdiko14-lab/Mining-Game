@@ -1,5 +1,4 @@
 using System.Collections.Concurrent;
-using System.Numerics;
 using System.Text.Json;
 using BlockCraft.Core.Blocks;
 using BlockCraft.Core.Items;
