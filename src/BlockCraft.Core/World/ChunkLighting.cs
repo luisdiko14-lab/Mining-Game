@@ -164,7 +164,7 @@ public sealed class ChunkLighting
         while (queue.TryDequeue(out var index))
         {
             var (x, y, z) = Coordinates(index);
-            var nextLevel = light[index] - 1;
+            var nextLevel = (byte)(light[index] - 1);
             if (nextLevel == 0)
                 continue;
 
