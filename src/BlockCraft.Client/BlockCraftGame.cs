@@ -553,7 +553,6 @@ internal sealed class BlockCraftGame : Game
             pressed ? new Color(15, 28, 44) : Color.White, scale);
     }
 
-    private static XVector3 ToXna(NVector3 vector) => new(vector.X, vector.Y, vector.Z);
     private static Vector2 ToXna2(NVector2 vector) => new(vector.X, vector.Y);
 
     private void EatSelectedFood()
