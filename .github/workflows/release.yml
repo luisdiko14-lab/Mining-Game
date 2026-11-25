@@ -73,7 +73,7 @@ jobs:
       - name: Install Inno Setup and WiX Toolset v5
         shell: pwsh
         run: |
-          choco install innosetup --version=6.7.4 --yes --no-progress
+          choco install innosetup --version=6.7.1 --yes --no-progress
           dotnet tool install --global wix --version 5.0.2
           wix --version
 
