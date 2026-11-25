@@ -32,7 +32,9 @@ public sealed class ChunkLightingTests
     {
         var chunk = new Chunk(0, 0);
         chunk.SetBlock(8, 100, 8, 2);
-        chunk.SetBlock(9, 100, 8, 1);
+        for (var y = 0; y < Chunk.Height; y++)
+        for (var z = 0; z < Chunk.Depth; z++)
+            chunk.SetBlock(9, y, z, 1);
         var lighting = ChunkLighting.Calculate(chunk, CreateBlocks());
 
         Assert.Equal((byte)14, lighting.GetBlockLight(8, 100, 8));

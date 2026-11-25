@@ -29,6 +29,8 @@ internal sealed class BlockCraftGame : Game
     private BlockRegistry _blocks = null!;
     private ItemRegistry _items = null!;
     private Inventory? _inventory;
+    private SurvivalStats _survival = new();
+    private float _fallDistance;
     private ChunkManager? _world;
     private PlayerController? _player;
     private SpriteBatch _spriteBatch = null!;
@@ -242,6 +244,8 @@ internal sealed class BlockCraftGame : Game
             }
         }
         _player = new PlayerController(_blocks, new NVector3(8.5f, surface + 1.05f, 8.5f));
+        _survival = new SurvivalStats();
+        _fallDistance = 0f;
         _inventory = new Inventory(_items, 36);
         _inventory.Add(_items.GetId("stone"), 64);
         _inventory.Add(_items.GetId("dirt"), 64);
@@ -260,6 +264,7 @@ internal sealed class BlockCraftGame : Game
                     _player.Teleport(new NVector3(saved.X, saved.Y, saved.Z));
                     _player.Yaw = saved.Yaw;
                     _player.Pitch = saved.Pitch;
+                    _survival.Restore(saved.Health, saved.Hunger, saved.Saturation);
                     for (var index = 0; index < _inventory.Count; index++)
                         _inventory.Set(index, index < saved.Inventory.Length ? saved.Inventory[index] : ItemStack.Empty);
                 }
@@ -289,8 +294,29 @@ internal sealed class BlockCraftGame : Game
 
         var horizontal = (keyboard.IsKeyDown(Keys.D) ? 1f : 0f) - (keyboard.IsKeyDown(Keys.A) ? 1f : 0f);
         var vertical = (keyboard.IsKeyDown(Keys.W) ? 1f : 0f) - (keyboard.IsKeyDown(Keys.S) ? 1f : 0f);
+        var wasGrounded = _player.IsGrounded;
+        var previousY = _player.Position.Y;
+        var sprinting = keyboard.IsKeyDown(Keys.LeftShift);
         _player.Update(_world!, new NVector2(horizontal, vertical), elapsed,
-            keyboard.IsKeyDown(Keys.Space), keyboard.IsKeyDown(Keys.LeftShift), keyboard.IsKeyDown(Keys.LeftControl));
+            keyboard.IsKeyDown(Keys.Space), sprinting, keyboard.IsKeyDown(Keys.LeftControl));
+        if (!_player.IsFlying && !wasGrounded && _player.Position.Y < previousY)
+            _fallDistance += previousY - _player.Position.Y;
+        if (!_player.IsFlying && !wasGrounded && _player.IsGrounded)
+        {
+            _survival.ApplyFallDamage(_fallDistance);
+            _fallDistance = 0f;
+        }
+        _survival.Update(elapsed, horizontal != 0f || vertical != 0f, sprinting);
+        if (!_survival.IsAlive)
+        {
+            _screen = GameScreen.GameOver;
+            IsMouseVisible = true;
+            SaveWorld();
+            return;
+        }
+
+        if (keyboard.IsKeyDown(Keys.F) && !_previousKeyboard.IsKeyDown(Keys.F))
+            EatSelectedFood();
 
         if (keyboard.IsKeyDown(Keys.F5) && !_previousKeyboard.IsKeyDown(Keys.F5))
             _player.IsFlying = !_player.IsFlying;
@@ -327,6 +353,19 @@ internal sealed class BlockCraftGame : Game
         if (rightPressed && hit is not null)
             PlaceBlock(hit.Value);
         RequestNearbyChunks();
+    }
+
+    private void EatSelectedFood()
+    {
+        if (_inventory is null)
+            return;
+        var stack = _inventory[_selectedHotbar];
+        if (stack.IsEmpty)
+            return;
+        var item = _items[stack.ItemId];
+        if (item.FoodValue <= 0 || !_survival.ConsumeFood(item.FoodValue))
+            return;
+        _inventory.Set(_selectedHotbar, stack.Count == 1 ? ItemStack.Empty : stack with { Count = stack.Count - 1 });
     }
 
     private void MineBlock(RayHit hit, float elapsed)
@@ -417,6 +456,8 @@ internal sealed class BlockCraftGame : Game
                 _meshes[key] = (-1, _meshes[key].Vertices);
         }
 
+        var world = _world;
+        var daylight = _clock.Daylight;
         foreach (var chunk in chunks)
         {
             var position = new ChunkPos(chunk.ChunkX, chunk.ChunkZ);
@@ -428,14 +469,37 @@ internal sealed class BlockCraftGame : Game
                 try
                 {
                     var quads = GreedyMesher.Build(
-                        (x, y, z) => _world.GetBlock(chunk.ChunkX * Chunk.Width + x, y, chunk.ChunkZ * Chunk.Depth + z),
+                        (x, y, z) => world.GetBlock(chunk.ChunkX * Chunk.Width + x, y, chunk.ChunkZ * Chunk.Depth + z),
                         _blocks);
+                    var lighting = ChunkLighting.Calculate(chunk, _blocks,
+                        (x, y, z) => world.GetBlock(chunk.ChunkX * Chunk.Width + x, y, chunk.ChunkZ * Chunk.Depth + z));
                     var vertices = new List<VertexPositionColorTexture>(quads.Count * 6);
                     foreach (var quad in quads)
                     {
-                        var color = BlockColor(quad.BlockId);
-                        var shade = quad.Normal.Y > 0 ? 1f : quad.Normal.Y < 0 ? 0.52f : 0.78f;
-                        color = new Color((byte)(color.R * shade), (byte)(color.G * shade), (byte)(color.B * shade), color.A);
+                        var baseColor = BlockColor(quad.BlockId);
+                        var center = (quad.P0 + quad.P1 + quad.P2 + quad.P3) * 0.25f;
+                        var normalAxis = quad.Normal.X != 0 ? 0 : quad.Normal.Y != 0 ? 1 : 2;
+                        var normalSign = (int)MathF.Sign(normalAxis == 0 ? quad.Normal.X : normalAxis == 1 ? quad.Normal.Y : quad.Normal.Z);
+                        var blockX = (int)MathF.Floor(center.X - quad.Normal.X * 0.5f);
+                        var blockY = (int)MathF.Floor(center.Y - quad.Normal.Y * 0.5f);
+                        var blockZ = (int)MathF.Floor(center.Z - quad.Normal.Z * 0.5f);
+                        var lightX = (int)MathF.Floor(center.X + quad.Normal.X * 0.1f);
+                        var lightY = (int)MathF.Floor(center.Y + quad.Normal.Y * 0.1f);
+                        var lightZ = (int)MathF.Floor(center.Z + quad.Normal.Z * 0.1f);
+                        var sun = lighting.GetSunlight(lightX, lightY, lightZ) / 15f * daylight;
+                        var emitted = lighting.GetBlockLight(lightX, lightY, lightZ) / 15f;
+                        var light = Math.Clamp(Math.Max(sun, emitted), 0.10f, 1f);
+                        var faceShade = normalAxis == 1 ? (normalSign > 0 ? 1f : 0.58f) : 0.82f;
+                        var uAxis = (normalAxis + 1) % 3;
+                        var vAxis = (normalAxis + 2) % 3;
+                        var ao00 = lighting.GetAmbientOcclusion(blockX, blockY, blockZ, normalAxis, normalSign, uAxis, vAxis, -1, -1);
+                        var ao10 = lighting.GetAmbientOcclusion(blockX, blockY, blockZ, normalAxis, normalSign, uAxis, vAxis, 1, -1);
+                        var ao11 = lighting.GetAmbientOcclusion(blockX, blockY, blockZ, normalAxis, normalSign, uAxis, vAxis, 1, 1);
+                        var ao01 = lighting.GetAmbientOcclusion(blockX, blockY, blockZ, normalAxis, normalSign, uAxis, vAxis, -1, 1);
+                        var color00 = ShadeColor(baseColor, light, faceShade, ao00);
+                        var color10 = ShadeColor(baseColor, light, faceShade, ao10);
+                        var color11 = ShadeColor(baseColor, light, faceShade, ao11);
+                        var color01 = ShadeColor(baseColor, light, faceShade, ao01);
                         var p0 = ToXna(quad.P0); var p1 = ToXna(quad.P1);
                         var p2 = ToXna(quad.P2); var p3 = ToXna(quad.P3);
                         var texture = GetTextureRectangle(quad.BlockId, quad.Normal);
@@ -447,12 +511,12 @@ internal sealed class BlockCraftGame : Game
                         var uv1 = new Vector2(u1, v1);
                         var uv2 = new Vector2(u1, v0);
                         var uv3 = new Vector2(u0, v0);
-                        vertices.Add(new VertexPositionColorTexture(p0, color, uv0));
-                        vertices.Add(new VertexPositionColorTexture(p1, color, uv1));
-                        vertices.Add(new VertexPositionColorTexture(p2, color, uv2));
-                        vertices.Add(new VertexPositionColorTexture(p0, color, uv0));
-                        vertices.Add(new VertexPositionColorTexture(p2, color, uv2));
-                        vertices.Add(new VertexPositionColorTexture(p3, color, uv3));
+                        vertices.Add(new VertexPositionColorTexture(p0, color00, uv0));
+                        vertices.Add(new VertexPositionColorTexture(p1, color10, uv1));
+                        vertices.Add(new VertexPositionColorTexture(p2, color11, uv2));
+                        vertices.Add(new VertexPositionColorTexture(p0, color00, uv0));
+                        vertices.Add(new VertexPositionColorTexture(p2, color11, uv2));
+                        vertices.Add(new VertexPositionColorTexture(p3, color01, uv3));
                     }
                     _readyMeshes.Enqueue((position, chunk.Revision, vertices.ToArray()));
                 }
@@ -472,6 +536,13 @@ internal sealed class BlockCraftGame : Game
     {
         while (_readyMeshes.TryDequeue(out var mesh))
             _meshes[mesh.Position] = (mesh.Revision, mesh.Vertices);
+    }
+
+    private static Color ShadeColor(Color color, float light, float faceShade, byte ambientOcclusion)
+    {
+        var aoFactor = 0.45f + 0.55f * ambientOcclusion / 3f;
+        var factor = Math.Clamp(light * faceShade * aoFactor, 0f, 1f);
+        return new Color((byte)(color.R * factor), (byte)(color.G * factor), (byte)(color.B * factor), color.A);
     }
 
     private Color BlockColor(ushort id) => _blocks[id].Name switch
@@ -546,7 +617,7 @@ internal sealed class BlockCraftGame : Game
     {
         var sky = Color.Lerp(new Color(7, 12, 24), new Color(85, 154, 218), _clock.Daylight);
         GraphicsDevice.Clear(sky);
-        if (_screen is GameScreen.Playing or GameScreen.Paused or GameScreen.Inventory)
+        if (_screen is GameScreen.Playing or GameScreen.Paused or GameScreen.Inventory or GameScreen.GameOver)
             DrawWorld();
         DrawInterface();
         base.Draw(gameTime);
@@ -580,6 +651,7 @@ internal sealed class BlockCraftGame : Game
         else if (_screen == GameScreen.Playing)
         {
             DrawHotbar(width, height);
+            DrawSurvivalMeters(height);
             DrawRect(new Rectangle(width / 2 - 1, height / 2 - 9, 2, 18), Color.White);
             DrawRect(new Rectangle(width / 2 - 9, height / 2 - 1, 18, 2), Color.White);
             if (_showDebug && _player is not null && _world is not null)
@@ -596,6 +668,12 @@ internal sealed class BlockCraftGame : Game
                 DrawRect(new Rectangle(width / 2 - 50, height / 2 + 22, 100, 5), new Color(15, 18, 22, 210));
                 DrawRect(new Rectangle(width / 2 - 50, height / 2 + 22, (int)(100 * Math.Clamp(_breakProgress, 0, 1)), 5), new Color(244, 194, 72));
             }
+        }
+        else if (_screen == GameScreen.GameOver)
+        {
+            DrawPanel(new Rectangle(width / 2 - 220, height / 2 - 100, 440, 200), new Color(10, 12, 20, 235));
+            _font.Draw(_spriteBatch, "YOU DIED", new Vector2(width / 2 - 88, height / 2 - 45), new Color(238, 111, 102), 3);
+            _font.Draw(_spriteBatch, "WORLD SAVED  -  PRESS ESC", new Vector2(width / 2 - 125, height / 2 + 25), Color.White, 1.5f);
         }
         else if (_screen == GameScreen.Inventory && _inventory is not null)
         {
@@ -630,6 +708,19 @@ internal sealed class BlockCraftGame : Game
             }
             _font.Draw(_spriteBatch, (i + 1).ToString(), new Vector2(rect.X + 4, rect.Y + 3), Color.White, 1);
         }
+    }
+
+    private void DrawSurvivalMeters(int height)
+    {
+        const int barWidth = 132;
+        DrawPanel(new Rectangle(12, height - 82, 162, 68), new Color(7, 11, 20, 190));
+        _font.Draw(_spriteBatch, "HEALTH", new Vector2(20, height - 75), new Color(244, 133, 128), 1);
+        DrawRect(new Rectangle(20, height - 58, barWidth, 8), new Color(51, 29, 37));
+        DrawRect(new Rectangle(20, height - 58, (int)(barWidth * (_survival.Health / SurvivalStats.MaximumHealth)), 8), new Color(224, 79, 83));
+        _font.Draw(_spriteBatch, $"{_survival.Health:0}/{SurvivalStats.MaximumHealth:0}", new Vector2(20, height - 48), Color.White, 1);
+        _font.Draw(_spriteBatch, "HUNGER", new Vector2(20, height - 33), new Color(232, 188, 116), 1);
+        DrawRect(new Rectangle(20, height - 19, barWidth, 5), new Color(51, 43, 31));
+        DrawRect(new Rectangle(20, height - 19, (int)(barWidth * (_survival.Hunger / SurvivalStats.MaximumHunger)), 5), new Color(220, 159, 65));
     }
 
     private void DrawInventorySlots(int width, int height)
@@ -699,7 +790,8 @@ internal sealed class BlockCraftGame : Game
             try
             {
                 var state = new PlayerSaveData(_player.Position.X, _player.Position.Y, _player.Position.Z,
-                    _player.Yaw, _player.Pitch, _inventory.Snapshot().ToArray());
+                    _player.Yaw, _player.Pitch, _inventory.Snapshot().ToArray(),
+                    _survival.Health, _survival.Hunger, _survival.Saturation);
                 File.WriteAllText(Path.Combine(_worldDirectory, "player.json"),
                     JsonSerializer.Serialize(state, new JsonSerializerOptions { WriteIndented = true }));
             }
@@ -751,6 +843,8 @@ internal sealed class BlockCraftGame : Game
         _effect?.Dispose();
     }
 
-    private sealed record PlayerSaveData(float X, float Y, float Z, float Yaw, float Pitch, ItemStack[] Inventory);
-    private enum GameScreen { MainMenu, Playing, Paused, Inventory }
+    private sealed record PlayerSaveData(
+        float X, float Y, float Z, float Yaw, float Pitch, ItemStack[] Inventory,
+        float Health = 20f, float Hunger = 20f, float Saturation = 5f);
+    private enum GameScreen { MainMenu, Playing, Paused, Inventory, GameOver }
 }
