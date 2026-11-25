@@ -69,10 +69,13 @@ public sealed class WorldStorage
             await using (var stream = new FileStream(temporary, FileMode.Create, FileAccess.Write, FileShare.None, 81920, useAsync: true))
             using (var writer = new BinaryWriter(stream, System.Text.Encoding.UTF8, leaveOpen: true))
             {
-                writer.Write(Magic); writer.Write(records.Count);
+                writer.Write(Magic);
+                writer.Write(records.Count);
                 foreach (var record in records.OrderBy(pair => pair.Key))
                 {
-                    writer.Write(record.Key); writer.Write(record.Value.Length); writer.Write(record.Value);
+                    writer.Write(record.Key);
+                    writer.Write(record.Value.Length);
+                    writer.Write(record.Value);
                 }
                 await stream.FlushAsync(cancellationToken).ConfigureAwait(false);
             }
@@ -92,7 +95,8 @@ public sealed class WorldStorage
         var records = new Dictionary<int, byte[]>(count);
         for (var i = 0; i < count; i++)
         {
-            var key = reader.ReadInt32(); var length = reader.ReadInt32();
+            var key = reader.ReadInt32();
+            var length = reader.ReadInt32();
             if (key is < 0 or >= RegionSize * RegionSize || length is < 1 or > 4_000_000)
                 throw new InvalidDataException("Invalid region record.");
             var data = reader.ReadBytes(length);

@@ -51,5 +51,6 @@
  {"id":50,"name":"stone_sword","maxStack":1,"toolType":"sword","toolTier":"stone","miningSpeed":1},
  {"id":51,"name":"apple","maxStack":64,"foodValue":4},
  {"id":52,"name":"bread","maxStack":64,"foodValue":5},
- {"id":53,"name":"cooked_meat","maxStack":64,"foodValue":8}
+ {"id":53,"name":"cooked_meat","maxStack":64,"foodValue":8},
+ {"id":54,"name":"stick","maxStack":64}
 ]

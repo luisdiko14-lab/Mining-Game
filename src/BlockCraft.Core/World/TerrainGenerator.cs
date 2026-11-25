@@ -41,7 +41,7 @@ public sealed class TerrainGenerator
             chunk.Biomes[x, z] = biome;
             var height = Math.Clamp((int)MathF.Round(66 + continental * 24 +
                 Noise.Fractal2D(seed + 91, worldX / 36f, worldZ / 36f, 3) * 7), 8, Chunk.Height - 12);
-            var top = biome switch { BiomeKind.Desert => _sand, BiomeKind.Snow => _snow, _ => _grass };
+            var top = biome switch { BiomeKind.Desert or BiomeKind.Ocean => _sand, BiomeKind.Snow => _snow, _ => _grass };
 
             for (var y = 0; y < Chunk.Height; y++)
             {

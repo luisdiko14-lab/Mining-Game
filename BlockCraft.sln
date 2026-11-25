@@ -6,6 +6,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlockCraft.Core", "src\Bloc
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlockCraft.Tests", "tests\BlockCraft.Tests\BlockCraft.Tests.csproj", "{9E2A6BAE-C30E-4F36-91E4-8D0D633D1212}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlockCraft.Client", "src\BlockCraft.Client\BlockCraft.Client.csproj", "{A4C7C8D3-2F11-49D3-B8BE-4A1B6A7D4E50}"
+EndProject
 Global
   GlobalSection(SolutionConfigurationPlatforms) = preSolution
     Debug|Any CPU = Debug|Any CPU
@@ -20,5 +22,9 @@ Global
     {9E2A6BAE-C30E-4F36-91E4-8D0D633D1212}.Debug|Any CPU.Build.0 = Debug|Any CPU
     {9E2A6BAE-C30E-4F36-91E4-8D0D633D1212}.Release|Any CPU.ActiveCfg = Release|Any CPU
     {9E2A6BAE-C30E-4F36-91E4-8D0D633D1212}.Release|Any CPU.Build.0 = Release|Any CPU
+    {A4C7C8D3-2F11-49D3-B8BE-4A1B6A7D4E50}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+    {A4C7C8D3-2F11-49D3-B8BE-4A1B6A7D4E50}.Debug|Any CPU.Build.0 = Debug|Any CPU
+    {A4C7C8D3-2F11-49D3-B8BE-4A1B6A7D4E50}.Release|Any CPU.ActiveCfg = Release|Any CPU
+    {A4C7C8D3-2F11-49D3-B8BE-4A1B6A7D4E50}.Release|Any CPU.Build.0 = Release|Any CPU
   EndGlobalSection
 EndGlobal

@@ -10,7 +10,7 @@ public sealed record CraftingRecipe(string[] Pattern, Dictionary<char, ushort> I
 }
 
 /// <summary>Matches shaped recipes in 2×2 or 3×3 crafting grids.</summary>
-public sealed class RecipeBook
+public sealed partial class RecipeBook
 {
     private readonly List<CraftingRecipe> _recipes;
     /// <summary>Creates a recipe book from validated recipe definitions.</summary>
@@ -41,7 +41,6 @@ public sealed class RecipeBook
                 if (!Matches(grid, recipe, offsetX, offsetY, width, height)) continue;
                 foreach (var (character, itemId) in recipe.Ingredients)
                 {
-                    var needed = recipe.Pattern.Sum(row => row.Count(value => value == character));
                     for (var y = 0; y < recipe.Height; y++)
                     for (var x = 0; x < recipe.Width; x++)
                     {
@@ -50,7 +49,6 @@ public sealed class RecipeBook
                         var current = grid[row, column];
                         grid[row, column] = current.Count == 1 ? ItemStack.Empty : current with { Count = current.Count - 1 };
                     }
-                    _ = needed;
                 }
                 crafted = recipe.Result;
                 return true;

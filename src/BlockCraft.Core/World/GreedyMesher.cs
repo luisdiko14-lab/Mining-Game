@@ -35,8 +35,8 @@ public static class GreedyMesher
                 {
                     var a = Read(getBlock, axis, position, 0);
                     var b = Read(getBlock, axis, position, 1);
-                    var aSolid = a != 0 && registry[a].Solid;
-                    var bSolid = b != 0 && registry[b].Solid;
+                    var aSolid = a != 0;
+                    var bSolid = b != 0;
                     if (aSolid && (b == 0 || !registry[b].OccludesFaces)) mask[index] = new FaceCell(a, 1);
                     else if (bSolid && (a == 0 || !registry[a].OccludesFaces)) mask[index] = new FaceCell(b, -1);
                     index++;

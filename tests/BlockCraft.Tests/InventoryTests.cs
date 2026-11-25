@@ -13,13 +13,15 @@ public sealed class InventoryTests
     """);
 
     [Fact]
-    public void AddSplitsAcrossStacksAndReturnsOverflow()
+    public void AddSplitsAcrossStacksAndFillsExistingStacksBeforeReportingOverflow()
     {
         var inventory = new Inventory(CreateItems(), 2);
         Assert.Equal(0, inventory.Add(1, 100));
         Assert.Equal(new ItemStack(1, 64), inventory[0]);
         Assert.Equal(new ItemStack(1, 36), inventory[1]);
-        Assert.Equal(5, inventory.Add(1, 5));
+        Assert.Equal(0, inventory.Add(1, 5));
+        Assert.Equal(new ItemStack(1, 41), inventory[1]);
+        Assert.Equal(23, inventory.Add(1, 50));
     }
 
     [Fact]

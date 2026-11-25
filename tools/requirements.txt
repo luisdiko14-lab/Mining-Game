@@ -1,0 +1,1 @@
+# No third-party dependencies. Texture and audio generation use Python 3 standard library only.
