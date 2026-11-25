@@ -39,3 +39,92 @@ jobs:
           name: blockcraft-test-results
           path: "**/blockcraft-tests.trx"
           if-no-files-found: ignore
+
+  package-validation:
+    name: Build ZIP and installers; install and uninstall
+    needs: build-test
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Set up Python 3
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.13"
+      - name: Generate assets and publish portable package
+        shell: pwsh
+        run: |
+          python tools/gen_textures.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          .\scripts\package.ps1 -Version "0.0.0" -RuntimeIdentifier "win-x64"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Install installer toolchains
+        shell: pwsh
+        run: |
+          choco install innosetup --version=6.7.4 --yes --no-progress
+          dotnet tool install --global wix --version 5.0.2
+          $env:PATH += ";$env:USERPROFILE\.dotnet\tools"
+          wix --version
+      - name: Compile setup.exe
+        shell: pwsh
+        run: |
+          $programFilesX86 = [Environment]::GetFolderPath("ProgramFilesX86")
+          $compiler = Get-ChildItem (Join-Path $programFilesX86 "Inno Setup*") -Filter "ISCC.exe" -Recurse |
+            Select-Object -First 1
+          if (-not $compiler) { throw "Inno Setup compiler was not found." }
+          & $compiler.FullName "/DMyAppVersion=0.0.0" ".\installer\BlockCraft.iss"
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Compile setup.msi
+        shell: pwsh
+        run: |
+          $publish = (Resolve-Path ".\artifacts\publish\win-x64").Path
+          $msi = Join-Path (Resolve-Path ".\artifacts\installer").Path "BlockCraft-0.0.0-win-x64-setup.msi"
+          wix build ".\installer\Product.wxs" -arch x64 "-dProductVersion=0.0.0" "-dPublishDir=$publish" -o $msi
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+      - name: Verify portable ZIP contents
+        shell: pwsh
+        run: |
+          $zip = ".\artifacts\BlockCraft-0.0.0-win-x64-portable.zip"
+          $extract = Join-Path $env:RUNNER_TEMP "blockcraft-portable-test"
+          Expand-Archive -Path $zip -DestinationPath $extract -Force
+          if (-not (Test-Path (Join-Path $extract "BlockCraft.exe"))) { throw "Portable ZIP is missing BlockCraft.exe." }
+          if (-not (Test-Path (Join-Path $extract "assets\generated\block_atlas.png"))) { throw "Portable ZIP is missing the generated texture atlas." }
+          if (-not (Test-Path (Join-Path $extract "assets\generated\ambient_loop.wav"))) { throw "Portable ZIP is missing generated audio." }
+      - name: Install and uninstall MSI
+        shell: pwsh
+        run: |
+          $msi = (Resolve-Path ".\artifacts\installer\BlockCraft-0.0.0-win-x64-setup.msi").Path
+          $installedExe = Join-Path $env:ProgramFiles "BlockCraft\BlockCraft.exe"
+          $install = Start-Process -FilePath "msiexec.exe" -ArgumentList ('/i "' + $msi + '" /qn /norestart') -Wait -PassThru
+          if ($install.ExitCode -notin @(0, 3010)) { throw "MSI installation failed with exit code $($install.ExitCode)." }
+          if (-not (Test-Path $installedExe)) { throw "MSI did not install BlockCraft.exe." }
+          $uninstall = Start-Process -FilePath "msiexec.exe" -ArgumentList ('/x "' + $msi + '" /qn /norestart') -Wait -PassThru
+          if ($uninstall.ExitCode -notin @(0, 3010)) { throw "MSI uninstall failed with exit code $($uninstall.ExitCode)." }
+          if (Test-Path $installedExe) { throw "MSI uninstall left BlockCraft.exe behind." }
+      - name: Install and uninstall setup.exe
+        shell: pwsh
+        run: |
+          $setup = (Resolve-Path ".\artifacts\installer\BlockCraft-0.0.0-win-x64-setup.exe").Path
+          $installedExe = Join-Path $env:ProgramFiles "BlockCraft\BlockCraft.exe"
+          $install = Start-Process -FilePath $setup -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-" -Wait -PassThru
+          if ($install.ExitCode -ne 0) { throw "Inno Setup installation failed with exit code $($install.ExitCode)." }
+          if (-not (Test-Path $installedExe)) { throw "Inno Setup did not install BlockCraft.exe." }
+          $uninstaller = Join-Path $env:ProgramFiles "BlockCraft\unins000.exe"
+          if (-not (Test-Path $uninstaller)) { throw "Inno Setup uninstaller was not installed." }
+          & $uninstaller /VERYSILENT /SUPPRESSMSGBOXES /NORESTART
+          if ($LASTEXITCODE -ne 0) { throw "Inno Setup uninstaller failed." }
+          if (Test-Path $installedExe) { throw "Inno Setup uninstall left BlockCraft.exe behind." }
+      - name: Upload validated release packages
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: blockcraft-windows-packages
+          path: |
+            artifacts/BlockCraft-0.0.0-win-x64-portable.zip
+            artifacts/installer/BlockCraft-0.0.0-win-x64-setup.exe
+            artifacts/installer/BlockCraft-0.0.0-win-x64-setup.msi
+          if-no-files-found: ignore
