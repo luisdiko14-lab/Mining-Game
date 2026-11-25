@@ -33,7 +33,7 @@ public sealed class FurnaceTests
         Assert.True(furnace.InsertFuel(new ItemStack(3, 1)).IsEmpty);
         furnace.Update(9.5f);
         Assert.True(furnace.Output.IsEmpty);
-        Assert.Equal(0.5f, furnace.SmeltProgressSeconds, 3);
+        Assert.Equal(9.5f, furnace.SmeltProgressSeconds, 3);
         furnace.Update(0.5f);
         Assert.Equal(new ItemStack(2, 1), furnace.Output);
         Assert.Equal(new ItemStack(1, 1), furnace.Input);
