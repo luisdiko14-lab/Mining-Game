@@ -9,6 +9,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using Microsoft.Xna.Framework.Input.Touch;
 using NVector2 = System.Numerics.Vector2;
 using NVector3 = System.Numerics.Vector3;
 using XVector3 = Microsoft.Xna.Framework.Vector3;
@@ -35,7 +36,18 @@ internal sealed class BlockCraftGame : Game
     private PlayerController? _player;
     private SpriteBatch _spriteBatch = null!;
     private Texture2D _pixel = null!;
+    private Texture2D? _touchCircle;
     private BitmapFont _font = null!;
+    private readonly VirtualJoystick _moveJoystick = new(NVector2.Zero, 80f);
+    private bool _touchAvailable;
+    private int? _touchLookPointer;
+    private int? _touchJumpPointer;
+    private int? _touchMinePointer;
+    private int? _touchPlacePointer;
+    private Vector2 _previousTouchLookPosition;
+    private bool _touchJumpPressed;
+    private bool _touchMinePressed;
+    private bool _touchPlaceRequested;
     private BasicEffect _effect = null!;
     private SoundEffect? _blockSound;
     private Texture2D? _blockAtlas;
@@ -91,6 +103,15 @@ internal sealed class BlockCraftGame : Game
         _spriteBatch = new SpriteBatch(GraphicsDevice);
         _pixel = new Texture2D(GraphicsDevice, 1, 1);
         _pixel.SetData(new[] { Color.White });
+        _touchCircle = CreateTouchCircle(GraphicsDevice, 128);
+        try
+        {
+            _touchAvailable = TouchPanel.GetCapabilities().IsConnected;
+        }
+        catch (NotSupportedException)
+        {
+            _touchAvailable = false;
+        }
         _font = new BitmapFont(GraphicsDevice);
         _effect = new BasicEffect(GraphicsDevice)
         {
@@ -103,6 +124,23 @@ internal sealed class BlockCraftGame : Game
         _effect.Texture = _blockAtlas;
         _effect.TextureEnabled = _blockAtlas is not null;
         LoadAudio();
+    }
+
+    private static Texture2D CreateTouchCircle(GraphicsDevice graphicsDevice, int size)
+    {
+        var texture = new Texture2D(graphicsDevice, size, size);
+        var pixels = new Color[size * size];
+        var center = (size - 1) * 0.5f;
+        var radius = size * 0.5f - 2f;
+        for (var y = 0; y < size; y++)
+        for (var x = 0; x < size; x++)
+        {
+            var distance = Vector2.Distance(new Vector2(x, y), new Vector2(center, center));
+            var alpha = (byte)Math.Clamp((radius + 1f - distance) * 255f, 0f, 255f);
+            pixels[y * size + x] = new Color(255, 255, 255, alpha);
+        }
+        texture.SetData(pixels);
+        return texture;
     }
 
     private void LoadBlockAtlas()
@@ -286,19 +324,33 @@ internal sealed class BlockCraftGame : Game
     private void UpdatePlaying(GameTime gameTime, KeyboardState keyboard, MouseState mouse, bool rightPressed)
     {
         var elapsed = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        var touchLookDelta = UpdateTouchControls();
         var centerX = GraphicsDevice.Viewport.Width / 2;
         var centerY = GraphicsDevice.Viewport.Height / 2;
-        _player!.Yaw += (mouse.X - centerX) * 0.0024f;
-        _player.Pitch = Math.Clamp(_player.Pitch - (mouse.Y - centerY) * 0.0024f, -1.52f, 1.52f);
-        CenterMouse();
+        if (_touchAvailable)
+        {
+            _player!.Yaw += touchLookDelta.X * 0.0024f;
+            _player.Pitch = Math.Clamp(_player.Pitch - touchLookDelta.Y * 0.0024f, -1.52f, 1.52f);
+        }
+        else
+        {
+            _player!.Yaw += (mouse.X - centerX) * 0.0024f;
+            _player.Pitch = Math.Clamp(_player.Pitch - (mouse.Y - centerY) * 0.0024f, -1.52f, 1.52f);
+            CenterMouse();
+        }
 
         var horizontal = (keyboard.IsKeyDown(Keys.D) ? 1f : 0f) - (keyboard.IsKeyDown(Keys.A) ? 1f : 0f);
         var vertical = (keyboard.IsKeyDown(Keys.W) ? 1f : 0f) - (keyboard.IsKeyDown(Keys.S) ? 1f : 0f);
+        if (_touchAvailable)
+        {
+            horizontal = Math.Clamp(horizontal + _moveJoystick.Axis.X, -1f, 1f);
+            vertical = Math.Clamp(vertical + _moveJoystick.Axis.Y, -1f, 1f);
+        }
         var wasGrounded = _player.IsGrounded;
         var previousY = _player.Position.Y;
         var sprinting = keyboard.IsKeyDown(Keys.LeftShift);
         _player.Update(_world!, new NVector2(horizontal, vertical), elapsed,
-            keyboard.IsKeyDown(Keys.Space), sprinting, keyboard.IsKeyDown(Keys.LeftControl));
+            keyboard.IsKeyDown(Keys.Space) || _touchJumpPressed, sprinting, keyboard.IsKeyDown(Keys.LeftControl));
         if (!_player.IsFlying && !wasGrounded && _player.Position.Y < previousY)
             _fallDistance += previousY - _player.Position.Y;
         if (!_player.IsFlying && !wasGrounded && _player.IsGrounded)
@@ -345,15 +397,164 @@ internal sealed class BlockCraftGame : Game
             -MathF.Cos(_player.Yaw) * MathF.Cos(_player.Pitch));
         var hit = BlockRaycaster.Cast(_world!, _blocks, origin, direction, 6f);
 
-        if (mouse.LeftButton == ButtonState.Pressed && hit is not null)
+        if ((mouse.LeftButton == ButtonState.Pressed || _touchMinePressed) && hit is not null)
             MineBlock(hit.Value, elapsed);
         else
             ResetBreakProgress();
 
-        if (rightPressed && hit is not null)
+        if ((rightPressed || _touchPlaceRequested) && hit is not null)
             PlaceBlock(hit.Value);
         RequestNearbyChunks();
     }
+
+    private NVector2 UpdateTouchControls()
+    {
+        _touchPlaceRequested = false;
+        if (!_touchAvailable)
+            return NVector2.Zero;
+
+        var width = GraphicsDevice.Viewport.Width;
+        var height = GraphicsDevice.Viewport.Height;
+        var layout = GetTouchLayout(width, height);
+        _moveJoystick.Configure(ToNumerics(layout.JoystickCenter), layout.JoystickRadius);
+
+        var activePointers = new HashSet<int>();
+        var lookDelta = NVector2.Zero;
+        foreach (var touch in TouchPanel.GetState())
+        {
+            if (touch.State is TouchLocationState.Pressed or TouchLocationState.Moved)
+                activePointers.Add(touch.Id);
+
+            if (touch.State == TouchLocationState.Pressed)
+            {
+                if (_moveJoystick.TryBegin(touch.Id, ToNumerics(touch.Position)))
+                    continue;
+
+                if (IsInside(touch.Position, layout.JumpCenter, layout.ButtonRadius))
+                {
+                    _touchJumpPointer = touch.Id;
+                    _touchJumpPressed = true;
+                }
+                else if (IsInside(touch.Position, layout.MineCenter, layout.ButtonRadius))
+                {
+                    _touchMinePointer = touch.Id;
+                    _touchMinePressed = true;
+                }
+                else if (IsInside(touch.Position, layout.PlaceCenter, layout.ButtonRadius))
+                {
+                    _touchPlacePointer = touch.Id;
+                    _touchPlaceRequested = true;
+                }
+                else if (touch.Position.X > width * 0.42f && touch.Position.Y < height - layout.JoystickRadius * 3.1f)
+                {
+                    _touchLookPointer = touch.Id;
+                    _previousTouchLookPosition = touch.Position;
+                }
+            }
+            else if (touch.State == TouchLocationState.Moved)
+            {
+                if (_moveJoystick.UpdatePointer(touch.Id, ToNumerics(touch.Position)))
+                    continue;
+
+                if (_touchLookPointer == touch.Id)
+                {
+                    var delta = touch.Position - _previousTouchLookPosition;
+                    lookDelta += new NVector2(delta.X, delta.Y);
+                    _previousTouchLookPosition = touch.Position;
+                }
+            }
+            else if (touch.State == TouchLocationState.Released)
+            {
+                _moveJoystick.Release(touch.Id);
+                if (_touchLookPointer == touch.Id) _touchLookPointer = null;
+                if (_touchJumpPointer == touch.Id)
+                {
+                    _touchJumpPointer = null;
+                    _touchJumpPressed = false;
+                }
+                if (_touchMinePointer == touch.Id)
+                {
+                    _touchMinePointer = null;
+                    _touchMinePressed = false;
+                }
+                if (_touchPlacePointer == touch.Id) _touchPlacePointer = null;
+            }
+        }
+
+        if (_moveJoystick.PointerId is int joystickId && !activePointers.Contains(joystickId))
+            _moveJoystick.Reset();
+        if (_touchLookPointer is int lookId && !activePointers.Contains(lookId))
+            _touchLookPointer = null;
+        if (_touchJumpPointer is int jumpId && !activePointers.Contains(jumpId))
+        {
+            _touchJumpPointer = null;
+            _touchJumpPressed = false;
+        }
+        if (_touchMinePointer is int mineId && !activePointers.Contains(mineId))
+        {
+            _touchMinePointer = null;
+            _touchMinePressed = false;
+        }
+        if (_touchPlacePointer is int placeId && !activePointers.Contains(placeId))
+            _touchPlacePointer = null;
+
+        return lookDelta;
+    }
+
+    private static bool IsInside(Vector2 point, Vector2 center, float radius) =>
+        Vector2.DistanceSquared(point, center) <= radius * radius;
+
+    private static NVector2 ToNumerics(Vector2 point) => new(point.X, point.Y);
+
+    private static TouchLayout GetTouchLayout(int width, int height)
+    {
+        var radius = Math.Clamp(Math.Min(width, height) * 0.105f, 54f, 90f);
+        var buttonRadius = radius * 0.66f;
+        return new TouchLayout(
+            new Vector2(radius + 22f, height - radius - 22f),
+            new Vector2(width - radius * 1.05f, height - radius - 22f),
+            new Vector2(width - radius * 2.9f, height - radius - 22f),
+            new Vector2(width - radius * 1.95f, height - radius * 2.65f),
+            radius,
+            buttonRadius);
+    }
+
+    private void DrawTouchControls(int width, int height)
+    {
+        if (!_touchAvailable || _touchCircle is null)
+            return;
+        var layout = GetTouchLayout(width, height);
+        DrawTouchCircle(layout.JoystickCenter, layout.JoystickRadius,
+            _moveJoystick.IsActive ? new Color(45, 130, 210, 95) : new Color(16, 28, 46, 115));
+        DrawTouchCircle(ToXna2(_moveJoystick.KnobPosition), layout.JoystickRadius * 0.43f,
+            _moveJoystick.IsActive ? new Color(205, 230, 255, 210) : new Color(174, 199, 227, 145));
+        DrawTouchButton("JUMP", layout.JumpCenter, layout.ButtonRadius, _touchJumpPressed,
+            new Color(83, 151, 218, 160));
+        DrawTouchButton("MINE", layout.MineCenter, layout.ButtonRadius, _touchMinePressed,
+            new Color(222, 111, 88, 160));
+        DrawTouchButton("PLACE", layout.PlaceCenter, layout.ButtonRadius, _touchPlacePointer.HasValue,
+            new Color(91, 178, 133, 160));
+    }
+
+    private void DrawTouchCircle(Vector2 center, float radius, Color color)
+    {
+        if (_touchCircle is null) return;
+        var bounds = new Rectangle((int)(center.X - radius), (int)(center.Y - radius),
+            (int)(radius * 2), (int)(radius * 2));
+        _spriteBatch.Draw(_touchCircle, bounds, color);
+    }
+
+    private void DrawTouchButton(string label, Vector2 center, float radius, bool pressed, Color color)
+    {
+        DrawTouchCircle(center, radius, pressed ? Color.White : color);
+        var scale = 1.05f;
+        _font.Draw(_spriteBatch, label,
+            new Vector2(center.X - label.Length * 3f * scale, center.Y - 4f * scale),
+            pressed ? new Color(15, 28, 44) : Color.White, scale);
+    }
+
+    private static XVector3 ToXna(NVector3 vector) => new(vector.X, vector.Y, vector.Z);
+    private static Vector2 ToXna2(NVector2 vector) => new(vector.X, vector.Y);
 
     private void EatSelectedFood()
     {
@@ -652,6 +853,7 @@ internal sealed class BlockCraftGame : Game
         {
             DrawHotbar(width, height);
             DrawSurvivalMeters(height);
+            DrawTouchControls(width, height);
             DrawRect(new Rectangle(width / 2 - 1, height / 2 - 9, 2, 18), Color.White);
             DrawRect(new Rectangle(width / 2 - 9, height / 2 - 1, 18, 2), Color.White);
             if (_showDebug && _player is not null && _world is not null)
@@ -837,12 +1039,16 @@ internal sealed class BlockCraftGame : Game
         _ambientSound?.Dispose();
         _blockSound?.Dispose();
         _font?.Dispose();
+        _touchCircle?.Dispose();
         _blockAtlas?.Dispose();
         _pixel?.Dispose();
         _spriteBatch?.Dispose();
         _effect?.Dispose();
     }
 
+    private readonly record struct TouchLayout(
+        Vector2 JoystickCenter, Vector2 JumpCenter, Vector2 MineCenter, Vector2 PlaceCenter,
+        float JoystickRadius, float ButtonRadius);
     private sealed record PlayerSaveData(
         float X, float Y, float Z, float Yaw, float Pitch, ItemStack[] Inventory,
         float Health = 20f, float Hunger = 20f, float Saturation = 5f);

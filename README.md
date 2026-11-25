@@ -49,6 +49,17 @@ BlockCraft uses **MonoGame DesktopGL** for its game loop, windowing, graphics, k
 | F11 | Toggle fullscreen |
 | Esc | Pause / resume |
 
+### Touchscreen controls
+
+On devices that expose a MonoGame touch panel, BlockCraft shows a virtual control overlay during gameplay:
+
+- Drag the left thumbstick to move. The thumb follows your finger, movement is analog, and travel is clamped to the stick radius.
+- Release the left thumbstick to snap it back to the center and stop movement.
+- Swipe on the right side of the screen to look around.
+- Use the on-screen JUMP, MINE, and PLACE buttons for the main actions.
+
+Keyboard and mouse controls remain available. The current release target is still Windows x64; this touch layer is ready for touch-enabled MonoGame hosts, but an Android/iOS app project and mobile installer are not part of this Windows release.
+
 The pause screen exposes render distance (Page Up/Page Down), FOV (+/-), and VSync (V). Settings are stored under %LOCALAPPDATA%/BlockCraft/settings.json. The first world slot is stored under %LOCALAPPDATA%/BlockCraft/Worlds/World-1.
 
 ## Build prerequisites
