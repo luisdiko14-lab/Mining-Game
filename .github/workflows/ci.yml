@@ -83,7 +83,7 @@ jobs:
         run: |
           $publish = (Resolve-Path ".\artifacts\publish\win-x64").Path
           $msi = Join-Path (Resolve-Path ".\artifacts\installer").Path "BlockCraft-0.0.0-win-x64-setup.msi"
-          wix build ".\installer\Product.wxs" -arch x64 "-dProductVersion=0.0.0" "-dPublishDir=$publish" -o $msi
+          wix build ".\installer\Product.wxs" -arch x64 -d "ProductVersion=0.0.0" -d "PublishDir=$publish" -o $msi
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
       - name: Verify portable ZIP contents
         shell: pwsh

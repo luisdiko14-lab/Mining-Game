@@ -91,7 +91,7 @@ jobs:
         run: |
           $publish = (Resolve-Path ".\artifacts\publish\win-x64").Path
           $msi = Join-Path (Resolve-Path ".\artifacts\installer").Path "BlockCraft-${{ steps.version.outputs.value }}-win-x64-setup.msi"
-          wix build ".\installer\Product.wxs" -arch x64 "-dProductVersion=${{ steps.version.outputs.value }}" "-dPublishDir=$publish" -o $msi
+          wix build ".\installer\Product.wxs" -arch x64 -d "ProductVersion=${{ steps.version.outputs.value }}" -d "PublishDir=$publish" -o $msi
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: Generate SHA-256 checksums
