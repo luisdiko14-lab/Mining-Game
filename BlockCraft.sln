@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlockCraft.Core", "src\BlockCraft.Core\BlockCraft.Core.csproj", "{2D851A7E-0ACF-4E92-9F50-7DF735A34111}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BlockCraft.Tests", "tests\BlockCraft.Tests\BlockCraft.Tests.csproj", "{9E2A6BAE-C30E-4F36-91E4-8D0D633D1212}"
+EndProject
+Global
+  GlobalSection(SolutionConfigurationPlatforms) = preSolution
+    Debug|Any CPU = Debug|Any CPU
+    Release|Any CPU = Release|Any CPU
+  EndGlobalSection
+  GlobalSection(ProjectConfigurationPlatforms) = postSolution
+    {2D851A7E-0ACF-4E92-9F50-7DF735A34111}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+    {2D851A7E-0ACF-4E92-9F50-7DF735A34111}.Debug|Any CPU.Build.0 = Debug|Any CPU
+    {2D851A7E-0ACF-4E92-9F50-7DF735A34111}.Release|Any CPU.ActiveCfg = Release|Any CPU
+    {2D851A7E-0ACF-4E92-9F50-7DF735A34111}.Release|Any CPU.Build.0 = Release|Any CPU
+    {9E2A6BAE-C30E-4F36-91E4-8D0D633D1212}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+    {9E2A6BAE-C30E-4F36-91E4-8D0D633D1212}.Debug|Any CPU.Build.0 = Debug|Any CPU
+    {9E2A6BAE-C30E-4F36-91E4-8D0D633D1212}.Release|Any CPU.ActiveCfg = Release|Any CPU
+    {9E2A6BAE-C30E-4F36-91E4-8D0D633D1212}.Release|Any CPU.Build.0 = Release|Any CPU
+  EndGlobalSection
+EndGlobal

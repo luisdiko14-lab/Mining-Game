@@ -1,0 +1,35 @@
+name: BlockCraft CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  build-test:
+    name: Build and test (.NET 10)
+    runs-on: windows-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Set up .NET 10
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 10.0.x
+      - name: Restore
+        run: dotnet restore BlockCraft.sln
+      - name: Build
+        run: dotnet build BlockCraft.sln --configuration Release --no-restore
+      - name: Test
+        run: dotnet test BlockCraft.sln --configuration Release --no-build --logger "trx;LogFileName=blockcraft-tests.trx"
+      - name: Upload test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: blockcraft-test-results
+          path: "**/blockcraft-tests.trx"
+          if-no-files-found: ignore

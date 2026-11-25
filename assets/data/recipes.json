@@ -1,0 +1,10 @@
+[
+ {"id":"oak_planks","pattern":["L"],"ingredients":{"L":"oak_log"},"result":{"item":"oak_planks","count":4}},
+ {"id":"sticks","pattern":["P","P"],"ingredients":{"P":"oak_planks"},"result":{"item":"stick","count":4}},
+ {"id":"crafting_table","pattern":["PP","PP"],"ingredients":{"P":"oak_planks"},"result":{"item":"crafting_table","count":1}},
+ {"id":"wooden_pickaxe","pattern":["PPP"," S "," S "],"ingredients":{"P":"oak_planks","S":"stick"},"result":{"item":"wooden_pickaxe","count":1}},
+ {"id":"wooden_axe","pattern":["PP","PS"," S"],"ingredients":{"P":"oak_planks","S":"stick"},"result":{"item":"wooden_axe","count":1}},
+ {"id":"wooden_shovel","pattern":["P","S","S"],"ingredients":{"P":"oak_planks","S":"stick"},"result":{"item":"wooden_shovel","count":1}},
+ {"id":"furnace","pattern":["CCC","C C","CCC"],"ingredients":{"C":"cobblestone"},"result":{"item":"furnace","count":1}},
+ {"id":"glass_pane","pattern":["GGG","GGG"],"ingredients":{"G":"glass"},"result":{"item":"glass","count":16}}
+]

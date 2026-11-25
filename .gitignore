@@ -1,0 +1,11 @@
+**/bin/
+**/obj/
+**/.vs/
+.vscode/
+artifacts/
+publish/
+dist/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
