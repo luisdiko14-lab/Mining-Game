@@ -115,8 +115,11 @@ jobs:
           if (-not (Test-Path $installedExe)) { throw "Inno Setup did not install BlockCraft.exe." }
           $uninstaller = Join-Path $env:ProgramFiles "BlockCraft\unins000.exe"
           if (-not (Test-Path $uninstaller)) { throw "Inno Setup uninstaller was not installed." }
-          & $uninstaller /VERYSILENT /SUPPRESSMSGBOXES /NORESTART
-          if ($LASTEXITCODE -ne 0) { throw "Inno Setup uninstaller failed." }
+          $uninstallLog = Join-Path $env:RUNNER_TEMP "blockcraft-inno-uninstall.log"
+          $uninstall = Start-Process -FilePath $uninstaller -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /LOG=$uninstallLog" -Wait -PassThru
+          Write-Host "Inno Setup uninstaller exit code: $($uninstall.ExitCode)"
+          if (Test-Path $uninstallLog) { Get-Content $uninstallLog | Write-Host }
+          if ($uninstall.ExitCode -ne 0) { throw "Inno Setup uninstaller failed with exit code $($uninstall.ExitCode)." }
           if (Test-Path $installedExe) { throw "Inno Setup uninstall left BlockCraft.exe behind." }
       - name: Upload validated release packages
         if: always()
