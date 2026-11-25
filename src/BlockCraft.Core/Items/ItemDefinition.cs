@@ -21,6 +21,8 @@ public sealed record ItemDefinition
     public int FoodValue { get; init; }
     /// <summary>Block id placed by this item, or zero for non-block items.</summary>
     public ushort PlacesBlockId { get; init; }
+    /// <summary>Fuel energy in seconds; zero means the item cannot be burned.</summary>
+    public float BurnTimeSeconds { get; init; }
 }
 
 /// <summary>Validated lookup for item definitions.</summary>
@@ -33,7 +35,7 @@ public sealed class ItemRegistry
     {
         foreach (var item in items)
         {
-            if (string.IsNullOrWhiteSpace(item.Name) || item.MaxStack is < 1 or > 999 || item.MiningSpeed < 0)
+            if (string.IsNullOrWhiteSpace(item.Name) || item.MaxStack is < 1 or > 999 || item.MiningSpeed < 0 || !float.IsFinite(item.MiningSpeed) || item.BurnTimeSeconds < 0 || !float.IsFinite(item.BurnTimeSeconds))
                 throw new InvalidDataException($"Item {item.Id} has invalid definition data.");
             if (!_byId.TryAdd(item.Id, item) || !_byName.TryAdd(item.Name, item))
                 throw new InvalidDataException($"Duplicate item id or name: {item.Name}.");

@@ -1,0 +1,7 @@
+[
+ {"input":"raw_iron","output":"iron_ingot","count":1,"durationSeconds":10},
+ {"input":"raw_gold","output":"gold_ingot","count":1,"durationSeconds":10},
+ {"input":"raw_copper","output":"copper_ingot","count":1,"durationSeconds":8},
+ {"input":"sand","output":"glass","count":1,"durationSeconds":8},
+ {"input":"cobblestone","output":"stone","count":1,"durationSeconds":10}
+]
