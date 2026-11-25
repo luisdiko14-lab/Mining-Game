@@ -137,7 +137,7 @@ internal sealed class BlockCraftGame : Game
         {
             var distance = Vector2.Distance(new Vector2(x, y), new Vector2(center, center));
             var alpha = (byte)Math.Clamp((radius + 1f - distance) * 255f, 0f, 255f);
-            pixels[y * size + x] = new Color(255, 255, 255, alpha);
+            pixels[y * size + x] = new Color(255, 255, 255, (int)alpha);
         }
         texture.SetData(pixels);
         return texture;
