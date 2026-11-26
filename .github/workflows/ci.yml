@@ -31,7 +31,7 @@ jobs:
           java-version: "21"
           cache: maven
       - name: Audit content pack with Java
-        run: mvn -q -f tools/java/pom.xml compile exec:java -Dexec.args="."
+        run: mvn -q -f tools/java/pom.xml compile exec:java "-Dexec.args=../.."
       - name: Generate original assets
         run: python tools/gen_textures.py
       - name: Restore
