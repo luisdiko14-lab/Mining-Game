@@ -45,7 +45,7 @@ public sealed class ContentPackTests
     {
         var data = FindDataDirectory(); var items = ItemRegistry.LoadFromFile(Path.Combine(data, "items.json"));
         var recipes = RecipeBook.LoadFromFile(Path.Combine(data, "recipes.json"), items);
-        var inventory = new Inventory(items, 2); inventory.Add(items.GetId("oak_log"), 1);
+        var inventory = new Inventory(items, 1); inventory.Add(items.GetId("oak_log"), 64);
         var before = inventory.Snapshot();
         Assert.False(recipes.TryCraftFromInventory(inventory, 0));
         Assert.Equal(before, inventory.Snapshot());
