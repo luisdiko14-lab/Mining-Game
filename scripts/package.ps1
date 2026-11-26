@@ -28,11 +28,14 @@ try {
 
     if (Test-Path $publishDir) { Remove-Item $publishDir -Recurse -Force }
     New-Item -ItemType Directory -Path $publishDir -Force | Out-Null
-    dotnet publish $project --configuration Release --runtime $RuntimeIdentifier --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=true -p:EnableCompressionInSingleFile=true -p:PublishTrimmed=false --output $publishDir
+    dotnet publish $project --configuration Release --runtime $RuntimeIdentifier --self-contained true -p:PublishSingleFile=true -p:IncludeNativeLibrariesForSelfExtract=false -p:IncludeNativeLibrariesInSingleFile=false -p:EnableCompressionInSingleFile=true -p:PublishTrimmed=false --output $publishDir
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
     if (-not (Test-Path (Join-Path $publishDir "BlockCraft.exe")) -and $RuntimeIdentifier -eq "win-x64") {
         throw "Publish output does not contain BlockCraft.exe."
+    }
+    if ($RuntimeIdentifier -eq "win-x64" -and -not (Test-Path (Join-Path $publishDir "SDL2.dll"))) {
+        throw "Publish output does not contain SDL2.dll next to BlockCraft.exe; the game would crash at startup."
     }
     if (Test-Path $zipPath) { Remove-Item $zipPath -Force }
     Compress-Archive -Path (Join-Path $publishDir "*") -DestinationPath $zipPath -CompressionLevel Optimal

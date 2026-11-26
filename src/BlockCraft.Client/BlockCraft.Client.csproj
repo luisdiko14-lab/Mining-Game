@@ -7,7 +7,11 @@
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <PublishSingleFile>true</PublishSingleFile>
     <SelfContained>true</SelfContained>
-    <IncludeNativeLibrariesForSelfExtract>true</IncludeNativeLibrariesForSelfExtract>
+    <!-- MonoGame loads SDL2.dll/soft_oal.dll with a plain LoadLibrary(), which only finds files placed
+         next to BlockCraft.exe. Bundling them into the single file and self-extracting to %TEMP% makes
+         startup fail with "Failed to load library: SDL2.dll", so keep the native libraries beside the exe. -->
+    <IncludeNativeLibrariesForSelfExtract>false</IncludeNativeLibrariesForSelfExtract>
+    <IncludeNativeLibrariesInSingleFile>false</IncludeNativeLibrariesInSingleFile>
     <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
   </PropertyGroup>
   <ItemGroup>
