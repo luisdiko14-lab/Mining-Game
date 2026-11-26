@@ -21,7 +21,7 @@ BlockCraft uses **MonoGame DesktopGL** for its game loop, windowing, graphics, k
 
 - 16 × 16 × 256 chunks with deterministic seeded terrain, negative-coordinate support, asynchronous chunk requests, chunk revision tracking, and compressed region-file persistence.
 - Smooth deterministic multi-octave noise, plains/forest/desert/snow/ocean biomes, cave pockets, coal/iron/gold/diamond ore, water fill, and oak trees.
-- Expanded JSON-driven registries with 155 blocks and 211 items: eight wood families and planks, tree species, stone variants, deepslate ores, Nether/End-inspired materials, utility blocks, colored wool/concrete, extra tools, and survival foods.
+- Expanded JSON-driven registries with 158 blocks and 214 items: eight wood families and planks, tree species, stone variants, deepslate ores, Nether/End-inspired materials, utility blocks, colored wool/concrete, extra tools, and survival foods.
 - Greedy meshing with exposed-face merging, transparent/non-solid surface support, view-frustum culling, and render-distance chunk requests.
 - First-person WASD movement, mouse look, jumping, sprinting, sneaking, creative flight, axis-separated AABB collision, and voxel DDA targeting.
 - Block breaking with hardness/tool speed progress, block-specific drops, block placement, a nine-slot hotbar, inventory display, recipe browsing and transactional quick crafting from stored ingredients, pause/settings display, day/night tint, F2 screenshots, and F3 diagnostics.
