@@ -75,7 +75,7 @@ public sealed class Chunk
 }
 
 /// <summary>Terrain regions used by generation and the debug overlay.</summary>
-public enum BiomeKind : byte { Plains, Forest, Desert, Snow, Ocean }
+public enum BiomeKind : byte { Plains, Forest, Desert, Snow, Ocean, Jungle, Savanna, Swamp, CherryGrove }
 /// <summary>Integer chunk coordinate pair.</summary>
 public readonly record struct ChunkPos(int X, int Z);
 /// <summary>Integer world block coordinate triplet.</summary>

@@ -1,59 +1,1327 @@
 [
- {"id":1,"name":"stone","maxStack":64,"placesBlockId":1},
- {"id":2,"name":"cobblestone","maxStack":64,"placesBlockId":16},
- {"id":3,"name":"dirt","maxStack":64,"placesBlockId":2},
- {"id":4,"name":"grass_block","maxStack":64,"placesBlockId":3},
- {"id":5,"name":"sand","maxStack":64,"placesBlockId":4},
- {"id":6,"name":"oak_log","maxStack":64,"placesBlockId":5,"burnTimeSeconds":15},
- {"id":7,"name":"oak_planks","maxStack":64,"placesBlockId":6,"burnTimeSeconds":15},
- {"id":8,"name":"glass","maxStack":64,"placesBlockId":7},
- {"id":9,"name":"coal","maxStack":64,"burnTimeSeconds":80},
- {"id":10,"name":"iron_ingot","maxStack":64},
- {"id":11,"name":"gold_ingot","maxStack":64},
- {"id":12,"name":"diamond","maxStack":64},
- {"id":13,"name":"oak_sapling","maxStack":64},
- {"id":14,"name":"gravel","maxStack":64,"placesBlockId":17},
- {"id":15,"name":"clay_ball","maxStack":64},
- {"id":16,"name":"snowball","maxStack":16},
- {"id":17,"name":"ice","maxStack":64,"placesBlockId":20},
- {"id":18,"name":"cactus","maxStack":64,"placesBlockId":21},
- {"id":19,"name":"birch_log","maxStack":64,"placesBlockId":22,"burnTimeSeconds":15},
- {"id":20,"name":"birch_sapling","maxStack":64},
- {"id":21,"name":"spruce_log","maxStack":64,"placesBlockId":24,"burnTimeSeconds":15},
- {"id":22,"name":"spruce_sapling","maxStack":64},
- {"id":23,"name":"sandstone","maxStack":64,"placesBlockId":26},
- {"id":24,"name":"mossy_cobblestone","maxStack":64,"placesBlockId":27},
- {"id":25,"name":"bricks","maxStack":64,"placesBlockId":28},
- {"id":26,"name":"stone_bricks","maxStack":64,"placesBlockId":29},
- {"id":27,"name":"obsidian","maxStack":64,"placesBlockId":30},
- {"id":28,"name":"torch","maxStack":64,"placesBlockId":31},
- {"id":29,"name":"glowstone","maxStack":64,"placesBlockId":32},
- {"id":30,"name":"redstone_dust","maxStack":64},
- {"id":31,"name":"lapis_lazuli","maxStack":64},
- {"id":32,"name":"copper_ingot","maxStack":64},
- {"id":33,"name":"deepslate","maxStack":64,"placesBlockId":36},
- {"id":34,"name":"white_wool","maxStack":64,"placesBlockId":37},
- {"id":35,"name":"bookshelf","maxStack":64,"placesBlockId":38},
- {"id":36,"name":"crafting_table","maxStack":64,"placesBlockId":39},
- {"id":37,"name":"furnace","maxStack":64,"placesBlockId":40},
- {"id":38,"name":"iron_block","maxStack":64,"placesBlockId":41},
- {"id":39,"name":"gold_block","maxStack":64,"placesBlockId":42},
- {"id":40,"name":"diamond_block","maxStack":64,"placesBlockId":43},
- {"id":41,"name":"wooden_pickaxe","maxStack":1,"toolType":"pickaxe","toolTier":"wood","miningSpeed":2},
- {"id":42,"name":"stone_pickaxe","maxStack":1,"toolType":"pickaxe","toolTier":"stone","miningSpeed":4},
- {"id":43,"name":"iron_pickaxe","maxStack":1,"toolType":"pickaxe","toolTier":"iron","miningSpeed":6},
- {"id":44,"name":"diamond_pickaxe","maxStack":1,"toolType":"pickaxe","toolTier":"diamond","miningSpeed":8},
- {"id":45,"name":"wooden_axe","maxStack":1,"toolType":"axe","toolTier":"wood","miningSpeed":2},
- {"id":46,"name":"stone_axe","maxStack":1,"toolType":"axe","toolTier":"stone","miningSpeed":4},
- {"id":47,"name":"wooden_shovel","maxStack":1,"toolType":"shovel","toolTier":"wood","miningSpeed":2},
- {"id":48,"name":"stone_shovel","maxStack":1,"toolType":"shovel","toolTier":"stone","miningSpeed":4},
- {"id":49,"name":"wooden_sword","maxStack":1,"toolType":"sword","toolTier":"wood","miningSpeed":1},
- {"id":50,"name":"stone_sword","maxStack":1,"toolType":"sword","toolTier":"stone","miningSpeed":1},
- {"id":51,"name":"apple","maxStack":64,"foodValue":4},
- {"id":52,"name":"bread","maxStack":64,"foodValue":5},
- {"id":53,"name":"cooked_meat","maxStack":64,"foodValue":8},
- {"id":54,"name":"stick","maxStack":64,"burnTimeSeconds":5},
- {"id":55,"name":"raw_iron","maxStack":64},
- {"id":56,"name":"raw_gold","maxStack":64},
- {"id":57,"name":"raw_copper","maxStack":64}
+  {
+    "id": 1,
+    "name": "stone",
+    "maxStack": 64,
+    "placesBlockId": 1
+  },
+  {
+    "id": 2,
+    "name": "cobblestone",
+    "maxStack": 64,
+    "placesBlockId": 16
+  },
+  {
+    "id": 3,
+    "name": "dirt",
+    "maxStack": 64,
+    "placesBlockId": 2
+  },
+  {
+    "id": 4,
+    "name": "grass_block",
+    "maxStack": 64,
+    "placesBlockId": 3
+  },
+  {
+    "id": 5,
+    "name": "sand",
+    "maxStack": 64,
+    "placesBlockId": 4
+  },
+  {
+    "id": 6,
+    "name": "oak_log",
+    "maxStack": 64,
+    "placesBlockId": 5,
+    "burnTimeSeconds": 15
+  },
+  {
+    "id": 7,
+    "name": "oak_planks",
+    "maxStack": 64,
+    "placesBlockId": 6,
+    "burnTimeSeconds": 15
+  },
+  {
+    "id": 8,
+    "name": "glass",
+    "maxStack": 64,
+    "placesBlockId": 7
+  },
+  {
+    "id": 9,
+    "name": "coal",
+    "maxStack": 64,
+    "burnTimeSeconds": 80
+  },
+  {
+    "id": 10,
+    "name": "iron_ingot",
+    "maxStack": 64
+  },
+  {
+    "id": 11,
+    "name": "gold_ingot",
+    "maxStack": 64
+  },
+  {
+    "id": 12,
+    "name": "diamond",
+    "maxStack": 64
+  },
+  {
+    "id": 13,
+    "name": "oak_sapling",
+    "maxStack": 64
+  },
+  {
+    "id": 14,
+    "name": "gravel",
+    "maxStack": 64,
+    "placesBlockId": 17
+  },
+  {
+    "id": 15,
+    "name": "clay_ball",
+    "maxStack": 64
+  },
+  {
+    "id": 16,
+    "name": "snowball",
+    "maxStack": 16
+  },
+  {
+    "id": 17,
+    "name": "ice",
+    "maxStack": 64,
+    "placesBlockId": 20
+  },
+  {
+    "id": 18,
+    "name": "cactus",
+    "maxStack": 64,
+    "placesBlockId": 21
+  },
+  {
+    "id": 19,
+    "name": "birch_log",
+    "maxStack": 64,
+    "placesBlockId": 22,
+    "burnTimeSeconds": 15
+  },
+  {
+    "id": 20,
+    "name": "birch_sapling",
+    "maxStack": 64
+  },
+  {
+    "id": 21,
+    "name": "spruce_log",
+    "maxStack": 64,
+    "placesBlockId": 24,
+    "burnTimeSeconds": 15
+  },
+  {
+    "id": 22,
+    "name": "spruce_sapling",
+    "maxStack": 64
+  },
+  {
+    "id": 23,
+    "name": "sandstone",
+    "maxStack": 64,
+    "placesBlockId": 26
+  },
+  {
+    "id": 24,
+    "name": "mossy_cobblestone",
+    "maxStack": 64,
+    "placesBlockId": 27
+  },
+  {
+    "id": 25,
+    "name": "bricks",
+    "maxStack": 64,
+    "placesBlockId": 28
+  },
+  {
+    "id": 26,
+    "name": "stone_bricks",
+    "maxStack": 64,
+    "placesBlockId": 29
+  },
+  {
+    "id": 27,
+    "name": "obsidian",
+    "maxStack": 64,
+    "placesBlockId": 30
+  },
+  {
+    "id": 28,
+    "name": "torch",
+    "maxStack": 64,
+    "placesBlockId": 31
+  },
+  {
+    "id": 29,
+    "name": "glowstone",
+    "maxStack": 64,
+    "placesBlockId": 32
+  },
+  {
+    "id": 30,
+    "name": "redstone_dust",
+    "maxStack": 64
+  },
+  {
+    "id": 31,
+    "name": "lapis_lazuli",
+    "maxStack": 64
+  },
+  {
+    "id": 32,
+    "name": "copper_ingot",
+    "maxStack": 64
+  },
+  {
+    "id": 33,
+    "name": "deepslate",
+    "maxStack": 64,
+    "placesBlockId": 36
+  },
+  {
+    "id": 34,
+    "name": "white_wool",
+    "maxStack": 64,
+    "placesBlockId": 37
+  },
+  {
+    "id": 35,
+    "name": "bookshelf",
+    "maxStack": 64,
+    "placesBlockId": 38
+  },
+  {
+    "id": 36,
+    "name": "crafting_table",
+    "maxStack": 64,
+    "placesBlockId": 39
+  },
+  {
+    "id": 37,
+    "name": "furnace",
+    "maxStack": 64,
+    "placesBlockId": 40
+  },
+  {
+    "id": 38,
+    "name": "iron_block",
+    "maxStack": 64,
+    "placesBlockId": 41
+  },
+  {
+    "id": 39,
+    "name": "gold_block",
+    "maxStack": 64,
+    "placesBlockId": 42
+  },
+  {
+    "id": 40,
+    "name": "diamond_block",
+    "maxStack": 64,
+    "placesBlockId": 43
+  },
+  {
+    "id": 41,
+    "name": "wooden_pickaxe",
+    "maxStack": 1,
+    "toolType": "pickaxe",
+    "toolTier": "wood",
+    "miningSpeed": 2
+  },
+  {
+    "id": 42,
+    "name": "stone_pickaxe",
+    "maxStack": 1,
+    "toolType": "pickaxe",
+    "toolTier": "stone",
+    "miningSpeed": 4
+  },
+  {
+    "id": 43,
+    "name": "iron_pickaxe",
+    "maxStack": 1,
+    "toolType": "pickaxe",
+    "toolTier": "iron",
+    "miningSpeed": 6
+  },
+  {
+    "id": 44,
+    "name": "diamond_pickaxe",
+    "maxStack": 1,
+    "toolType": "pickaxe",
+    "toolTier": "diamond",
+    "miningSpeed": 8
+  },
+  {
+    "id": 45,
+    "name": "wooden_axe",
+    "maxStack": 1,
+    "toolType": "axe",
+    "toolTier": "wood",
+    "miningSpeed": 2
+  },
+  {
+    "id": 46,
+    "name": "stone_axe",
+    "maxStack": 1,
+    "toolType": "axe",
+    "toolTier": "stone",
+    "miningSpeed": 4
+  },
+  {
+    "id": 47,
+    "name": "wooden_shovel",
+    "maxStack": 1,
+    "toolType": "shovel",
+    "toolTier": "wood",
+    "miningSpeed": 2
+  },
+  {
+    "id": 48,
+    "name": "stone_shovel",
+    "maxStack": 1,
+    "toolType": "shovel",
+    "toolTier": "stone",
+    "miningSpeed": 4
+  },
+  {
+    "id": 49,
+    "name": "wooden_sword",
+    "maxStack": 1,
+    "toolType": "sword",
+    "toolTier": "wood",
+    "miningSpeed": 1
+  },
+  {
+    "id": 50,
+    "name": "stone_sword",
+    "maxStack": 1,
+    "toolType": "sword",
+    "toolTier": "stone",
+    "miningSpeed": 1
+  },
+  {
+    "id": 51,
+    "name": "apple",
+    "maxStack": 64,
+    "foodValue": 4
+  },
+  {
+    "id": 52,
+    "name": "bread",
+    "maxStack": 64,
+    "foodValue": 5
+  },
+  {
+    "id": 53,
+    "name": "cooked_meat",
+    "maxStack": 64,
+    "foodValue": 8
+  },
+  {
+    "id": 54,
+    "name": "stick",
+    "maxStack": 64,
+    "burnTimeSeconds": 5
+  },
+  {
+    "id": 55,
+    "name": "raw_iron",
+    "maxStack": 64
+  },
+  {
+    "id": 56,
+    "name": "raw_gold",
+    "maxStack": 64
+  },
+  {
+    "id": 57,
+    "name": "raw_copper",
+    "maxStack": 64
+  },
+  {
+    "id": 58,
+    "name": "emerald",
+    "maxStack": 64
+  },
+  {
+    "id": 59,
+    "name": "nether_quartz",
+    "maxStack": 64
+  },
+  {
+    "id": 60,
+    "name": "netherite_scrap",
+    "maxStack": 64
+  },
+  {
+    "id": 61,
+    "name": "honey_bottle",
+    "maxStack": 16,
+    "foodValue": 6
+  },
+  {
+    "id": 62,
+    "name": "slime_ball",
+    "maxStack": 64
+  },
+  {
+    "id": 63,
+    "name": "amethyst_shard",
+    "maxStack": 64
+  },
+  {
+    "id": 64,
+    "name": "flint",
+    "maxStack": 64
+  },
+  {
+    "id": 65,
+    "name": "string",
+    "maxStack": 64
+  },
+  {
+    "id": 66,
+    "name": "bone",
+    "maxStack": 64
+  },
+  {
+    "id": 67,
+    "name": "gunpowder",
+    "maxStack": 64
+  },
+  {
+    "id": 68,
+    "name": "leather",
+    "maxStack": 64
+  },
+  {
+    "id": 69,
+    "name": "feather",
+    "maxStack": 64
+  },
+  {
+    "id": 70,
+    "name": "arrow",
+    "maxStack": 64
+  },
+  {
+    "id": 71,
+    "name": "egg",
+    "maxStack": 16
+  },
+  {
+    "id": 72,
+    "name": "raw_beef",
+    "maxStack": 64
+  },
+  {
+    "id": 73,
+    "name": "cooked_beef",
+    "maxStack": 64,
+    "foodValue": 8
+  },
+  {
+    "id": 74,
+    "name": "raw_porkchop",
+    "maxStack": 64
+  },
+  {
+    "id": 75,
+    "name": "cooked_porkchop",
+    "maxStack": 64,
+    "foodValue": 8
+  },
+  {
+    "id": 76,
+    "name": "carrot",
+    "maxStack": 64,
+    "foodValue": 3
+  },
+  {
+    "id": 77,
+    "name": "baked_potato",
+    "maxStack": 64,
+    "foodValue": 5
+  },
+  {
+    "id": 78,
+    "name": "pumpkin_pie",
+    "maxStack": 64,
+    "foodValue": 8
+  },
+  {
+    "id": 79,
+    "name": "melon_slice",
+    "maxStack": 64,
+    "foodValue": 2
+  },
+  {
+    "id": 80,
+    "name": "mushroom_stew",
+    "maxStack": 1,
+    "foodValue": 6
+  },
+  {
+    "id": 81,
+    "name": "golden_apple",
+    "maxStack": 64,
+    "foodValue": 8
+  },
+  {
+    "id": 82,
+    "name": "dried_kelp",
+    "maxStack": 64,
+    "foodValue": 1
+  },
+  {
+    "id": 83,
+    "name": "jungle_sapling",
+    "maxStack": 64
+  },
+  {
+    "id": 84,
+    "name": "acacia_sapling",
+    "maxStack": 64
+  },
+  {
+    "id": 85,
+    "name": "dark_oak_sapling",
+    "maxStack": 64
+  },
+  {
+    "id": 86,
+    "name": "mangrove_propagule",
+    "maxStack": 64
+  },
+  {
+    "id": 87,
+    "name": "cherry_sapling",
+    "maxStack": 64
+  },
+  {
+    "id": 88,
+    "name": "raw_chicken",
+    "maxStack": 64
+  },
+  {
+    "id": 89,
+    "name": "cooked_chicken",
+    "maxStack": 64,
+    "foodValue": 6
+  },
+  {
+    "id": 90,
+    "name": "sweet_berries",
+    "maxStack": 64,
+    "foodValue": 2
+  },
+  {
+    "id": 91,
+    "name": "honeycomb",
+    "maxStack": 64
+  },
+  {
+    "id": 92,
+    "name": "netherite_ingot",
+    "maxStack": 64
+  },
+  {
+    "id": 93,
+    "name": "beetroot",
+    "maxStack": 64,
+    "foodValue": 1
+  },
+  {
+    "id": 94,
+    "name": "chorus_fruit",
+    "maxStack": 64,
+    "foodValue": 4
+  },
+  {
+    "id": 95,
+    "name": "iron_axe",
+    "maxStack": 1,
+    "toolType": "axe",
+    "toolTier": "iron",
+    "miningSpeed": 6
+  },
+  {
+    "id": 96,
+    "name": "iron_shovel",
+    "maxStack": 1,
+    "toolType": "shovel",
+    "toolTier": "iron",
+    "miningSpeed": 6
+  },
+  {
+    "id": 97,
+    "name": "iron_sword",
+    "maxStack": 1,
+    "toolType": "sword",
+    "toolTier": "iron",
+    "miningSpeed": 1
+  },
+  {
+    "id": 98,
+    "name": "gold_pickaxe",
+    "maxStack": 1,
+    "toolType": "pickaxe",
+    "toolTier": "gold",
+    "miningSpeed": 5
+  },
+  {
+    "id": 99,
+    "name": "gold_axe",
+    "maxStack": 1,
+    "toolType": "axe",
+    "toolTier": "gold",
+    "miningSpeed": 5
+  },
+  {
+    "id": 100,
+    "name": "gold_shovel",
+    "maxStack": 1,
+    "toolType": "shovel",
+    "toolTier": "gold",
+    "miningSpeed": 5
+  },
+  {
+    "id": 101,
+    "name": "gold_sword",
+    "maxStack": 1,
+    "toolType": "sword",
+    "toolTier": "gold",
+    "miningSpeed": 1
+  },
+  {
+    "id": 102,
+    "name": "diamond_axe",
+    "maxStack": 1,
+    "toolType": "axe",
+    "toolTier": "diamond",
+    "miningSpeed": 8
+  },
+  {
+    "id": 103,
+    "name": "diamond_shovel",
+    "maxStack": 1,
+    "toolType": "shovel",
+    "toolTier": "diamond",
+    "miningSpeed": 8
+  },
+  {
+    "id": 104,
+    "name": "diamond_sword",
+    "maxStack": 1,
+    "toolType": "sword",
+    "toolTier": "diamond",
+    "miningSpeed": 1
+  },
+  {
+    "id": 105,
+    "name": "copper_pickaxe",
+    "maxStack": 1,
+    "toolType": "pickaxe",
+    "toolTier": "copper",
+    "miningSpeed": 5
+  },
+  {
+    "id": 106,
+    "name": "copper_axe",
+    "maxStack": 1,
+    "toolType": "axe",
+    "toolTier": "copper",
+    "miningSpeed": 5
+  },
+  {
+    "id": 107,
+    "name": "copper_shovel",
+    "maxStack": 1,
+    "toolType": "shovel",
+    "toolTier": "copper",
+    "miningSpeed": 5
+  },
+  {
+    "id": 108,
+    "name": "copper_sword",
+    "maxStack": 1,
+    "toolType": "sword",
+    "toolTier": "copper",
+    "miningSpeed": 1
+  },
+  {
+    "id": 109,
+    "name": "shears",
+    "maxStack": 1,
+    "toolType": "shears",
+    "toolTier": "iron",
+    "miningSpeed": 1
+  },
+  {
+    "id": 110,
+    "name": "fishing_rod",
+    "maxStack": 1,
+    "toolType": "fishing_rod",
+    "toolTier": "iron",
+    "miningSpeed": 1
+  },
+  {
+    "id": 111,
+    "name": "flint_and_steel",
+    "maxStack": 1,
+    "toolType": "tool",
+    "toolTier": "iron",
+    "miningSpeed": 1
+  },
+  {
+    "id": 112,
+    "name": "bucket",
+    "maxStack": 1,
+    "toolType": "bucket",
+    "toolTier": "iron",
+    "miningSpeed": 1
+  },
+  {
+    "id": 113,
+    "name": "shield",
+    "maxStack": 1,
+    "toolType": "shield",
+    "toolTier": "iron",
+    "miningSpeed": 1
+  },
+  {
+    "id": 114,
+    "name": "bow",
+    "maxStack": 1,
+    "toolType": "bow",
+    "toolTier": "wood",
+    "miningSpeed": 1
+  },
+  {
+    "id": 115,
+    "name": "trident",
+    "maxStack": 1,
+    "toolType": "trident",
+    "toolTier": "diamond",
+    "miningSpeed": 1
+  },
+  {
+    "id": 116,
+    "name": "granite",
+    "maxStack": 64,
+    "placesBlockId": 44
+  },
+  {
+    "id": 117,
+    "name": "diorite",
+    "maxStack": 64,
+    "placesBlockId": 45
+  },
+  {
+    "id": 118,
+    "name": "andesite",
+    "maxStack": 64,
+    "placesBlockId": 46
+  },
+  {
+    "id": 119,
+    "name": "moss_block",
+    "maxStack": 64,
+    "placesBlockId": 47
+  },
+  {
+    "id": 120,
+    "name": "podzol",
+    "maxStack": 64,
+    "placesBlockId": 48
+  },
+  {
+    "id": 121,
+    "name": "mycelium",
+    "maxStack": 64,
+    "placesBlockId": 49
+  },
+  {
+    "id": 122,
+    "name": "jungle_log",
+    "maxStack": 64,
+    "placesBlockId": 50,
+    "burnTimeSeconds": 15
+  },
+  {
+    "id": 123,
+    "name": "acacia_log",
+    "maxStack": 64,
+    "placesBlockId": 52,
+    "burnTimeSeconds": 15
+  },
+  {
+    "id": 124,
+    "name": "dark_oak_log",
+    "maxStack": 64,
+    "placesBlockId": 54,
+    "burnTimeSeconds": 15
+  },
+  {
+    "id": 125,
+    "name": "mangrove_log",
+    "maxStack": 64,
+    "placesBlockId": 56,
+    "burnTimeSeconds": 15
+  },
+  {
+    "id": 126,
+    "name": "cherry_log",
+    "maxStack": 64,
+    "placesBlockId": 58,
+    "burnTimeSeconds": 15
+  },
+  {
+    "id": 127,
+    "name": "jungle_planks",
+    "maxStack": 64,
+    "placesBlockId": 60,
+    "burnTimeSeconds": 15
+  },
+  {
+    "id": 128,
+    "name": "acacia_planks",
+    "maxStack": 64,
+    "placesBlockId": 61,
+    "burnTimeSeconds": 15
+  },
+  {
+    "id": 129,
+    "name": "dark_oak_planks",
+    "maxStack": 64,
+    "placesBlockId": 62,
+    "burnTimeSeconds": 15
+  },
+  {
+    "id": 130,
+    "name": "mangrove_planks",
+    "maxStack": 64,
+    "placesBlockId": 63,
+    "burnTimeSeconds": 15
+  },
+  {
+    "id": 131,
+    "name": "cherry_planks",
+    "maxStack": 64,
+    "placesBlockId": 64,
+    "burnTimeSeconds": 15
+  },
+  {
+    "id": 132,
+    "name": "birch_planks",
+    "maxStack": 64,
+    "placesBlockId": 65,
+    "burnTimeSeconds": 15
+  },
+  {
+    "id": 133,
+    "name": "spruce_planks",
+    "maxStack": 64,
+    "placesBlockId": 66,
+    "burnTimeSeconds": 15
+  },
+  {
+    "id": 134,
+    "name": "netherrack",
+    "maxStack": 64,
+    "placesBlockId": 67
+  },
+  {
+    "id": 135,
+    "name": "soul_sand",
+    "maxStack": 64,
+    "placesBlockId": 68
+  },
+  {
+    "id": 136,
+    "name": "basalt",
+    "maxStack": 64,
+    "placesBlockId": 69
+  },
+  {
+    "id": 137,
+    "name": "blackstone",
+    "maxStack": 64,
+    "placesBlockId": 70
+  },
+  {
+    "id": 138,
+    "name": "magma_block",
+    "maxStack": 64,
+    "placesBlockId": 71
+  },
+  {
+    "id": 139,
+    "name": "end_stone",
+    "maxStack": 64,
+    "placesBlockId": 72
+  },
+  {
+    "id": 140,
+    "name": "purpur_block",
+    "maxStack": 64,
+    "placesBlockId": 73
+  },
+  {
+    "id": 141,
+    "name": "prismarine",
+    "maxStack": 64,
+    "placesBlockId": 74
+  },
+  {
+    "id": 142,
+    "name": "sea_lantern",
+    "maxStack": 64,
+    "placesBlockId": 75
+  },
+  {
+    "id": 143,
+    "name": "amethyst_block",
+    "maxStack": 64,
+    "placesBlockId": 76
+  },
+  {
+    "id": 144,
+    "name": "copper_block",
+    "maxStack": 64,
+    "placesBlockId": 77
+  },
+  {
+    "id": 145,
+    "name": "oxidized_copper_block",
+    "maxStack": 64,
+    "placesBlockId": 78
+  },
+  {
+    "id": 146,
+    "name": "emerald_block",
+    "maxStack": 64,
+    "placesBlockId": 80
+  },
+  {
+    "id": 147,
+    "name": "redstone_block",
+    "maxStack": 64,
+    "placesBlockId": 81
+  },
+  {
+    "id": 148,
+    "name": "lapis_block",
+    "maxStack": 64,
+    "placesBlockId": 82
+  },
+  {
+    "id": 149,
+    "name": "ancient_debris",
+    "maxStack": 64,
+    "placesBlockId": 84
+  },
+  {
+    "id": 150,
+    "name": "mud",
+    "maxStack": 64,
+    "placesBlockId": 85
+  },
+  {
+    "id": 151,
+    "name": "packed_mud",
+    "maxStack": 64,
+    "placesBlockId": 86
+  },
+  {
+    "id": 152,
+    "name": "mud_bricks",
+    "maxStack": 64,
+    "placesBlockId": 87
+  },
+  {
+    "id": 153,
+    "name": "terracotta",
+    "maxStack": 64,
+    "placesBlockId": 88
+  },
+  {
+    "id": 154,
+    "name": "white_concrete",
+    "maxStack": 64,
+    "placesBlockId": 89
+  },
+  {
+    "id": 155,
+    "name": "mossy_stone_bricks",
+    "maxStack": 64,
+    "placesBlockId": 90
+  },
+  {
+    "id": 156,
+    "name": "cracked_stone_bricks",
+    "maxStack": 64,
+    "placesBlockId": 91
+  },
+  {
+    "id": 157,
+    "name": "chiseled_stone_bricks",
+    "maxStack": 64,
+    "placesBlockId": 92
+  },
+  {
+    "id": 158,
+    "name": "calcite",
+    "maxStack": 64,
+    "placesBlockId": 93
+  },
+  {
+    "id": 159,
+    "name": "tuff",
+    "maxStack": 64,
+    "placesBlockId": 94
+  },
+  {
+    "id": 160,
+    "name": "dripstone_block",
+    "maxStack": 64,
+    "placesBlockId": 95
+  },
+  {
+    "id": 161,
+    "name": "coal_block",
+    "maxStack": 64,
+    "placesBlockId": 96
+  },
+  {
+    "id": 162,
+    "name": "sponge",
+    "maxStack": 64,
+    "placesBlockId": 104
+  },
+  {
+    "id": 163,
+    "name": "hay_block",
+    "maxStack": 64,
+    "placesBlockId": 105
+  },
+  {
+    "id": 164,
+    "name": "pumpkin",
+    "maxStack": 64,
+    "placesBlockId": 106
+  },
+  {
+    "id": 165,
+    "name": "barrel",
+    "maxStack": 64,
+    "placesBlockId": 108
+  },
+  {
+    "id": 166,
+    "name": "chest",
+    "maxStack": 64,
+    "placesBlockId": 109
+  },
+  {
+    "id": 167,
+    "name": "anvil",
+    "maxStack": 64,
+    "placesBlockId": 110
+  },
+  {
+    "id": 168,
+    "name": "enchanting_table",
+    "maxStack": 64,
+    "placesBlockId": 111
+  },
+  {
+    "id": 169,
+    "name": "campfire",
+    "maxStack": 64,
+    "placesBlockId": 112
+  },
+  {
+    "id": 170,
+    "name": "stonecutter",
+    "maxStack": 64,
+    "placesBlockId": 113
+  },
+  {
+    "id": 171,
+    "name": "smoker",
+    "maxStack": 64,
+    "placesBlockId": 114
+  },
+  {
+    "id": 172,
+    "name": "blast_furnace",
+    "maxStack": 64,
+    "placesBlockId": 115
+  },
+  {
+    "id": 173,
+    "name": "composter",
+    "maxStack": 64,
+    "placesBlockId": 116
+  },
+  {
+    "id": 174,
+    "name": "lantern",
+    "maxStack": 64,
+    "placesBlockId": 117
+  },
+  {
+    "id": 175,
+    "name": "soul_lantern",
+    "maxStack": 64,
+    "placesBlockId": 118
+  },
+  {
+    "id": 176,
+    "name": "honeycomb_block",
+    "maxStack": 64,
+    "placesBlockId": 119
+  },
+  {
+    "id": 177,
+    "name": "honey_block",
+    "maxStack": 64,
+    "placesBlockId": 120
+  },
+  {
+    "id": 178,
+    "name": "slime_block",
+    "maxStack": 64,
+    "placesBlockId": 121
+  },
+  {
+    "id": 179,
+    "name": "glass_pane",
+    "maxStack": 64,
+    "placesBlockId": 122
+  },
+  {
+    "id": 180,
+    "name": "orange_wool",
+    "maxStack": 64,
+    "placesBlockId": 123
+  },
+  {
+    "id": 181,
+    "name": "magenta_wool",
+    "maxStack": 64,
+    "placesBlockId": 124
+  },
+  {
+    "id": 182,
+    "name": "light_blue_wool",
+    "maxStack": 64,
+    "placesBlockId": 125
+  },
+  {
+    "id": 183,
+    "name": "yellow_wool",
+    "maxStack": 64,
+    "placesBlockId": 126
+  },
+  {
+    "id": 184,
+    "name": "lime_wool",
+    "maxStack": 64,
+    "placesBlockId": 127
+  },
+  {
+    "id": 185,
+    "name": "pink_wool",
+    "maxStack": 64,
+    "placesBlockId": 128
+  },
+  {
+    "id": 186,
+    "name": "gray_wool",
+    "maxStack": 64,
+    "placesBlockId": 129
+  },
+  {
+    "id": 187,
+    "name": "light_gray_wool",
+    "maxStack": 64,
+    "placesBlockId": 130
+  },
+  {
+    "id": 188,
+    "name": "cyan_wool",
+    "maxStack": 64,
+    "placesBlockId": 131
+  },
+  {
+    "id": 189,
+    "name": "purple_wool",
+    "maxStack": 64,
+    "placesBlockId": 132
+  },
+  {
+    "id": 190,
+    "name": "blue_wool",
+    "maxStack": 64,
+    "placesBlockId": 133
+  },
+  {
+    "id": 191,
+    "name": "brown_wool",
+    "maxStack": 64,
+    "placesBlockId": 134
+  },
+  {
+    "id": 192,
+    "name": "green_wool",
+    "maxStack": 64,
+    "placesBlockId": 135
+  },
+  {
+    "id": 193,
+    "name": "red_wool",
+    "maxStack": 64,
+    "placesBlockId": 136
+  },
+  {
+    "id": 194,
+    "name": "black_wool",
+    "maxStack": 64,
+    "placesBlockId": 137
+  },
+  {
+    "id": 195,
+    "name": "orange_concrete",
+    "maxStack": 64,
+    "placesBlockId": 138
+  },
+  {
+    "id": 196,
+    "name": "magenta_concrete",
+    "maxStack": 64,
+    "placesBlockId": 139
+  },
+  {
+    "id": 197,
+    "name": "light_blue_concrete",
+    "maxStack": 64,
+    "placesBlockId": 140
+  },
+  {
+    "id": 198,
+    "name": "yellow_concrete",
+    "maxStack": 64,
+    "placesBlockId": 141
+  },
+  {
+    "id": 199,
+    "name": "lime_concrete",
+    "maxStack": 64,
+    "placesBlockId": 142
+  },
+  {
+    "id": 200,
+    "name": "pink_concrete",
+    "maxStack": 64,
+    "placesBlockId": 143
+  },
+  {
+    "id": 201,
+    "name": "gray_concrete",
+    "maxStack": 64,
+    "placesBlockId": 144
+  },
+  {
+    "id": 202,
+    "name": "light_gray_concrete",
+    "maxStack": 64,
+    "placesBlockId": 145
+  },
+  {
+    "id": 203,
+    "name": "cyan_concrete",
+    "maxStack": 64,
+    "placesBlockId": 146
+  },
+  {
+    "id": 204,
+    "name": "purple_concrete",
+    "maxStack": 64,
+    "placesBlockId": 147
+  },
+  {
+    "id": 205,
+    "name": "blue_concrete",
+    "maxStack": 64,
+    "placesBlockId": 148
+  },
+  {
+    "id": 206,
+    "name": "brown_concrete",
+    "maxStack": 64,
+    "placesBlockId": 149
+  },
+  {
+    "id": 207,
+    "name": "green_concrete",
+    "maxStack": 64,
+    "placesBlockId": 150
+  },
+  {
+    "id": 208,
+    "name": "red_concrete",
+    "maxStack": 64,
+    "placesBlockId": 151
+  },
+  {
+    "id": 209,
+    "name": "black_concrete",
+    "maxStack": 64,
+    "placesBlockId": 152
+  },
+  {
+    "id": 210,
+    "name": "red_terracotta",
+    "maxStack": 64,
+    "placesBlockId": 153
+  },
+  {
+    "id": 211,
+    "name": "blue_terracotta",
+    "maxStack": 64,
+    "placesBlockId": 154
+  },
+  {
+    "id": 212,
+    "name": "green_terracotta",
+    "maxStack": 64,
+    "placesBlockId": 155
+  },
+  {
+    "id": 213,
+    "name": "yellow_terracotta",
+    "maxStack": 64,
+    "placesBlockId": 156
+  },
+  {
+    "id": 214,
+    "name": "black_terracotta",
+    "maxStack": 64,
+    "placesBlockId": 157
+  }
 ]

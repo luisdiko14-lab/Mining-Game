@@ -29,7 +29,9 @@ internal sealed class BlockCraftGame : Game
     private GameSettings _settings;
     private BlockRegistry _blocks = null!;
     private ItemRegistry _items = null!;
+    private RecipeBook _recipes = null!;
     private Inventory? _inventory;
+    private int _selectedRecipe;
     private SurvivalStats _survival = new();
     private float _fallDistance;
     private ChunkManager? _world;
@@ -95,6 +97,7 @@ internal sealed class BlockCraftGame : Game
     {
         _blocks = BlockRegistry.LoadFromFile(Path.Combine(_dataDirectory, "blocks.json"));
         _items = ItemRegistry.LoadFromFile(Path.Combine(_dataDirectory, "items.json"));
+        _recipes = RecipeBook.LoadFromFile(Path.Combine(_dataDirectory, "recipes.json"), _items);
         base.Initialize();
     }
 
@@ -239,8 +242,13 @@ internal sealed class BlockCraftGame : Game
         }
         else if (_screen == GameScreen.Inventory)
         {
-            if (keyboard.IsKeyDown(Keys.C) && !_previousKeyboard.IsKeyDown(Keys.C))
-                CraftPlanks();
+            if (keyboard.IsKeyDown(Keys.C) && !_previousKeyboard.IsKeyDown(Keys.C)) CraftSelectedRecipe();
+            if (keyboard.IsKeyDown(Keys.Down) && !_previousKeyboard.IsKeyDown(Keys.Down))
+                _selectedRecipe = (_selectedRecipe + 1) % Math.Max(1, _recipes.Count);
+            if (keyboard.IsKeyDown(Keys.Up) && !_previousKeyboard.IsKeyDown(Keys.Up))
+                _selectedRecipe = (_selectedRecipe - 1 + Math.Max(1, _recipes.Count)) % Math.Max(1, _recipes.Count);
+            if (keyboard.IsKeyDown(Keys.E) && !_previousKeyboard.IsKeyDown(Keys.E))
+            { _screen = GameScreen.Playing; IsMouseVisible = false; CenterMouse(); }
         }
         else if (_screen == GameScreen.Playing && _world is not null && _player is not null && _inventory is not null)
         {
@@ -291,6 +299,11 @@ internal sealed class BlockCraftGame : Game
         _inventory.Add(_items.GetId("oak_log"), 16);
         _inventory.Add(_items.GetId("glass"), 32);
         _inventory.Add(_items.GetId("torch"), 24);
+        _inventory.Add(_items.GetId("wooden_pickaxe"), 1);
+        _inventory.Add(_items.GetId("wooden_axe"), 1);
+        _inventory.Add(_items.GetId("wooden_shovel"), 1);
+        _inventory.Add(_items.GetId("bread"), 8);
+        _selectedRecipe = 0;
         var playerSavePath = Path.Combine(_worldDirectory, "player.json");
         if (File.Exists(playerSavePath))
         {
@@ -618,13 +631,14 @@ internal sealed class BlockCraftGame : Game
         }
     }
 
-    private void CraftPlanks()
+    private void CraftSelectedRecipe()
     {
-        if (_inventory is null) return;
-        var logs = _items.GetId("oak_log");
-        if (_inventory.Remove(logs, 1))
-            _inventory.Add(_items.GetId("oak_planks"), 4);
+        if (_inventory is null || _recipes.Count == 0) return;
+        _recipes.TryCraftFromInventory(_inventory, _selectedRecipe);
     }
+
+    private string RecipeIngredientSummary(CraftingRecipe recipe) => string.Join(" + ",
+        recipe.RequiredItems().Select(pair => $"{pair.Value} {_items[pair.Key].Name.Replace('_', ' ').ToUpperInvariant()}"));
 
     private void ResetBreakProgress()
     {
@@ -881,8 +895,18 @@ internal sealed class BlockCraftGame : Game
             DrawPanel(new Rectangle(width / 2 - 260, height / 2 - 210, 520, 420), new Color(10, 16, 28, 238));
             _font.Draw(_spriteBatch, "INVENTORY", new Vector2(width / 2 - 80, height / 2 - 185), Color.White, 2.5f);
             DrawInventorySlots(width, height);
-            _font.Draw(_spriteBatch, "C: CRAFT 4 PLANKS FROM 1 LOG", new Vector2(width / 2 - 170, height / 2 + 170), new Color(177, 194, 218), 1.3f);
-            _font.Draw(_spriteBatch, "PRESS E OR ESC TO RETURN", new Vector2(width / 2 - 125, height / 2 + 190), new Color(137, 155, 179), 1.1f);
+            if (_recipes.Count > 0)
+            {
+                var recipe = _recipes.Recipes[_selectedRecipe];
+                var resultName = _items[recipe.Result.ItemId].Name.Replace('_', ' ').ToUpperInvariant();
+                _font.Draw(_spriteBatch, $"RECIPE {_selectedRecipe + 1}/{_recipes.Count}: {resultName} X{recipe.Result.Count}",
+                    new Vector2(width / 2 - 225, height / 2 + 119), new Color(246, 207, 119), 1.05f);
+                var needs = RecipeIngredientSummary(recipe);
+                _font.Draw(_spriteBatch, needs.Length > 54 ? needs[..54] : needs,
+                    new Vector2(width / 2 - 225, height / 2 + 140), new Color(177, 194, 218), 1.0f);
+            }
+            _font.Draw(_spriteBatch, "UP/DOWN: SELECT RECIPE   C: QUICK CRAFT", new Vector2(width / 2 - 178, height / 2 + 164), new Color(177, 194, 218), 1.0f);
+            _font.Draw(_spriteBatch, "E OR ESC: RETURN", new Vector2(width / 2 - 78, height / 2 + 186), new Color(137, 155, 179), 1.0f);
         }
         _spriteBatch.End();
     }

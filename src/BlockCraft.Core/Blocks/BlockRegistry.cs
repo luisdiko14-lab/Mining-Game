@@ -39,6 +39,13 @@ public sealed class BlockRegistry
         ? value.Id : throw new KeyNotFoundException($"Unknown block '{name}'.");
     /// <summary>Returns whether a numeric id is registered.</summary>
     public bool Contains(ushort id) => _byId.ContainsKey(id);
+    /// <summary>Tries to resolve a block name without throwing.</summary>
+    public bool TryGetId(string name, out ushort id)
+    {
+        if (_byName.TryGetValue(name, out var value)) { id = value.Id; return true; }
+        id = 0;
+        return false;
+    }
 
     /// <summary>Loads and validates a registry from a JSON file.</summary>
     public static BlockRegistry LoadFromFile(string path)

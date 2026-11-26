@@ -7,12 +7,28 @@ public sealed record CraftingRecipe(string[] Pattern, Dictionary<char, ushort> I
     public int Width => Pattern.Length == 0 ? 0 : Pattern.Max(row => row.Length);
     /// <summary>Height of the recipe pattern.</summary>
     public int Height => Pattern.Length;
+    /// <summary>Number of each ingredient item required by this pattern.</summary>
+    public IReadOnlyDictionary<ushort, int> RequiredItems()
+    {
+        var result = new Dictionary<ushort, int>();
+        foreach (var symbol in Pattern.SelectMany(row => row).Where(character => character != ' '))
+        {
+            if (!Ingredients.TryGetValue(symbol, out var itemId))
+                throw new InvalidDataException($"Recipe pattern uses undefined ingredient '{symbol}'.");
+            result[itemId] = result.GetValueOrDefault(itemId) + 1;
+        }
+        return result;
+    }
 }
 
 /// <summary>Matches shaped recipes in 2×2 or 3×3 crafting grids.</summary>
 public sealed partial class RecipeBook
 {
     private readonly List<CraftingRecipe> _recipes;
+    /// <summary>Loaded recipes in stable data-file order.</summary>
+    public IReadOnlyList<CraftingRecipe> Recipes => _recipes.AsReadOnly();
+    /// <summary>Number of available recipes.</summary>
+    public int Count => _recipes.Count;
     /// <summary>Creates a recipe book from validated recipe definitions.</summary>
     public RecipeBook(IEnumerable<CraftingRecipe> recipes)
     {
@@ -55,6 +71,32 @@ public sealed partial class RecipeBook
             }
         }
         return false;
+    }
+
+    /// <summary>Quick-crafts a recipe from inventory ingredients without a manual grid layout.</summary>
+    /// <remarks>Missing ingredients or a full inventory leave all slots unchanged.</remarks>
+    public bool TryCraftFromInventory(Inventory inventory, int recipeIndex)
+    {
+        ArgumentNullException.ThrowIfNull(inventory);
+        if ((uint)recipeIndex >= (uint)_recipes.Count) return false;
+        var recipe = _recipes[recipeIndex];
+        var required = recipe.RequiredItems();
+        if (required.Any(pair => !inventory.Contains(pair.Key, pair.Value))) return false;
+        var before = inventory.Snapshot();
+        foreach (var (itemId, count) in required)
+        {
+            if (inventory.Remove(itemId, count)) continue;
+            RestoreInventory(inventory, before);
+            return false;
+        }
+        if (inventory.Add(recipe.Result.ItemId, recipe.Result.Count) == 0) return true;
+        RestoreInventory(inventory, before);
+        return false;
+    }
+
+    private static void RestoreInventory(Inventory inventory, IReadOnlyList<ItemStack> snapshot)
+    {
+        for (var index = 0; index < snapshot.Count; index++) inventory.Set(index, snapshot[index]);
     }
 
     private static bool Matches(ItemStack[,] grid, CraftingRecipe recipe, int offsetX, int offsetY, int width, int height)

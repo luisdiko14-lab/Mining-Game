@@ -1,10 +1,816 @@
 [
- {"id":"oak_planks","pattern":["L"],"ingredients":{"L":"oak_log"},"result":{"item":"oak_planks","count":4}},
- {"id":"sticks","pattern":["P","P"],"ingredients":{"P":"oak_planks"},"result":{"item":"stick","count":4}},
- {"id":"crafting_table","pattern":["PP","PP"],"ingredients":{"P":"oak_planks"},"result":{"item":"crafting_table","count":1}},
- {"id":"wooden_pickaxe","pattern":["PPP"," S "," S "],"ingredients":{"P":"oak_planks","S":"stick"},"result":{"item":"wooden_pickaxe","count":1}},
- {"id":"wooden_axe","pattern":["PP","PS"," S"],"ingredients":{"P":"oak_planks","S":"stick"},"result":{"item":"wooden_axe","count":1}},
- {"id":"wooden_shovel","pattern":["P","S","S"],"ingredients":{"P":"oak_planks","S":"stick"},"result":{"item":"wooden_shovel","count":1}},
- {"id":"furnace","pattern":["CCC","C C","CCC"],"ingredients":{"C":"cobblestone"},"result":{"item":"furnace","count":1}},
- {"id":"glass_pane","pattern":["GGG","GGG"],"ingredients":{"G":"glass"},"result":{"item":"glass","count":16}}
+  {
+    "id": "oak_planks",
+    "pattern": [
+      "L"
+    ],
+    "ingredients": {
+      "L": "oak_log"
+    },
+    "result": {
+      "item": "oak_planks",
+      "count": 4
+    }
+  },
+  {
+    "id": "sticks",
+    "pattern": [
+      "P",
+      "P"
+    ],
+    "ingredients": {
+      "P": "oak_planks"
+    },
+    "result": {
+      "item": "stick",
+      "count": 4
+    }
+  },
+  {
+    "id": "crafting_table",
+    "pattern": [
+      "PP",
+      "PP"
+    ],
+    "ingredients": {
+      "P": "oak_planks"
+    },
+    "result": {
+      "item": "crafting_table",
+      "count": 1
+    }
+  },
+  {
+    "id": "wooden_pickaxe",
+    "pattern": [
+      "PPP",
+      " S ",
+      " S "
+    ],
+    "ingredients": {
+      "P": "oak_planks",
+      "S": "stick"
+    },
+    "result": {
+      "item": "wooden_pickaxe",
+      "count": 1
+    }
+  },
+  {
+    "id": "wooden_axe",
+    "pattern": [
+      "PP",
+      "PS",
+      " S"
+    ],
+    "ingredients": {
+      "P": "oak_planks",
+      "S": "stick"
+    },
+    "result": {
+      "item": "wooden_axe",
+      "count": 1
+    }
+  },
+  {
+    "id": "wooden_shovel",
+    "pattern": [
+      "P",
+      "S",
+      "S"
+    ],
+    "ingredients": {
+      "P": "oak_planks",
+      "S": "stick"
+    },
+    "result": {
+      "item": "wooden_shovel",
+      "count": 1
+    }
+  },
+  {
+    "id": "furnace",
+    "pattern": [
+      "CCC",
+      "C C",
+      "CCC"
+    ],
+    "ingredients": {
+      "C": "cobblestone"
+    },
+    "result": {
+      "item": "furnace",
+      "count": 1
+    }
+  },
+  {
+    "id": "glass_pane",
+    "pattern": [
+      "GGG",
+      "GGG"
+    ],
+    "ingredients": {
+      "G": "glass"
+    },
+    "result": {
+      "item": "glass_pane",
+      "count": 16
+    }
+  },
+  {
+    "id": "birch_planks",
+    "pattern": [
+      "L"
+    ],
+    "ingredients": {
+      "L": "birch_log"
+    },
+    "result": {
+      "item": "birch_planks",
+      "count": 4
+    }
+  },
+  {
+    "id": "birch_sticks",
+    "pattern": [
+      "P",
+      "P"
+    ],
+    "ingredients": {
+      "P": "birch_planks"
+    },
+    "result": {
+      "item": "stick",
+      "count": 4
+    }
+  },
+  {
+    "id": "spruce_planks",
+    "pattern": [
+      "L"
+    ],
+    "ingredients": {
+      "L": "spruce_log"
+    },
+    "result": {
+      "item": "spruce_planks",
+      "count": 4
+    }
+  },
+  {
+    "id": "spruce_sticks",
+    "pattern": [
+      "P",
+      "P"
+    ],
+    "ingredients": {
+      "P": "spruce_planks"
+    },
+    "result": {
+      "item": "stick",
+      "count": 4
+    }
+  },
+  {
+    "id": "jungle_planks",
+    "pattern": [
+      "L"
+    ],
+    "ingredients": {
+      "L": "jungle_log"
+    },
+    "result": {
+      "item": "jungle_planks",
+      "count": 4
+    }
+  },
+  {
+    "id": "jungle_sticks",
+    "pattern": [
+      "P",
+      "P"
+    ],
+    "ingredients": {
+      "P": "jungle_planks"
+    },
+    "result": {
+      "item": "stick",
+      "count": 4
+    }
+  },
+  {
+    "id": "acacia_planks",
+    "pattern": [
+      "L"
+    ],
+    "ingredients": {
+      "L": "acacia_log"
+    },
+    "result": {
+      "item": "acacia_planks",
+      "count": 4
+    }
+  },
+  {
+    "id": "acacia_sticks",
+    "pattern": [
+      "P",
+      "P"
+    ],
+    "ingredients": {
+      "P": "acacia_planks"
+    },
+    "result": {
+      "item": "stick",
+      "count": 4
+    }
+  },
+  {
+    "id": "dark_oak_planks",
+    "pattern": [
+      "L"
+    ],
+    "ingredients": {
+      "L": "dark_oak_log"
+    },
+    "result": {
+      "item": "dark_oak_planks",
+      "count": 4
+    }
+  },
+  {
+    "id": "dark_oak_sticks",
+    "pattern": [
+      "P",
+      "P"
+    ],
+    "ingredients": {
+      "P": "dark_oak_planks"
+    },
+    "result": {
+      "item": "stick",
+      "count": 4
+    }
+  },
+  {
+    "id": "mangrove_planks",
+    "pattern": [
+      "L"
+    ],
+    "ingredients": {
+      "L": "mangrove_log"
+    },
+    "result": {
+      "item": "mangrove_planks",
+      "count": 4
+    }
+  },
+  {
+    "id": "mangrove_sticks",
+    "pattern": [
+      "P",
+      "P"
+    ],
+    "ingredients": {
+      "P": "mangrove_planks"
+    },
+    "result": {
+      "item": "stick",
+      "count": 4
+    }
+  },
+  {
+    "id": "cherry_planks",
+    "pattern": [
+      "L"
+    ],
+    "ingredients": {
+      "L": "cherry_log"
+    },
+    "result": {
+      "item": "cherry_planks",
+      "count": 4
+    }
+  },
+  {
+    "id": "cherry_sticks",
+    "pattern": [
+      "P",
+      "P"
+    ],
+    "ingredients": {
+      "P": "cherry_planks"
+    },
+    "result": {
+      "item": "stick",
+      "count": 4
+    }
+  },
+  {
+    "id": "stone_bricks",
+    "pattern": [
+      "SS"
+    ],
+    "ingredients": {
+      "S": "stone"
+    },
+    "result": {
+      "item": "stone_bricks",
+      "count": 1
+    }
+  },
+  {
+    "id": "sandstone",
+    "pattern": [
+      "SS",
+      "SS"
+    ],
+    "ingredients": {
+      "S": "sand"
+    },
+    "result": {
+      "item": "sandstone",
+      "count": 1
+    }
+  },
+  {
+    "id": "torch",
+    "pattern": [
+      "C",
+      "S"
+    ],
+    "ingredients": {
+      "C": "coal",
+      "S": "stick"
+    },
+    "result": {
+      "item": "torch",
+      "count": 4
+    }
+  },
+  {
+    "id": "barrel",
+    "pattern": [
+      "PPP",
+      "PSP",
+      "PPP"
+    ],
+    "ingredients": {
+      "P": "oak_planks",
+      "S": "stick"
+    },
+    "result": {
+      "item": "barrel",
+      "count": 1
+    }
+  },
+  {
+    "id": "chest",
+    "pattern": [
+      "PPP",
+      "P P",
+      "PPP"
+    ],
+    "ingredients": {
+      "P": "oak_planks"
+    },
+    "result": {
+      "item": "chest",
+      "count": 1
+    }
+  },
+  {
+    "id": "lantern",
+    "pattern": [
+      "III",
+      "ITI",
+      "III"
+    ],
+    "ingredients": {
+      "I": "iron_ingot",
+      "T": "torch"
+    },
+    "result": {
+      "item": "lantern",
+      "count": 1
+    }
+  },
+  {
+    "id": "amethyst_block",
+    "pattern": [
+      "AA",
+      "AA"
+    ],
+    "ingredients": {
+      "A": "amethyst_shard"
+    },
+    "result": {
+      "item": "amethyst_block",
+      "count": 1
+    }
+  },
+  {
+    "id": "copper_block",
+    "pattern": [
+      "CCC",
+      "CCC",
+      "CCC"
+    ],
+    "ingredients": {
+      "C": "copper_ingot"
+    },
+    "result": {
+      "item": "copper_block",
+      "count": 1
+    }
+  },
+  {
+    "id": "iron_block",
+    "pattern": [
+      "III",
+      "III",
+      "III"
+    ],
+    "ingredients": {
+      "I": "iron_ingot"
+    },
+    "result": {
+      "item": "iron_block",
+      "count": 1
+    }
+  },
+  {
+    "id": "gold_block",
+    "pattern": [
+      "GGG",
+      "GGG",
+      "GGG"
+    ],
+    "ingredients": {
+      "G": "gold_ingot"
+    },
+    "result": {
+      "item": "gold_block",
+      "count": 1
+    }
+  },
+  {
+    "id": "diamond_block",
+    "pattern": [
+      "DDD",
+      "DDD",
+      "DDD"
+    ],
+    "ingredients": {
+      "D": "diamond"
+    },
+    "result": {
+      "item": "diamond_block",
+      "count": 1
+    }
+  },
+  {
+    "id": "emerald_block",
+    "pattern": [
+      "EEE",
+      "EEE",
+      "EEE"
+    ],
+    "ingredients": {
+      "E": "emerald"
+    },
+    "result": {
+      "item": "emerald_block",
+      "count": 1
+    }
+  },
+  {
+    "id": "redstone_block",
+    "pattern": [
+      "RRR",
+      "RRR",
+      "RRR"
+    ],
+    "ingredients": {
+      "R": "redstone_dust"
+    },
+    "result": {
+      "item": "redstone_block",
+      "count": 1
+    }
+  },
+  {
+    "id": "lapis_block",
+    "pattern": [
+      "LLL",
+      "LLL",
+      "LLL"
+    ],
+    "ingredients": {
+      "L": "lapis_lazuli"
+    },
+    "result": {
+      "item": "lapis_block",
+      "count": 1
+    }
+  },
+  {
+    "id": "honeycomb_block",
+    "pattern": [
+      "HH",
+      "HH"
+    ],
+    "ingredients": {
+      "H": "honeycomb"
+    },
+    "result": {
+      "item": "honeycomb_block",
+      "count": 1
+    }
+  },
+  {
+    "id": "mud_bricks",
+    "pattern": [
+      "MP",
+      "PM"
+    ],
+    "ingredients": {
+      "M": "mud",
+      "P": "packed_mud"
+    },
+    "result": {
+      "item": "mud_bricks",
+      "count": 4
+    }
+  },
+  {
+    "id": "iron_axe",
+    "pattern": [
+      "II",
+      "IS",
+      " S"
+    ],
+    "ingredients": {
+      "I": "iron_ingot",
+      "S": "stick"
+    },
+    "result": {
+      "item": "iron_axe",
+      "count": 1
+    }
+  },
+  {
+    "id": "iron_shovel",
+    "pattern": [
+      "I",
+      "S",
+      "S"
+    ],
+    "ingredients": {
+      "I": "iron_ingot",
+      "S": "stick"
+    },
+    "result": {
+      "item": "iron_shovel",
+      "count": 1
+    }
+  },
+  {
+    "id": "iron_sword",
+    "pattern": [
+      "I",
+      "I",
+      "S"
+    ],
+    "ingredients": {
+      "I": "iron_ingot",
+      "S": "stick"
+    },
+    "result": {
+      "item": "iron_sword",
+      "count": 1
+    }
+  },
+  {
+    "id": "gold_pickaxe",
+    "pattern": [
+      "GGG",
+      " S ",
+      " S "
+    ],
+    "ingredients": {
+      "G": "gold_ingot",
+      "S": "stick"
+    },
+    "result": {
+      "item": "gold_pickaxe",
+      "count": 1
+    }
+  },
+  {
+    "id": "gold_axe",
+    "pattern": [
+      "GG",
+      "GS",
+      " S"
+    ],
+    "ingredients": {
+      "G": "gold_ingot",
+      "S": "stick"
+    },
+    "result": {
+      "item": "gold_axe",
+      "count": 1
+    }
+  },
+  {
+    "id": "gold_shovel",
+    "pattern": [
+      "G",
+      "S",
+      "S"
+    ],
+    "ingredients": {
+      "G": "gold_ingot",
+      "S": "stick"
+    },
+    "result": {
+      "item": "gold_shovel",
+      "count": 1
+    }
+  },
+  {
+    "id": "gold_sword",
+    "pattern": [
+      "G",
+      "G",
+      "S"
+    ],
+    "ingredients": {
+      "G": "gold_ingot",
+      "S": "stick"
+    },
+    "result": {
+      "item": "gold_sword",
+      "count": 1
+    }
+  },
+  {
+    "id": "diamond_axe",
+    "pattern": [
+      "DD",
+      "DS",
+      " S"
+    ],
+    "ingredients": {
+      "D": "diamond",
+      "S": "stick"
+    },
+    "result": {
+      "item": "diamond_axe",
+      "count": 1
+    }
+  },
+  {
+    "id": "diamond_shovel",
+    "pattern": [
+      "D",
+      "S",
+      "S"
+    ],
+    "ingredients": {
+      "D": "diamond",
+      "S": "stick"
+    },
+    "result": {
+      "item": "diamond_shovel",
+      "count": 1
+    }
+  },
+  {
+    "id": "diamond_sword",
+    "pattern": [
+      "D",
+      "D",
+      "S"
+    ],
+    "ingredients": {
+      "D": "diamond",
+      "S": "stick"
+    },
+    "result": {
+      "item": "diamond_sword",
+      "count": 1
+    }
+  },
+  {
+    "id": "copper_pickaxe",
+    "pattern": [
+      "CCC",
+      " S ",
+      " S "
+    ],
+    "ingredients": {
+      "C": "copper_ingot",
+      "S": "stick"
+    },
+    "result": {
+      "item": "copper_pickaxe",
+      "count": 1
+    }
+  },
+  {
+    "id": "copper_axe",
+    "pattern": [
+      "CC",
+      "CS",
+      " S"
+    ],
+    "ingredients": {
+      "C": "copper_ingot",
+      "S": "stick"
+    },
+    "result": {
+      "item": "copper_axe",
+      "count": 1
+    }
+  },
+  {
+    "id": "copper_shovel",
+    "pattern": [
+      "C",
+      "S",
+      "S"
+    ],
+    "ingredients": {
+      "C": "copper_ingot",
+      "S": "stick"
+    },
+    "result": {
+      "item": "copper_shovel",
+      "count": 1
+    }
+  },
+  {
+    "id": "copper_sword",
+    "pattern": [
+      "C",
+      "C",
+      "S"
+    ],
+    "ingredients": {
+      "C": "copper_ingot",
+      "S": "stick"
+    },
+    "result": {
+      "item": "copper_sword",
+      "count": 1
+    }
+  },
+  {
+    "id": "flint_and_steel",
+    "pattern": [
+      "IF"
+    ],
+    "ingredients": {
+      "I": "iron_ingot",
+      "F": "flint"
+    },
+    "result": {
+      "item": "flint_and_steel",
+      "count": 1
+    }
+  },
+  {
+    "id": "golden_apple",
+    "pattern": [
+      "GGG",
+      "GAG",
+      "GGG"
+    ],
+    "ingredients": {
+      "G": "gold_ingot",
+      "A": "apple"
+    },
+    "result": {
+      "item": "golden_apple",
+      "count": 1
+    }
+  },
+  {
+    "id": "netherite_scrap",
+    "pattern": [
+      "DAD",
+      "AAA",
+      "DAD"
+    ],
+    "ingredients": {
+      "D": "diamond",
+      "A": "ancient_debris"
+    },
+    "result": {
+      "item": "netherite_scrap",
+      "count": 1
+    }
+  }
 ]

@@ -1,46 +1,1611 @@
 [
- {"id":0,"name":"air","textures":{"all":"air"},"hardness":0,"dropItemId":0,"transparent":true,"solid":false},
- {"id":1,"name":"stone","textures":{"all":"stone"},"hardness":1.5,"requiredTool":"pickaxe","dropItemId":2},
- {"id":2,"name":"dirt","textures":{"all":"dirt"},"hardness":0.5,"requiredTool":"shovel","dropItemId":3},
- {"id":3,"name":"grass_block","textures":{"top":"grass_top","side":"grass_side","bottom":"dirt"},"hardness":0.6,"requiredTool":"shovel","dropItemId":4},
- {"id":4,"name":"sand","textures":{"all":"sand"},"hardness":0.5,"requiredTool":"shovel","dropItemId":5},
- {"id":5,"name":"oak_log","textures":{"top":"oak_log_top","side":"oak_log"},"hardness":2,"requiredTool":"axe","dropItemId":6},
- {"id":6,"name":"oak_planks","textures":{"all":"oak_planks"},"hardness":2,"requiredTool":"axe","dropItemId":7},
- {"id":7,"name":"glass","textures":{"all":"glass"},"hardness":0.3,"transparent":true,"dropItemId":8},
- {"id":8,"name":"coal_ore","textures":{"all":"coal_ore"},"hardness":3,"requiredTool":"pickaxe","dropItemId":9},
- {"id":9,"name":"iron_ore","textures":{"all":"iron_ore"},"hardness":3,"requiredTool":"pickaxe","dropItemId":55},
- {"id":10,"name":"gold_ore","textures":{"all":"gold_ore"},"hardness":3,"requiredTool":"pickaxe","dropItemId":56},
- {"id":11,"name":"diamond_ore","textures":{"all":"diamond_ore"},"hardness":3,"requiredTool":"pickaxe","dropItemId":12},
- {"id":12,"name":"bedrock","textures":{"all":"bedrock"},"hardness":0,"dropItemId":0},
- {"id":13,"name":"water","textures":{"all":"water"},"hardness":100,"transparent":true,"solid":false,"dropItemId":0},
- {"id":14,"name":"lava","textures":{"all":"lava"},"hardness":100,"transparent":true,"solid":false,"lightEmission":15,"dropItemId":0},
- {"id":15,"name":"oak_leaves","textures":{"all":"oak_leaves"},"hardness":0.2,"transparent":true,"dropItemId":13},
- {"id":16,"name":"cobblestone","textures":{"all":"cobblestone"},"hardness":2,"requiredTool":"pickaxe","dropItemId":2},
- {"id":17,"name":"gravel","textures":{"all":"gravel"},"hardness":0.6,"requiredTool":"shovel","dropItemId":14},
- {"id":18,"name":"clay","textures":{"all":"clay"},"hardness":0.6,"requiredTool":"shovel","dropItemId":15},
- {"id":19,"name":"snow_block","textures":{"all":"snow"},"hardness":0.2,"requiredTool":"shovel","dropItemId":16},
- {"id":20,"name":"ice","textures":{"all":"ice"},"hardness":0.5,"requiredTool":"pickaxe","transparent":true,"dropItemId":17},
- {"id":21,"name":"cactus","textures":{"all":"cactus"},"hardness":0.4,"dropItemId":18},
- {"id":22,"name":"birch_log","textures":{"top":"birch_log_top","side":"birch_log"},"hardness":2,"requiredTool":"axe","dropItemId":19},
- {"id":23,"name":"birch_leaves","textures":{"all":"birch_leaves"},"hardness":0.2,"transparent":true,"dropItemId":20},
- {"id":24,"name":"spruce_log","textures":{"top":"spruce_log_top","side":"spruce_log"},"hardness":2,"requiredTool":"axe","dropItemId":21},
- {"id":25,"name":"spruce_leaves","textures":{"all":"spruce_leaves"},"hardness":0.2,"transparent":true,"dropItemId":22},
- {"id":26,"name":"sandstone","textures":{"all":"sandstone"},"hardness":0.8,"requiredTool":"pickaxe","dropItemId":23},
- {"id":27,"name":"mossy_cobblestone","textures":{"all":"mossy_cobblestone"},"hardness":2,"requiredTool":"pickaxe","dropItemId":24},
- {"id":28,"name":"bricks","textures":{"all":"bricks"},"hardness":2,"requiredTool":"pickaxe","dropItemId":25},
- {"id":29,"name":"stone_bricks","textures":{"all":"stone_bricks"},"hardness":2,"requiredTool":"pickaxe","dropItemId":26},
- {"id":30,"name":"obsidian","textures":{"all":"obsidian"},"hardness":50,"requiredTool":"pickaxe","dropItemId":27},
- {"id":31,"name":"torch","textures":{"all":"torch"},"hardness":0,"transparent":true,"solid":false,"lightEmission":14,"dropItemId":28},
- {"id":32,"name":"glowstone","textures":{"all":"glowstone"},"hardness":0.3,"lightEmission":15,"dropItemId":29},
- {"id":33,"name":"redstone_ore","textures":{"all":"redstone_ore"},"hardness":3,"requiredTool":"pickaxe","dropItemId":30},
- {"id":34,"name":"lapis_ore","textures":{"all":"lapis_ore"},"hardness":3,"requiredTool":"pickaxe","dropItemId":31},
- {"id":35,"name":"copper_ore","textures":{"all":"copper_ore"},"hardness":3,"requiredTool":"pickaxe","dropItemId":57},
- {"id":36,"name":"deepslate","textures":{"all":"deepslate"},"hardness":3,"requiredTool":"pickaxe","dropItemId":33},
- {"id":37,"name":"white_wool","textures":{"all":"white_wool"},"hardness":0.8,"requiredTool":"shears","dropItemId":34},
- {"id":38,"name":"bookshelf","textures":{"all":"bookshelf"},"hardness":1.5,"requiredTool":"axe","dropItemId":35},
- {"id":39,"name":"crafting_table","textures":{"top":"crafting_table_top","side":"crafting_table_side"},"hardness":2.5,"requiredTool":"axe","dropItemId":36},
- {"id":40,"name":"furnace","textures":{"all":"furnace"},"hardness":3.5,"requiredTool":"pickaxe","dropItemId":37},
- {"id":41,"name":"iron_block","textures":{"all":"iron_block"},"hardness":5,"requiredTool":"pickaxe","dropItemId":38},
- {"id":42,"name":"gold_block","textures":{"all":"gold_block"},"hardness":3,"requiredTool":"pickaxe","dropItemId":39},
- {"id":43,"name":"diamond_block","textures":{"all":"diamond_block"},"hardness":5,"requiredTool":"pickaxe","dropItemId":40}
+  {
+    "id": 0,
+    "name": "air",
+    "textures": {
+      "all": "air"
+    },
+    "hardness": 0,
+    "dropItemId": 0,
+    "transparent": true,
+    "solid": false
+  },
+  {
+    "id": 1,
+    "name": "stone",
+    "textures": {
+      "all": "stone"
+    },
+    "hardness": 1.5,
+    "requiredTool": "pickaxe",
+    "dropItemId": 2
+  },
+  {
+    "id": 2,
+    "name": "dirt",
+    "textures": {
+      "all": "dirt"
+    },
+    "hardness": 0.5,
+    "requiredTool": "shovel",
+    "dropItemId": 3
+  },
+  {
+    "id": 3,
+    "name": "grass_block",
+    "textures": {
+      "top": "grass_top",
+      "side": "grass_side",
+      "bottom": "dirt"
+    },
+    "hardness": 0.6,
+    "requiredTool": "shovel",
+    "dropItemId": 4
+  },
+  {
+    "id": 4,
+    "name": "sand",
+    "textures": {
+      "all": "sand"
+    },
+    "hardness": 0.5,
+    "requiredTool": "shovel",
+    "dropItemId": 5
+  },
+  {
+    "id": 5,
+    "name": "oak_log",
+    "textures": {
+      "top": "oak_log_top",
+      "side": "oak_log"
+    },
+    "hardness": 2,
+    "requiredTool": "axe",
+    "dropItemId": 6
+  },
+  {
+    "id": 6,
+    "name": "oak_planks",
+    "textures": {
+      "all": "oak_planks"
+    },
+    "hardness": 2,
+    "requiredTool": "axe",
+    "dropItemId": 7
+  },
+  {
+    "id": 7,
+    "name": "glass",
+    "textures": {
+      "all": "glass"
+    },
+    "hardness": 0.3,
+    "transparent": true,
+    "dropItemId": 8
+  },
+  {
+    "id": 8,
+    "name": "coal_ore",
+    "textures": {
+      "all": "coal_ore"
+    },
+    "hardness": 3,
+    "requiredTool": "pickaxe",
+    "dropItemId": 9
+  },
+  {
+    "id": 9,
+    "name": "iron_ore",
+    "textures": {
+      "all": "iron_ore"
+    },
+    "hardness": 3,
+    "requiredTool": "pickaxe",
+    "dropItemId": 55
+  },
+  {
+    "id": 10,
+    "name": "gold_ore",
+    "textures": {
+      "all": "gold_ore"
+    },
+    "hardness": 3,
+    "requiredTool": "pickaxe",
+    "dropItemId": 56
+  },
+  {
+    "id": 11,
+    "name": "diamond_ore",
+    "textures": {
+      "all": "diamond_ore"
+    },
+    "hardness": 3,
+    "requiredTool": "pickaxe",
+    "dropItemId": 12
+  },
+  {
+    "id": 12,
+    "name": "bedrock",
+    "textures": {
+      "all": "bedrock"
+    },
+    "hardness": 0,
+    "dropItemId": 0
+  },
+  {
+    "id": 13,
+    "name": "water",
+    "textures": {
+      "all": "water"
+    },
+    "hardness": 100,
+    "transparent": true,
+    "solid": false,
+    "dropItemId": 0
+  },
+  {
+    "id": 14,
+    "name": "lava",
+    "textures": {
+      "all": "lava"
+    },
+    "hardness": 100,
+    "transparent": true,
+    "solid": false,
+    "lightEmission": 15,
+    "dropItemId": 0
+  },
+  {
+    "id": 15,
+    "name": "oak_leaves",
+    "textures": {
+      "all": "oak_leaves"
+    },
+    "hardness": 0.2,
+    "transparent": true,
+    "dropItemId": 13
+  },
+  {
+    "id": 16,
+    "name": "cobblestone",
+    "textures": {
+      "all": "cobblestone"
+    },
+    "hardness": 2,
+    "requiredTool": "pickaxe",
+    "dropItemId": 2
+  },
+  {
+    "id": 17,
+    "name": "gravel",
+    "textures": {
+      "all": "gravel"
+    },
+    "hardness": 0.6,
+    "requiredTool": "shovel",
+    "dropItemId": 14
+  },
+  {
+    "id": 18,
+    "name": "clay",
+    "textures": {
+      "all": "clay"
+    },
+    "hardness": 0.6,
+    "requiredTool": "shovel",
+    "dropItemId": 15
+  },
+  {
+    "id": 19,
+    "name": "snow_block",
+    "textures": {
+      "all": "snow"
+    },
+    "hardness": 0.2,
+    "requiredTool": "shovel",
+    "dropItemId": 16
+  },
+  {
+    "id": 20,
+    "name": "ice",
+    "textures": {
+      "all": "ice"
+    },
+    "hardness": 0.5,
+    "requiredTool": "pickaxe",
+    "transparent": true,
+    "dropItemId": 17
+  },
+  {
+    "id": 21,
+    "name": "cactus",
+    "textures": {
+      "all": "cactus"
+    },
+    "hardness": 0.4,
+    "dropItemId": 18
+  },
+  {
+    "id": 22,
+    "name": "birch_log",
+    "textures": {
+      "top": "birch_log_top",
+      "side": "birch_log"
+    },
+    "hardness": 2,
+    "requiredTool": "axe",
+    "dropItemId": 19
+  },
+  {
+    "id": 23,
+    "name": "birch_leaves",
+    "textures": {
+      "all": "birch_leaves"
+    },
+    "hardness": 0.2,
+    "transparent": true,
+    "dropItemId": 20
+  },
+  {
+    "id": 24,
+    "name": "spruce_log",
+    "textures": {
+      "top": "spruce_log_top",
+      "side": "spruce_log"
+    },
+    "hardness": 2,
+    "requiredTool": "axe",
+    "dropItemId": 21
+  },
+  {
+    "id": 25,
+    "name": "spruce_leaves",
+    "textures": {
+      "all": "spruce_leaves"
+    },
+    "hardness": 0.2,
+    "transparent": true,
+    "dropItemId": 22
+  },
+  {
+    "id": 26,
+    "name": "sandstone",
+    "textures": {
+      "all": "sandstone"
+    },
+    "hardness": 0.8,
+    "requiredTool": "pickaxe",
+    "dropItemId": 23
+  },
+  {
+    "id": 27,
+    "name": "mossy_cobblestone",
+    "textures": {
+      "all": "mossy_cobblestone"
+    },
+    "hardness": 2,
+    "requiredTool": "pickaxe",
+    "dropItemId": 24
+  },
+  {
+    "id": 28,
+    "name": "bricks",
+    "textures": {
+      "all": "bricks"
+    },
+    "hardness": 2,
+    "requiredTool": "pickaxe",
+    "dropItemId": 25
+  },
+  {
+    "id": 29,
+    "name": "stone_bricks",
+    "textures": {
+      "all": "stone_bricks"
+    },
+    "hardness": 2,
+    "requiredTool": "pickaxe",
+    "dropItemId": 26
+  },
+  {
+    "id": 30,
+    "name": "obsidian",
+    "textures": {
+      "all": "obsidian"
+    },
+    "hardness": 50,
+    "requiredTool": "pickaxe",
+    "dropItemId": 27
+  },
+  {
+    "id": 31,
+    "name": "torch",
+    "textures": {
+      "all": "torch"
+    },
+    "hardness": 0,
+    "transparent": true,
+    "solid": false,
+    "lightEmission": 14,
+    "dropItemId": 28
+  },
+  {
+    "id": 32,
+    "name": "glowstone",
+    "textures": {
+      "all": "glowstone"
+    },
+    "hardness": 0.3,
+    "lightEmission": 15,
+    "dropItemId": 29
+  },
+  {
+    "id": 33,
+    "name": "redstone_ore",
+    "textures": {
+      "all": "redstone_ore"
+    },
+    "hardness": 3,
+    "requiredTool": "pickaxe",
+    "dropItemId": 30
+  },
+  {
+    "id": 34,
+    "name": "lapis_ore",
+    "textures": {
+      "all": "lapis_ore"
+    },
+    "hardness": 3,
+    "requiredTool": "pickaxe",
+    "dropItemId": 31
+  },
+  {
+    "id": 35,
+    "name": "copper_ore",
+    "textures": {
+      "all": "copper_ore"
+    },
+    "hardness": 3,
+    "requiredTool": "pickaxe",
+    "dropItemId": 57
+  },
+  {
+    "id": 36,
+    "name": "deepslate",
+    "textures": {
+      "all": "deepslate"
+    },
+    "hardness": 3,
+    "requiredTool": "pickaxe",
+    "dropItemId": 33
+  },
+  {
+    "id": 37,
+    "name": "white_wool",
+    "textures": {
+      "all": "white_wool"
+    },
+    "hardness": 0.8,
+    "requiredTool": "shears",
+    "dropItemId": 34
+  },
+  {
+    "id": 38,
+    "name": "bookshelf",
+    "textures": {
+      "all": "bookshelf"
+    },
+    "hardness": 1.5,
+    "requiredTool": "axe",
+    "dropItemId": 35
+  },
+  {
+    "id": 39,
+    "name": "crafting_table",
+    "textures": {
+      "top": "crafting_table_top",
+      "side": "crafting_table_side"
+    },
+    "hardness": 2.5,
+    "requiredTool": "axe",
+    "dropItemId": 36
+  },
+  {
+    "id": 40,
+    "name": "furnace",
+    "textures": {
+      "all": "furnace"
+    },
+    "hardness": 3.5,
+    "requiredTool": "pickaxe",
+    "dropItemId": 37
+  },
+  {
+    "id": 41,
+    "name": "iron_block",
+    "textures": {
+      "all": "iron_block"
+    },
+    "hardness": 5,
+    "requiredTool": "pickaxe",
+    "dropItemId": 38
+  },
+  {
+    "id": 42,
+    "name": "gold_block",
+    "textures": {
+      "all": "gold_block"
+    },
+    "hardness": 3,
+    "requiredTool": "pickaxe",
+    "dropItemId": 39
+  },
+  {
+    "id": 43,
+    "name": "diamond_block",
+    "textures": {
+      "all": "diamond_block"
+    },
+    "hardness": 5,
+    "requiredTool": "pickaxe",
+    "dropItemId": 40
+  },
+  {
+    "id": 44,
+    "name": "granite",
+    "textures": {
+      "all": "granite"
+    },
+    "hardness": 1.5,
+    "requiredTool": "pickaxe",
+    "dropItemId": 116
+  },
+  {
+    "id": 45,
+    "name": "diorite",
+    "textures": {
+      "all": "diorite"
+    },
+    "hardness": 1.5,
+    "requiredTool": "pickaxe",
+    "dropItemId": 117
+  },
+  {
+    "id": 46,
+    "name": "andesite",
+    "textures": {
+      "all": "andesite"
+    },
+    "hardness": 1.5,
+    "requiredTool": "pickaxe",
+    "dropItemId": 118
+  },
+  {
+    "id": 47,
+    "name": "moss_block",
+    "textures": {
+      "all": "moss_block"
+    },
+    "hardness": 0.6,
+    "requiredTool": "shovel",
+    "dropItemId": 119
+  },
+  {
+    "id": 48,
+    "name": "podzol",
+    "textures": {
+      "all": "podzol"
+    },
+    "hardness": 0.6,
+    "requiredTool": "shovel",
+    "dropItemId": 120
+  },
+  {
+    "id": 49,
+    "name": "mycelium",
+    "textures": {
+      "all": "mycelium"
+    },
+    "hardness": 0.6,
+    "requiredTool": "shovel",
+    "dropItemId": 121
+  },
+  {
+    "id": 50,
+    "name": "jungle_log",
+    "textures": {
+      "top": "jungle_log_top",
+      "side": "jungle"
+    },
+    "hardness": 2,
+    "requiredTool": "axe",
+    "dropItemId": 122
+  },
+  {
+    "id": 51,
+    "name": "jungle_leaves",
+    "textures": {
+      "all": "jungle_leaves"
+    },
+    "hardness": 0.2,
+    "requiredTool": "none",
+    "dropItemId": 83,
+    "transparent": true
+  },
+  {
+    "id": 52,
+    "name": "acacia_log",
+    "textures": {
+      "top": "acacia_log_top",
+      "side": "acacia"
+    },
+    "hardness": 2,
+    "requiredTool": "axe",
+    "dropItemId": 123
+  },
+  {
+    "id": 53,
+    "name": "acacia_leaves",
+    "textures": {
+      "all": "acacia_leaves"
+    },
+    "hardness": 0.2,
+    "requiredTool": "none",
+    "dropItemId": 84,
+    "transparent": true
+  },
+  {
+    "id": 54,
+    "name": "dark_oak_log",
+    "textures": {
+      "top": "dark_oak_log_top",
+      "side": "dark_oak"
+    },
+    "hardness": 2,
+    "requiredTool": "axe",
+    "dropItemId": 124
+  },
+  {
+    "id": 55,
+    "name": "dark_oak_leaves",
+    "textures": {
+      "all": "dark_oak_leaves"
+    },
+    "hardness": 0.2,
+    "requiredTool": "none",
+    "dropItemId": 85,
+    "transparent": true
+  },
+  {
+    "id": 56,
+    "name": "mangrove_log",
+    "textures": {
+      "top": "mangrove_log_top",
+      "side": "mangrove"
+    },
+    "hardness": 2,
+    "requiredTool": "axe",
+    "dropItemId": 125
+  },
+  {
+    "id": 57,
+    "name": "mangrove_leaves",
+    "textures": {
+      "all": "mangrove_leaves"
+    },
+    "hardness": 0.2,
+    "requiredTool": "none",
+    "dropItemId": 86,
+    "transparent": true
+  },
+  {
+    "id": 58,
+    "name": "cherry_log",
+    "textures": {
+      "top": "cherry_log_top",
+      "side": "cherry"
+    },
+    "hardness": 2,
+    "requiredTool": "axe",
+    "dropItemId": 126
+  },
+  {
+    "id": 59,
+    "name": "cherry_leaves",
+    "textures": {
+      "all": "cherry_leaves"
+    },
+    "hardness": 0.2,
+    "requiredTool": "none",
+    "dropItemId": 87,
+    "transparent": true
+  },
+  {
+    "id": 60,
+    "name": "jungle_planks",
+    "textures": {
+      "all": "jungle_planks"
+    },
+    "hardness": 2,
+    "requiredTool": "axe",
+    "dropItemId": 127
+  },
+  {
+    "id": 61,
+    "name": "acacia_planks",
+    "textures": {
+      "all": "acacia_planks"
+    },
+    "hardness": 2,
+    "requiredTool": "axe",
+    "dropItemId": 128
+  },
+  {
+    "id": 62,
+    "name": "dark_oak_planks",
+    "textures": {
+      "all": "dark_oak_planks"
+    },
+    "hardness": 2,
+    "requiredTool": "axe",
+    "dropItemId": 129
+  },
+  {
+    "id": 63,
+    "name": "mangrove_planks",
+    "textures": {
+      "all": "mangrove_planks"
+    },
+    "hardness": 2,
+    "requiredTool": "axe",
+    "dropItemId": 130
+  },
+  {
+    "id": 64,
+    "name": "cherry_planks",
+    "textures": {
+      "all": "cherry_planks"
+    },
+    "hardness": 2,
+    "requiredTool": "axe",
+    "dropItemId": 131
+  },
+  {
+    "id": 65,
+    "name": "birch_planks",
+    "textures": {
+      "all": "birch_planks"
+    },
+    "hardness": 2,
+    "requiredTool": "axe",
+    "dropItemId": 132
+  },
+  {
+    "id": 66,
+    "name": "spruce_planks",
+    "textures": {
+      "all": "spruce_planks"
+    },
+    "hardness": 2,
+    "requiredTool": "axe",
+    "dropItemId": 133
+  },
+  {
+    "id": 67,
+    "name": "netherrack",
+    "textures": {
+      "all": "netherrack"
+    },
+    "hardness": 0.4,
+    "requiredTool": "pickaxe",
+    "dropItemId": 134
+  },
+  {
+    "id": 68,
+    "name": "soul_sand",
+    "textures": {
+      "all": "soul_sand"
+    },
+    "hardness": 0.5,
+    "requiredTool": "shovel",
+    "dropItemId": 135
+  },
+  {
+    "id": 69,
+    "name": "basalt",
+    "textures": {
+      "all": "basalt"
+    },
+    "hardness": 1.25,
+    "requiredTool": "pickaxe",
+    "dropItemId": 136
+  },
+  {
+    "id": 70,
+    "name": "blackstone",
+    "textures": {
+      "all": "blackstone"
+    },
+    "hardness": 2,
+    "requiredTool": "pickaxe",
+    "dropItemId": 137
+  },
+  {
+    "id": 71,
+    "name": "magma_block",
+    "textures": {
+      "all": "magma_block"
+    },
+    "hardness": 0.5,
+    "requiredTool": "pickaxe",
+    "dropItemId": 138,
+    "lightEmission": 3
+  },
+  {
+    "id": 72,
+    "name": "end_stone",
+    "textures": {
+      "all": "end_stone"
+    },
+    "hardness": 3,
+    "requiredTool": "pickaxe",
+    "dropItemId": 139
+  },
+  {
+    "id": 73,
+    "name": "purpur_block",
+    "textures": {
+      "all": "purpur_block"
+    },
+    "hardness": 1.5,
+    "requiredTool": "pickaxe",
+    "dropItemId": 140
+  },
+  {
+    "id": 74,
+    "name": "prismarine",
+    "textures": {
+      "all": "prismarine"
+    },
+    "hardness": 1.5,
+    "requiredTool": "pickaxe",
+    "dropItemId": 141
+  },
+  {
+    "id": 75,
+    "name": "sea_lantern",
+    "textures": {
+      "all": "sea_lantern"
+    },
+    "hardness": 0.3,
+    "requiredTool": "pickaxe",
+    "dropItemId": 142,
+    "lightEmission": 15
+  },
+  {
+    "id": 76,
+    "name": "amethyst_block",
+    "textures": {
+      "all": "amethyst_block"
+    },
+    "hardness": 1.5,
+    "requiredTool": "pickaxe",
+    "dropItemId": 143
+  },
+  {
+    "id": 77,
+    "name": "copper_block",
+    "textures": {
+      "all": "copper_block"
+    },
+    "hardness": 3,
+    "requiredTool": "pickaxe",
+    "dropItemId": 144
+  },
+  {
+    "id": 78,
+    "name": "oxidized_copper_block",
+    "textures": {
+      "all": "oxidized_copper_block"
+    },
+    "hardness": 3,
+    "requiredTool": "pickaxe",
+    "dropItemId": 145
+  },
+  {
+    "id": 79,
+    "name": "emerald_ore",
+    "textures": {
+      "all": "emerald_ore"
+    },
+    "hardness": 3,
+    "requiredTool": "pickaxe",
+    "dropItemId": 58
+  },
+  {
+    "id": 80,
+    "name": "emerald_block",
+    "textures": {
+      "all": "emerald_block"
+    },
+    "hardness": 3,
+    "requiredTool": "pickaxe",
+    "dropItemId": 146
+  },
+  {
+    "id": 81,
+    "name": "redstone_block",
+    "textures": {
+      "all": "redstone_block"
+    },
+    "hardness": 5,
+    "requiredTool": "pickaxe",
+    "dropItemId": 147
+  },
+  {
+    "id": 82,
+    "name": "lapis_block",
+    "textures": {
+      "all": "lapis_block"
+    },
+    "hardness": 3,
+    "requiredTool": "pickaxe",
+    "dropItemId": 148
+  },
+  {
+    "id": 83,
+    "name": "quartz_ore",
+    "textures": {
+      "all": "quartz_ore"
+    },
+    "hardness": 3,
+    "requiredTool": "pickaxe",
+    "dropItemId": 59
+  },
+  {
+    "id": 84,
+    "name": "ancient_debris",
+    "textures": {
+      "all": "ancient_debris"
+    },
+    "hardness": 30,
+    "requiredTool": "pickaxe",
+    "dropItemId": 149
+  },
+  {
+    "id": 85,
+    "name": "mud",
+    "textures": {
+      "all": "mud"
+    },
+    "hardness": 0.5,
+    "requiredTool": "shovel",
+    "dropItemId": 150
+  },
+  {
+    "id": 86,
+    "name": "packed_mud",
+    "textures": {
+      "all": "packed_mud"
+    },
+    "hardness": 1,
+    "requiredTool": "pickaxe",
+    "dropItemId": 151
+  },
+  {
+    "id": 87,
+    "name": "mud_bricks",
+    "textures": {
+      "all": "mud_bricks"
+    },
+    "hardness": 1.5,
+    "requiredTool": "pickaxe",
+    "dropItemId": 152
+  },
+  {
+    "id": 88,
+    "name": "terracotta",
+    "textures": {
+      "all": "terracotta"
+    },
+    "hardness": 1.25,
+    "requiredTool": "pickaxe",
+    "dropItemId": 153
+  },
+  {
+    "id": 89,
+    "name": "white_concrete",
+    "textures": {
+      "all": "white_concrete"
+    },
+    "hardness": 1.8,
+    "requiredTool": "pickaxe",
+    "dropItemId": 154
+  },
+  {
+    "id": 90,
+    "name": "mossy_stone_bricks",
+    "textures": {
+      "all": "mossy_stone_bricks"
+    },
+    "hardness": 1.5,
+    "requiredTool": "pickaxe",
+    "dropItemId": 155
+  },
+  {
+    "id": 91,
+    "name": "cracked_stone_bricks",
+    "textures": {
+      "all": "cracked_stone_bricks"
+    },
+    "hardness": 1.5,
+    "requiredTool": "pickaxe",
+    "dropItemId": 156
+  },
+  {
+    "id": 92,
+    "name": "chiseled_stone_bricks",
+    "textures": {
+      "all": "chiseled_stone_bricks"
+    },
+    "hardness": 1.5,
+    "requiredTool": "pickaxe",
+    "dropItemId": 157
+  },
+  {
+    "id": 93,
+    "name": "calcite",
+    "textures": {
+      "all": "calcite"
+    },
+    "hardness": 0.75,
+    "requiredTool": "pickaxe",
+    "dropItemId": 158
+  },
+  {
+    "id": 94,
+    "name": "tuff",
+    "textures": {
+      "all": "tuff"
+    },
+    "hardness": 1.5,
+    "requiredTool": "pickaxe",
+    "dropItemId": 159
+  },
+  {
+    "id": 95,
+    "name": "dripstone_block",
+    "textures": {
+      "all": "dripstone_block"
+    },
+    "hardness": 1.5,
+    "requiredTool": "pickaxe",
+    "dropItemId": 160
+  },
+  {
+    "id": 96,
+    "name": "coal_block",
+    "textures": {
+      "all": "coal_block"
+    },
+    "hardness": 5,
+    "requiredTool": "pickaxe",
+    "dropItemId": 161
+  },
+  {
+    "id": 97,
+    "name": "iron_ore_deepslate",
+    "textures": {
+      "all": "iron_ore_deepslate"
+    },
+    "hardness": 4,
+    "requiredTool": "pickaxe",
+    "dropItemId": 55
+  },
+  {
+    "id": 98,
+    "name": "gold_ore_deepslate",
+    "textures": {
+      "all": "gold_ore_deepslate"
+    },
+    "hardness": 4,
+    "requiredTool": "pickaxe",
+    "dropItemId": 56
+  },
+  {
+    "id": 99,
+    "name": "diamond_ore_deepslate",
+    "textures": {
+      "all": "diamond_ore_deepslate"
+    },
+    "hardness": 4,
+    "requiredTool": "pickaxe",
+    "dropItemId": 12
+  },
+  {
+    "id": 100,
+    "name": "copper_ore_deepslate",
+    "textures": {
+      "all": "copper_ore_deepslate"
+    },
+    "hardness": 4,
+    "requiredTool": "pickaxe",
+    "dropItemId": 57
+  },
+  {
+    "id": 101,
+    "name": "redstone_ore_deepslate",
+    "textures": {
+      "all": "redstone_ore_deepslate"
+    },
+    "hardness": 4,
+    "requiredTool": "pickaxe",
+    "dropItemId": 30
+  },
+  {
+    "id": 102,
+    "name": "lapis_ore_deepslate",
+    "textures": {
+      "all": "lapis_ore_deepslate"
+    },
+    "hardness": 4,
+    "requiredTool": "pickaxe",
+    "dropItemId": 31
+  },
+  {
+    "id": 103,
+    "name": "emerald_ore_deepslate",
+    "textures": {
+      "all": "emerald_ore_deepslate"
+    },
+    "hardness": 4,
+    "requiredTool": "pickaxe",
+    "dropItemId": 58
+  },
+  {
+    "id": 104,
+    "name": "sponge",
+    "textures": {
+      "all": "sponge"
+    },
+    "hardness": 0.6,
+    "requiredTool": "hoe",
+    "dropItemId": 162
+  },
+  {
+    "id": 105,
+    "name": "hay_block",
+    "textures": {
+      "all": "hay_block"
+    },
+    "hardness": 0.5,
+    "requiredTool": "hoe",
+    "dropItemId": 163
+  },
+  {
+    "id": 106,
+    "name": "pumpkin",
+    "textures": {
+      "all": "pumpkin"
+    },
+    "hardness": 1,
+    "requiredTool": "axe",
+    "dropItemId": 164
+  },
+  {
+    "id": 107,
+    "name": "melon",
+    "textures": {
+      "all": "melon"
+    },
+    "hardness": 1,
+    "requiredTool": "axe",
+    "dropItemId": 79
+  },
+  {
+    "id": 108,
+    "name": "barrel",
+    "textures": {
+      "all": "barrel"
+    },
+    "hardness": 2.5,
+    "requiredTool": "axe",
+    "dropItemId": 165
+  },
+  {
+    "id": 109,
+    "name": "chest",
+    "textures": {
+      "all": "chest"
+    },
+    "hardness": 2.5,
+    "requiredTool": "axe",
+    "dropItemId": 166
+  },
+  {
+    "id": 110,
+    "name": "anvil",
+    "textures": {
+      "all": "anvil"
+    },
+    "hardness": 5,
+    "requiredTool": "pickaxe",
+    "dropItemId": 167
+  },
+  {
+    "id": 111,
+    "name": "enchanting_table",
+    "textures": {
+      "all": "enchanting_table"
+    },
+    "hardness": 5,
+    "requiredTool": "pickaxe",
+    "dropItemId": 168
+  },
+  {
+    "id": 112,
+    "name": "campfire",
+    "textures": {
+      "all": "campfire"
+    },
+    "hardness": 2,
+    "requiredTool": "axe",
+    "dropItemId": 169,
+    "lightEmission": 13
+  },
+  {
+    "id": 113,
+    "name": "stonecutter",
+    "textures": {
+      "all": "stonecutter"
+    },
+    "hardness": 3.5,
+    "requiredTool": "pickaxe",
+    "dropItemId": 170
+  },
+  {
+    "id": 114,
+    "name": "smoker",
+    "textures": {
+      "all": "smoker"
+    },
+    "hardness": 3.5,
+    "requiredTool": "pickaxe",
+    "dropItemId": 171
+  },
+  {
+    "id": 115,
+    "name": "blast_furnace",
+    "textures": {
+      "all": "blast_furnace"
+    },
+    "hardness": 3.5,
+    "requiredTool": "pickaxe",
+    "dropItemId": 172
+  },
+  {
+    "id": 116,
+    "name": "composter",
+    "textures": {
+      "all": "composter"
+    },
+    "hardness": 0.6,
+    "requiredTool": "axe",
+    "dropItemId": 173
+  },
+  {
+    "id": 117,
+    "name": "lantern",
+    "textures": {
+      "all": "lantern"
+    },
+    "hardness": 3.5,
+    "requiredTool": "pickaxe",
+    "dropItemId": 174,
+    "lightEmission": 13
+  },
+  {
+    "id": 118,
+    "name": "soul_lantern",
+    "textures": {
+      "all": "soul_lantern"
+    },
+    "hardness": 3.5,
+    "requiredTool": "pickaxe",
+    "dropItemId": 175,
+    "lightEmission": 10
+  },
+  {
+    "id": 119,
+    "name": "honeycomb_block",
+    "textures": {
+      "all": "honeycomb_block"
+    },
+    "hardness": 0.6,
+    "requiredTool": "axe",
+    "dropItemId": 176
+  },
+  {
+    "id": 120,
+    "name": "honey_block",
+    "textures": {
+      "all": "honey_block"
+    },
+    "hardness": 0,
+    "requiredTool": "none",
+    "dropItemId": 177,
+    "transparent": true
+  },
+  {
+    "id": 121,
+    "name": "slime_block",
+    "textures": {
+      "all": "slime_block"
+    },
+    "hardness": 0,
+    "requiredTool": "none",
+    "dropItemId": 178,
+    "transparent": true
+  },
+  {
+    "id": 122,
+    "name": "glass_pane",
+    "textures": {
+      "all": "glass_pane"
+    },
+    "hardness": 0.3,
+    "requiredTool": "none",
+    "dropItemId": 179,
+    "transparent": true
+  },
+  {
+    "id": 123,
+    "name": "orange_wool",
+    "textures": {
+      "all": "orange_wool"
+    },
+    "hardness": 0.8,
+    "requiredTool": "shears",
+    "dropItemId": 180
+  },
+  {
+    "id": 124,
+    "name": "magenta_wool",
+    "textures": {
+      "all": "magenta_wool"
+    },
+    "hardness": 0.8,
+    "requiredTool": "shears",
+    "dropItemId": 181
+  },
+  {
+    "id": 125,
+    "name": "light_blue_wool",
+    "textures": {
+      "all": "light_blue_wool"
+    },
+    "hardness": 0.8,
+    "requiredTool": "shears",
+    "dropItemId": 182
+  },
+  {
+    "id": 126,
+    "name": "yellow_wool",
+    "textures": {
+      "all": "yellow_wool"
+    },
+    "hardness": 0.8,
+    "requiredTool": "shears",
+    "dropItemId": 183
+  },
+  {
+    "id": 127,
+    "name": "lime_wool",
+    "textures": {
+      "all": "lime_wool"
+    },
+    "hardness": 0.8,
+    "requiredTool": "shears",
+    "dropItemId": 184
+  },
+  {
+    "id": 128,
+    "name": "pink_wool",
+    "textures": {
+      "all": "pink_wool"
+    },
+    "hardness": 0.8,
+    "requiredTool": "shears",
+    "dropItemId": 185
+  },
+  {
+    "id": 129,
+    "name": "gray_wool",
+    "textures": {
+      "all": "gray_wool"
+    },
+    "hardness": 0.8,
+    "requiredTool": "shears",
+    "dropItemId": 186
+  },
+  {
+    "id": 130,
+    "name": "light_gray_wool",
+    "textures": {
+      "all": "light_gray_wool"
+    },
+    "hardness": 0.8,
+    "requiredTool": "shears",
+    "dropItemId": 187
+  },
+  {
+    "id": 131,
+    "name": "cyan_wool",
+    "textures": {
+      "all": "cyan_wool"
+    },
+    "hardness": 0.8,
+    "requiredTool": "shears",
+    "dropItemId": 188
+  },
+  {
+    "id": 132,
+    "name": "purple_wool",
+    "textures": {
+      "all": "purple_wool"
+    },
+    "hardness": 0.8,
+    "requiredTool": "shears",
+    "dropItemId": 189
+  },
+  {
+    "id": 133,
+    "name": "blue_wool",
+    "textures": {
+      "all": "blue_wool"
+    },
+    "hardness": 0.8,
+    "requiredTool": "shears",
+    "dropItemId": 190
+  },
+  {
+    "id": 134,
+    "name": "brown_wool",
+    "textures": {
+      "all": "brown_wool"
+    },
+    "hardness": 0.8,
+    "requiredTool": "shears",
+    "dropItemId": 191
+  },
+  {
+    "id": 135,
+    "name": "green_wool",
+    "textures": {
+      "all": "green_wool"
+    },
+    "hardness": 0.8,
+    "requiredTool": "shears",
+    "dropItemId": 192
+  },
+  {
+    "id": 136,
+    "name": "red_wool",
+    "textures": {
+      "all": "red_wool"
+    },
+    "hardness": 0.8,
+    "requiredTool": "shears",
+    "dropItemId": 193
+  },
+  {
+    "id": 137,
+    "name": "black_wool",
+    "textures": {
+      "all": "black_wool"
+    },
+    "hardness": 0.8,
+    "requiredTool": "shears",
+    "dropItemId": 194
+  },
+  {
+    "id": 138,
+    "name": "orange_concrete",
+    "textures": {
+      "all": "orange_concrete"
+    },
+    "hardness": 1.8,
+    "requiredTool": "pickaxe",
+    "dropItemId": 195
+  },
+  {
+    "id": 139,
+    "name": "magenta_concrete",
+    "textures": {
+      "all": "magenta_concrete"
+    },
+    "hardness": 1.8,
+    "requiredTool": "pickaxe",
+    "dropItemId": 196
+  },
+  {
+    "id": 140,
+    "name": "light_blue_concrete",
+    "textures": {
+      "all": "light_blue_concrete"
+    },
+    "hardness": 1.8,
+    "requiredTool": "pickaxe",
+    "dropItemId": 197
+  },
+  {
+    "id": 141,
+    "name": "yellow_concrete",
+    "textures": {
+      "all": "yellow_concrete"
+    },
+    "hardness": 1.8,
+    "requiredTool": "pickaxe",
+    "dropItemId": 198
+  },
+  {
+    "id": 142,
+    "name": "lime_concrete",
+    "textures": {
+      "all": "lime_concrete"
+    },
+    "hardness": 1.8,
+    "requiredTool": "pickaxe",
+    "dropItemId": 199
+  },
+  {
+    "id": 143,
+    "name": "pink_concrete",
+    "textures": {
+      "all": "pink_concrete"
+    },
+    "hardness": 1.8,
+    "requiredTool": "pickaxe",
+    "dropItemId": 200
+  },
+  {
+    "id": 144,
+    "name": "gray_concrete",
+    "textures": {
+      "all": "gray_concrete"
+    },
+    "hardness": 1.8,
+    "requiredTool": "pickaxe",
+    "dropItemId": 201
+  },
+  {
+    "id": 145,
+    "name": "light_gray_concrete",
+    "textures": {
+      "all": "light_gray_concrete"
+    },
+    "hardness": 1.8,
+    "requiredTool": "pickaxe",
+    "dropItemId": 202
+  },
+  {
+    "id": 146,
+    "name": "cyan_concrete",
+    "textures": {
+      "all": "cyan_concrete"
+    },
+    "hardness": 1.8,
+    "requiredTool": "pickaxe",
+    "dropItemId": 203
+  },
+  {
+    "id": 147,
+    "name": "purple_concrete",
+    "textures": {
+      "all": "purple_concrete"
+    },
+    "hardness": 1.8,
+    "requiredTool": "pickaxe",
+    "dropItemId": 204
+  },
+  {
+    "id": 148,
+    "name": "blue_concrete",
+    "textures": {
+      "all": "blue_concrete"
+    },
+    "hardness": 1.8,
+    "requiredTool": "pickaxe",
+    "dropItemId": 205
+  },
+  {
+    "id": 149,
+    "name": "brown_concrete",
+    "textures": {
+      "all": "brown_concrete"
+    },
+    "hardness": 1.8,
+    "requiredTool": "pickaxe",
+    "dropItemId": 206
+  },
+  {
+    "id": 150,
+    "name": "green_concrete",
+    "textures": {
+      "all": "green_concrete"
+    },
+    "hardness": 1.8,
+    "requiredTool": "pickaxe",
+    "dropItemId": 207
+  },
+  {
+    "id": 151,
+    "name": "red_concrete",
+    "textures": {
+      "all": "red_concrete"
+    },
+    "hardness": 1.8,
+    "requiredTool": "pickaxe",
+    "dropItemId": 208
+  },
+  {
+    "id": 152,
+    "name": "black_concrete",
+    "textures": {
+      "all": "black_concrete"
+    },
+    "hardness": 1.8,
+    "requiredTool": "pickaxe",
+    "dropItemId": 209
+  },
+  {
+    "id": 153,
+    "name": "red_terracotta",
+    "textures": {
+      "all": "red_terracotta"
+    },
+    "hardness": 1.25,
+    "requiredTool": "pickaxe",
+    "dropItemId": 210
+  },
+  {
+    "id": 154,
+    "name": "blue_terracotta",
+    "textures": {
+      "all": "blue_terracotta"
+    },
+    "hardness": 1.25,
+    "requiredTool": "pickaxe",
+    "dropItemId": 211
+  },
+  {
+    "id": 155,
+    "name": "green_terracotta",
+    "textures": {
+      "all": "green_terracotta"
+    },
+    "hardness": 1.25,
+    "requiredTool": "pickaxe",
+    "dropItemId": 212
+  },
+  {
+    "id": 156,
+    "name": "yellow_terracotta",
+    "textures": {
+      "all": "yellow_terracotta"
+    },
+    "hardness": 1.25,
+    "requiredTool": "pickaxe",
+    "dropItemId": 213
+  },
+  {
+    "id": 157,
+    "name": "black_terracotta",
+    "textures": {
+      "all": "black_terracotta"
+    },
+    "hardness": 1.25,
+    "requiredTool": "pickaxe",
+    "dropItemId": 214
+  }
 ]
