@@ -2,16 +2,16 @@
   #define MyAppVersion "1.0.0"
 #endif
 
-#define MyAppName "BlockCraft"
+#define MyAppName "Mining Game"
 #define PublishDir "..\artifacts\publish\win-x64"
 
 [Setup]
 AppId={{A83D10A9-54D5-4C81-9EC4-48382FB13247}
 AppName={#MyAppName}
 AppVersion={#MyAppVersion}
-AppPublisher=BlockCraft Project
+AppPublisher=Mining Game
 DefaultDirName={autopf}\BlockCraft
-DefaultGroupName=BlockCraft
+DefaultGroupName=Mining Game
 DisableProgramGroupPage=yes
 ArchitecturesAllowed=x64
 ArchitecturesInstallIn64BitMode=x64
@@ -22,7 +22,7 @@ Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
 SetupIconFile=..\assets\generated\BlockCraft.ico
-UninstallDisplayIcon={app}\BlockCraft.exe
+UninstallDisplayIcon={app}\Mining_Game.exe
 SetupLogging=yes
 CloseApplications=yes
 RestartApplications=no
@@ -34,8 +34,8 @@ Name: "desktopicon"; Description: "Create a &desktop shortcut"; GroupDescription
 Source: "{#PublishDir}\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
-Name: "{group}\BlockCraft"; Filename: "{app}\BlockCraft.exe"; WorkingDir: "{app}"
-Name: "{autodesktop}\BlockCraft"; Filename: "{app}\BlockCraft.exe"; WorkingDir: "{app}"; Tasks: desktopicon
+Name: "{group}\Mining Game"; Filename: "{app}\Mining_Game.exe"; WorkingDir: "{app}"
+Name: "{autodesktop}\Mining Game"; Filename: "{app}\Mining_Game.exe"; WorkingDir: "{app}"; Tasks: desktopicon
 
 [Run]
-Filename: "{app}\BlockCraft.exe"; Description: "Launch BlockCraft"; Flags: postinstall nowait skipifsilent
+Filename: "{app}\Mining_Game.exe"; Description: "Launch Mining Game"; Flags: postinstall nowait skipifsilent
