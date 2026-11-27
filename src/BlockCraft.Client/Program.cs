@@ -26,12 +26,8 @@ internal static class Program
             // The external launch monitor uses this exit code to detect caught startup failures.
             Environment.ExitCode = 1;
             var report = WriteCrashReport(exception);
-            var message = "BlockCraft could not start.\n\n" +
-                          exception.GetType().FullName + ": " + exception.Message +
-                          "\n\nA diagnostic report was saved here:\n" + report +
-                          "\n\nPlease send that file to the developer.";
-            try { _ = MessageBoxW(IntPtr.Zero, message, "BlockCraft startup error", 0x10 | 0x1000); }
-            catch { /* Keep the crash report even if Windows cannot display the dialog. */ }
+            Log("Startup exception captured. The Mining Game launch monitor will display the support report.");
+            Log($"Crash report: {report}");
         }
     }
 
@@ -71,6 +67,4 @@ internal static class Program
         return path;
     }
 
-    [DllImport("user32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
-    private static extern int MessageBoxW(IntPtr hWnd, string text, string caption, uint type);
 }
