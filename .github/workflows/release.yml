@@ -54,14 +54,16 @@ jobs:
           "value=$version" >> $env:GITHUB_OUTPUT
           "tag=v$version" >> $env:GITHUB_OUTPUT
 
-      - name: Generate original assets and game icon
+      - name: Generate original assets, game icon and soundtrack
         shell: pwsh
         run: |
-          python -m pip install Pillow
+          python -m pip install -r tools/requirements.txt
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python tools/generate_icon.py
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python tools/gen_textures.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python tools/gen_soundtrack.py
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
 
       - name: Restore
