@@ -53,6 +53,11 @@ internal sealed class BlockCraftGame : Game
     private bool _touchPlaceRequested;
     private BasicEffect _effect = null!;
     private SoundEffect? _blockSound;
+    private SoundEffect? _musicEffect;
+    private SoundEffectInstance? _musicInstance;
+    private string? _currentMusic;
+    private float _musicRefreshTimer;
+    private float _rareDiscoveryMusicSeconds;
     private Texture2D? _blockAtlas;
     private readonly Dictionary<string, Rectangle> _atlasTiles = new(StringComparer.OrdinalIgnoreCase);
     private int _atlasWidth;
@@ -170,6 +175,92 @@ internal sealed class BlockCraftGame : Game
         }
     }
 
+    private void UpdateMusic(float elapsedSeconds)
+    {
+        _rareDiscoveryMusicSeconds = Math.Max(0f, _rareDiscoveryMusicSeconds - Math.Max(0f, elapsedSeconds));
+        _musicRefreshTimer -= Math.Max(0f, elapsedSeconds);
+        if (_musicRefreshTimer > 0f)
+            return;
+        _musicRefreshTimer = 3f;
+
+        var track = SelectMusicTrack();
+        if (string.Equals(track, _currentMusic, StringComparison.OrdinalIgnoreCase))
+            return;
+
+        var path = Path.Combine(AppContext.BaseDirectory, "assets", "generated", "music", track + ".wav");
+        if (!File.Exists(path))
+        {
+            Console.Error.WriteLine($"Music track is missing: {path}");
+            _musicRefreshTimer = 15f;
+            return;
+        }
+
+        try
+        {
+            using var stream = File.OpenRead(path);
+            var nextEffect = SoundEffect.FromStream(stream);
+            var nextInstance = nextEffect.CreateInstance();
+            nextInstance.IsLooped = true;
+            nextInstance.Volume = Math.Clamp(_settings.MasterVolume * 0.34f, 0f, 1f);
+            nextInstance.Play();
+
+            _musicInstance?.Stop();
+            _musicInstance?.Dispose();
+            _musicEffect?.Dispose();
+            _musicEffect = nextEffect;
+            _musicInstance = nextInstance;
+            _currentMusic = track;
+        }
+        catch (Exception exception) when (exception is IOException or InvalidOperationException or ArgumentException)
+        {
+            Console.Error.WriteLine($"Could not load music '{track}': {exception.Message}");
+            _musicRefreshTimer = 15f;
+        }
+    }
+
+    private string SelectMusicTrack()
+    {
+        if (_screen == GameScreen.MainMenu || _player is null || _world is null)
+            return "title_theme";
+        if (_rareDiscoveryMusicSeconds > 0f)
+            return "rare_discovery";
+
+        var position = _player.Position;
+        var y = (int)MathF.Floor(position.Y);
+        var x = (int)MathF.Floor(position.X);
+        var z = (int)MathF.Floor(position.Z);
+        if (_world.GetBlock(x, y, z) == _blocks.GetId("water"))
+            return "underwater_world";
+        if (y <= 25 || _achievements.EchoOresMined >= 5)
+            return "echo_chamber";
+        if (y <= 39)
+            return _achievements.AmethystBlocksMined > 0 ? "crystal_grotto" : "cave_depths";
+        if (y < 55)
+            return _achievements.FossilBlocksMined > 0 ? "abandoned_mineshaft" : "cave_depths";
+        if (_clock.Daylight < 0.20f)
+            return "surface_night";
+        if (y >= 100)
+            return "mountain_pass";
+
+        var chunkX = ChunkManager.FloorDiv(x, Chunk.Width);
+        var chunkZ = ChunkManager.FloorDiv(z, Chunk.Depth);
+        if (!_world.TryGetChunk(new ChunkPos(chunkX, chunkZ), out var chunk) || chunk is null)
+            return "plains_day";
+        var biome = chunk.Biomes[ChunkManager.Mod(x, Chunk.Width), ChunkManager.Mod(z, Chunk.Depth)];
+        return biome switch
+        {
+            BiomeKind.Forest => "forest_canopy",
+            BiomeKind.Desert => "desert_wind",
+            BiomeKind.Snow => "snowfall",
+            BiomeKind.Ocean => "ocean_current",
+            BiomeKind.Jungle => "jungle_mist",
+            BiomeKind.Savanna => "savanna_wind",
+            BiomeKind.Swamp => "swamp_lights",
+            BiomeKind.CherryGrove => "cherry_grove",
+            _ => "plains_day"
+        };
+    }
+
     private void LoadAudio()
     {
         var audioDirectory = Path.Combine(AppContext.BaseDirectory, "assets", "generated");
@@ -262,7 +353,9 @@ internal sealed class BlockCraftGame : Game
             UpdatePlaying(gameTime, keyboard, mouse, rightPressed);
         }
 
-        _clock.Update((float)gameTime.ElapsedGameTime.TotalSeconds);
+        var frameSeconds = (float)gameTime.ElapsedGameTime.TotalSeconds;
+        _clock.Update(frameSeconds);
+        UpdateMusic(frameSeconds);
         PumpMeshResults();
         UpdateChunkMeshes();
         _previousKeyboard = keyboard;
@@ -695,6 +788,8 @@ internal sealed class BlockCraftGame : Game
         {
             InvalidateBoundaryNeighborMeshes(position);
             _achievements.RecordMine(definition.Name, position.Y);
+            if (definition.Name is "diamond_ore" or "diamond_ore_deepslate" or "amethyst_block" or "echo_ore" or "fossil_block")
+                _rareDiscoveryMusicSeconds = 22f;
             if (definition.DropItemId != 0 && canHarvest)
                 _inventory.Add(definition.DropItemId, 1);
             _blockSound?.Play(_settings.MasterVolume, 0, 0);
@@ -1265,6 +1360,9 @@ internal sealed class BlockCraftGame : Game
         SaveWorld();
         _ambientSound?.Stop();
         _ambientSound?.Dispose();
+        _musicInstance?.Stop();
+        _musicInstance?.Dispose();
+        _musicEffect?.Dispose();
         _blockSound?.Dispose();
         _font?.Dispose();
         _touchCircle?.Dispose();
