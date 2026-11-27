@@ -1,0 +1,75 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#172617">
+<meta name="description" content="Mining Game — explore, mine, build and survive in an original voxel sandbox.">
+<title>Mining Game — Build Your Own World</title>
+<style>
+:root{--green:#65df38;--lime:#a6ff55;--ink:#101710;--panel:#1b281c;--line:#3c5638;--muted:#b5c3ad;--gold:#f4c95d}
+*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;background:#111811;color:#f2f5e9;font:16px/1.6 system-ui,Segoe UI,Arial,sans-serif;overflow-x:hidden}
+body:before{content:"";position:fixed;inset:0;pointer-events:none;opacity:.12;background-image:linear-gradient(#8dba6b 1px,transparent 1px),linear-gradient(90deg,#8dba6b 1px,transparent 1px);background-size:48px 48px;mask-image:linear-gradient(to bottom,black,transparent 75%)}
+a{color:inherit;text-decoration:none}.wrap{width:min(1160px,calc(100% - 40px));margin:auto}
+nav{height:76px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid #ffffff18;position:relative;z-index:3}
+.brand{display:flex;align-items:center;gap:12px;font-weight:950;letter-spacing:.06em}.brand img{width:44px;height:44px;image-rendering:pixelated}.brand span{color:var(--green)}
+.navlinks{display:flex;gap:26px;color:#c5d0bd;font-weight:700;font-size:14px}.navlinks a:hover{color:var(--lime)}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:10px;padding:14px 20px;border:2px solid #b6ff75;background:linear-gradient(#a3f75d,#56bc2d);color:#14200e;font-weight:950;text-transform:uppercase;letter-spacing:.04em;box-shadow:0 5px 0 #28601e,0 12px 30px #65df3833;transition:.18s;clip-path:polygon(0 0,calc(100% - 9px) 0,100% 9px,100% 100%,9px 100%,0 calc(100% - 9px))}
+.btn:hover{transform:translateY(-3px);filter:brightness(1.08)}.btn.secondary{background:#243426;color:#eaffdc;border-color:#67845b;box-shadow:0 5px 0 #101810}
+.hero{min-height:650px;display:grid;grid-template-columns:1.08fr .92fr;align-items:center;gap:30px;padding:70px 0 90px;position:relative}
+.eyebrow{color:var(--lime);font-size:12px;font-weight:950;letter-spacing:.2em;text-transform:uppercase}
+h1{font-size:clamp(48px,7vw,88px);line-height:.98;letter-spacing:-.065em;margin:18px 0 22px;text-shadow:5px 5px #294323}
+h1 em{font-style:normal;color:var(--green);display:block}.lead{color:#c6d2c0;max-width:570px;font-size:18px}
+.actions{display:flex;gap:14px;flex-wrap:wrap;margin:30px 0 24px}.tiny{font-size:12px;color:#9eae97}
+.scene{height:430px;position:relative;display:grid;place-items:center;perspective:900px}
+.sun{position:absolute;width:270px;height:270px;border-radius:50%;background:#83f43d22;filter:blur(45px)}
+.island{position:relative;width:min(440px,100%);height:300px;transform:rotateX(56deg) rotateZ(-35deg);transform-style:preserve-3d;animation:float 5s ease-in-out infinite}
+.block{position:absolute;width:125px;height:125px;transform-style:preserve-3d}
+.block .top{position:absolute;width:125px;height:125px;transform:rotateX(90deg) translateZ(62px);background:linear-gradient(135deg,#74d844,#347d2a);border:3px solid #a4f66a}
+.block .front{position:absolute;width:125px;height:125px;transform:translateZ(62px);background:linear-gradient(135deg,#8c5a34,#56351f);border:3px solid #bd8651}
+.block .side{position:absolute;width:125px;height:125px;transform:rotateY(90deg) translateZ(62px);background:#674026;border:3px solid #a16c42}
+.block.grass{left:125px;top:80px}.block.stone{left:250px;top:5px;transform:translateZ(-130px) scale(.8)}.block.ore{left:15px;top:10px;transform:translateZ(-65px) scale(.68)}
+.ore .front{background:radial-gradient(circle at 30% 35%,#37eaff 0 9px,transparent 10px),radial-gradient(circle at 72% 66%,#37eaff 0 11px,transparent 12px),#58616a}
+.ore .top{background:#75818b}.stone .front{background:#626d72}.stone .top{background:#899397}
+@keyframes float{0%,100%{transform:rotateX(56deg) rotateZ(-35deg) translateY(0)}50%{transform:rotateX(56deg) rotateZ(-35deg) translateY(-18px)}}
+.pixel{position:absolute;width:18px;height:18px;background:var(--green);box-shadow:0 0 24px #6eff48}.p1{top:60px;right:14%}.p2{bottom:60px;left:7%;background:#38d9e8}.p3{top:140px;left:4%;width:10px;height:10px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:32px;max-width:510px}.stat{border-left:3px solid var(--green);padding-left:13px}.stat b{display:block;font-size:23px}.stat small{color:#9fb09a;text-transform:uppercase;font-size:10px;letter-spacing:.12em}
+section{padding:78px 0;position:relative}.section-head{text-align:center;max-width:680px;margin:0 auto 38px}.section-head h2{font-size:clamp(32px,4vw,48px);margin:8px 0}.section-head p{color:var(--muted)}
+.cards{display:grid;grid-template-columns:repeat(3,1fr);gap:18px}.card{background:linear-gradient(145deg,#223324,#172219);border:1px solid var(--line);padding:25px;min-height:190px;box-shadow:0 12px 30px #0003;position:relative;overflow:hidden}.card:after{content:"";position:absolute;width:110px;height:110px;right:-40px;bottom:-45px;background:#7be64b12;transform:rotate(45deg)}.glyph{font-size:30px}.card h3{margin:10px 0 5px}.card p{color:#b6c4b0;margin:0;font-size:14px}
+.world{display:grid;grid-template-columns:1fr 1fr;gap:34px;align-items:center}.world-art{min-height:330px;border:1px solid #527344;background:radial-gradient(ellipse at 50% 85%,#6b9b36 0 13%,transparent 14%),linear-gradient(#243f3d,#15231b 65%);position:relative;overflow:hidden;display:grid;place-items:center}.world-art:before{content:"";position:absolute;inset:0;background:linear-gradient(135deg,transparent 45%,#90d65b18 45% 46%,transparent 46%)}.world-art strong{font-size:clamp(34px,5vw,58px);text-align:center;line-height:1;text-shadow:4px 5px #111}.world-copy h2{font-size:42px;line-height:1.05;margin:10px 0}.world-copy p,.world-copy li{color:#bac9b4}.world-copy ul{padding-left:20px}
+.download{background:linear-gradient(135deg,#243c24,#182619);border:1px solid #5b8048;padding:42px;text-align:center;box-shadow:0 18px 55px #0004}.download h2{font-size:clamp(34px,5vw,54px);margin:8px}.download p{color:#c3d0bc}.download-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:28px;text-align:left}.download-option{background:#111b13;border:1px solid #48613e;padding:20px}.download-option h3{margin:0 0 5px}.download-option p{font-size:13px;min-height:42px}.download-option .btn{width:100%;font-size:12px;padding:12px}
+.requirements{width:min(750px,100%);margin:32px auto 0;border-collapse:collapse;background:#152117}.requirements td,.requirements th{padding:13px 16px;border:1px solid #3b5236;text-align:left}.requirements th{color:var(--lime)}
+.faq{max-width:780px;margin:auto}.faq details{border-bottom:1px solid #3b5038;padding:17px 4px}.faq summary{cursor:pointer;font-weight:800}.faq p{color:var(--muted)}
+footer{border-top:1px solid #ffffff1a;padding:28px 0;color:#9eae98;font-size:13px}.foot{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap}
+@media(max-width:800px){.navlinks{display:none}.hero{grid-template-columns:1fr;padding-top:55px;text-align:center}.lead{margin:auto}.actions,.stats{justify-content:center;margin-left:auto;margin-right:auto}.scene{height:320px}.cards{grid-template-columns:1fr 1fr}.world{grid-template-columns:1fr}.download-grid{grid-template-columns:1fr}.download{padding:26px 18px}}
+@media(max-width:520px){.wrap{width:min(100% - 28px,1160px)}.cards{grid-template-columns:1fr}.scene{height:260px}.island{transform:scale(.75) rotateX(56deg) rotateZ(-35deg)}.island{animation:none}.stats{gap:8px}.stat b{font-size:19px}.btn{padding:12px 15px}}
+</style>
+</head>
+<body>
+<header class="wrap"><nav><a class="brand" href="#"><img src="assets/generated/BlockCraft.ico" alt=""><span>MINING</span> GAME</a><div class="navlinks"><a href="#features">Features</a><a href="#world">The World</a><a href="#requirements">Requirements</a><a href="#download">Download</a></div><a class="btn" href="#download">Play now ↓</a></nav></header>
+<main>
+<div class="wrap hero"><div><div class="eyebrow">An original voxel sandbox adventure</div><h1>BUILD. MINE.<em> SURVIVE.</em></h1><p class="lead">Shape a world block by block. Dig deep for rare resources, craft the tools you need, build a home worth defending, and explore what waits beyond the horizon.</p><div class="actions"><a class="btn" href="#download">⬇ Download game</a><a class="btn secondary" href="#features">Explore features</a></div><div class="tiny">Windows 10/11 · 64-bit · Free to download</div><div class="stats"><div class="stat"><b>150+</b><small>Block types</small></div><div class="stat"><b>200+</b><small>Items</small></div><div class="stat"><b>∞</b><small>Ways to build</small></div></div></div>
+<div class="scene" aria-label="Voxel blocks floating in a game world"><div class="sun"></div><i class="pixel p1"></i><i class="pixel p2"></i><i class="pixel p3"></i><div class="island"><div class="block grass"><i class="top"></i><i class="front"></i><i class="side"></i></div><div class="block stone"><i class="top"></i><i class="front"></i><i class="side"></i></div><div class="block ore"><i class="top"></i><i class="front"></i><i class="side"></i></div></div></div></div>
+<section id="features"><div class="wrap"><div class="section-head"><div class="eyebrow">Your world, your rules</div><h2>MAKE EVERY BLOCK COUNT</h2><p>Gather resources, experiment with crafting, and turn an untouched landscape into something unmistakably yours.</p></div><div class="cards">
+<article class="card"><div class="glyph">⛏️</div><h3>Mine & discover</h3><p>Dig through varied terrain, uncover ore deposits, and work your way toward stronger tools and rarer materials.</p></article>
+<article class="card"><div class="glyph">🧱</div><h3>Build anything</h3><p>Use a broad collection of blocks, wood types, colors, and decorative materials to create your own structures.</p></article>
+<article class="card"><div class="glyph">🛠️</div><h3>Craft & smelt</h3><p>Combine materials at crafting stations, make useful equipment, and smelt raw resources into better components.</p></article>
+<article class="card"><div class="glyph">🌲</div><h3>Explore biomes</h3><p>Travel through distinct landscapes with different trees, terrain, resources, and surprises underground.</p></article>
+<article class="card"><div class="glyph">🛡️</div><h3>Survive your way</h3><p>Manage your inventory, gather food, prepare your gear, and keep an eye on the dangers around you.</p></article>
+<article class="card"><div class="glyph">💾</div><h3>Keep your world</h3><p>Save your progress and return to your builds, discoveries, and adventures whenever you want.</p></article>
+</div></div></section>
+<section id="world"><div class="wrap world"><div class="world-art"><strong>THE WORLD<br><span style="color:#9bfa57">IS YOURS</span></strong></div><div class="world-copy"><div class="eyebrow">Dig deeper. Go further.</div><h2>FROM YOUR FIRST BLOCK TO YOUR BIGGEST BUILD.</h2><p>Start with the basics, gather wood and stone, then descend into the earth in search of valuable ores. Build a safe base, expand your collection, and experiment with different materials.</p><ul><li>Procedurally generated voxel terrain</li><li>Multiple wood, stone, ore, and decorative block families</li><li>Tools, food, crafting, and smelting progression</li><li>Chunk-based world streaming and persistent saves</li></ul></div></div></section>
+<section id="download"><div class="wrap"><div class="download"><div class="eyebrow">Latest stable release · v3.0.0</div><h2>START YOUR ADVENTURE</h2><p>Choose how you want to install Mining Game on your Windows PC.</p><div class="download-grid">
+<div class="download-option"><div class="glyph">🟩</div><h3>Setup EXE</h3><p>Recommended installer. Simple guided installation.</p><a class="btn" href="https://github.com/luisdiko14-lab/Mining-Game/releases/download/v3.0.0/BlockCraft-3.0.0-win-x64-setup.exe">Download EXE</a></div>
+<div class="download-option"><div class="glyph">📦</div><h3>Setup MSI</h3><p>Windows Installer package for managed installs.</p><a class="btn" href="https://github.com/luisdiko14-lab/Mining-Game/releases/download/v3.0.0/BlockCraft-3.0.0-win-x64-setup.msi">Download MSI</a></div>
+<div class="download-option"><div class="glyph">🗜️</div><h3>Portable ZIP</h3><p>Download, extract, and launch without running setup.</p><a class="btn" href="https://github.com/luisdiko14-lab/Mining-Game/releases/download/v3.0.0/BlockCraft-3.0.0-win-x64-portable.zip">Download ZIP</a></div>
+</div><p><a href="https://github.com/luisdiko14-lab/Mining-Game/releases/tag/v3.0.0">Release notes</a> · <a href="https://github.com/luisdiko14-lab/Mining-Game/releases/download/v3.0.0/SHA256SUMS.txt">SHA-256 checksums</a> · <a href="https://github.com/luisdiko14-lab/Mining-Game">Source code on GitHub</a></p></div></div></section>
+<section id="requirements"><div class="wrap"><div class="section-head"><div class="eyebrow">Before you install</div><h2>PC REQUIREMENTS</h2><p>Designed for modern 64-bit Windows computers.</p></div><table class="requirements"><tr><th>Component</th><th>Requirement</th></tr><tr><td>Operating system</td><td>Windows 10 or Windows 11 (64-bit)</td></tr><tr><td>Architecture</td><td>x64 processor</td></tr><tr><td>Runtime</td><td>Included with the packaged Windows build</td></tr><tr><td>Storage</td><td>At least 500 MB free space recommended</td></tr><tr><td>Internet</td><td>Required to download; not needed for ordinary local play</td></tr></table></div></section>
+<section><div class="wrap"><div class="section-head"><div class="eyebrow">Need a hand?</div><h2>QUICK QUESTIONS</h2></div><div class="faq">
+<details><summary>Is Mining Game free?</summary><p>Yes. The Windows downloads linked above are provided through the project's GitHub Releases.</p></details>
+<details><summary>Which download should I choose?</summary><p>Choose Setup EXE for the easiest installation. Choose MSI for Windows Installer workflows, or Portable ZIP if you prefer extracting the game yourself.</p></details>
+<details><summary>Where can I report a bug?</summary><p>Open an issue on the <a href="https://github.com/luisdiko14-lab/Mining-Game/issues">GitHub issue tracker</a> and include what happened and how to reproduce it.</p></details>
+<details><summary>Is this Minecraft?</summary><p>No. Mining Game is an original voxel sandbox inspired by block-building games. It uses its own project code and generated assets.</p></details>
+</div></div></section>
+</main>
+<footer><div class="wrap foot"><span>© 2026 Mining Game · An original voxel sandbox project</span><span><a href="https://github.com/luisdiko14-lab/Mining-Game">GitHub</a> · <a href="https://github.com/luisdiko14-lab/Mining-Game/releases">All releases</a></span></div></footer>
+</body></html>
