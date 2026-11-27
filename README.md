@@ -54,6 +54,7 @@ BlockCraft uses **MonoGame WindowsDX / Direct3D 11** for its game loop, windowin
 | C (inventory) | Quick-craft the selected recipe from inventory ingredients |
 | F2 | Save screenshot to Pictures/BlockCraft |
 | F3 | Toggle debug overlay |
+| J | Open the achievement and exploration journal |
 | F11 | Toggle fullscreen |
 | Esc | Pause / resume |
 
@@ -68,7 +69,7 @@ On devices that expose a MonoGame touch panel, BlockCraft shows a virtual contro
 
 Keyboard and mouse controls remain available. The current release target is still Windows x64; this touch layer is ready for touch-enabled MonoGame hosts, but an Android/iOS app project and mobile installer are not part of this Windows release.
 
-The pause screen exposes render distance (Page Up/Page Down), FOV (+/-), and VSync (V). Settings are stored under %LOCALAPPDATA%/BlockCraft/settings.json. The first world slot is stored under %LOCALAPPDATA%/BlockCraft/Worlds/World-1.
+The achievement journal tracks mining milestones, rare finds, placed blocks, explored chunks, and deepest depth. The pause screen exposes render distance (Page Up/Page Down), FOV (+/-), and VSync (V). Settings are stored under %LOCALAPPDATA%/BlockCraft/settings.json. Launch and crash-monitor logs are stored under %LOCALAPPDATA%/MiningGame/Logs, while the game writes detailed crash traces under %LOCALAPPDATA%/BlockCraft/Logs. The first world slot is stored under %LOCALAPPDATA%/BlockCraft/Worlds/World-1.
 
 ## Build prerequisites
 
