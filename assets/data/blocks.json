@@ -1628,5 +1628,60 @@
     "hardness": 1.25,
     "requiredTool": "pickaxe",
     "dropItemId": 214
+  },
+  {
+    "id": 158,
+    "name": "echo_ore",
+    "textures": {
+      "all": "echo_ore"
+    },
+    "hardness": 5.2,
+    "requiredTool": "pickaxe",
+    "requiredToolTier": "diamond",
+    "dropItemId": 215
+  },
+  {
+    "id": 159,
+    "name": "glowcap",
+    "textures": {
+      "all": "glowcap"
+    },
+    "hardness": 0.25,
+    "transparent": true,
+    "solid": false,
+    "lightEmission": 9,
+    "dropItemId": 216
+  },
+  {
+    "id": 160,
+    "name": "fossil_block",
+    "textures": {
+      "all": "fossil_block"
+    },
+    "hardness": 3.2,
+    "requiredTool": "pickaxe",
+    "dropItemId": 217
+  },
+  {
+    "id": 161,
+    "name": "resonance_lantern",
+    "textures": {
+      "all": "resonance_lantern"
+    },
+    "hardness": 3.5,
+    "requiredTool": "pickaxe",
+    "lightEmission": 15,
+    "dropItemId": 218
+  },
+  {
+    "id": 162,
+    "name": "ancient_relic",
+    "textures": {
+      "all": "ancient_relic"
+    },
+    "hardness": 4,
+    "requiredTool": "pickaxe",
+    "lightEmission": 4,
+    "dropItemId": 220
   }
 ]
