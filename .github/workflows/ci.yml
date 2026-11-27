@@ -24,9 +24,9 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
-      - name: Install Pillow and generate game icon
+      - name: Install asset tools and generate game icon
         run: |
-          python -m pip install Pillow
+          python -m pip install -r tools/requirements.txt
           python tools/generate_icon.py
       - name: Set up Java 21 content-pack tools
         uses: actions/setup-java@v4
@@ -38,8 +38,10 @@ jobs:
         run: mvn -q -f tools/java/pom.xml compile exec:java "-Dexec.args=."
       - name: Test original texture palette
         run: python -m unittest discover -s tools -p "test_*.py"
-      - name: Generate original assets
-        run: python tools/gen_textures.py
+      - name: Generate original assets and soundtrack
+        run: |
+          python tools/gen_textures.py
+          python tools/gen_soundtrack.py
       - name: Restore
         run: dotnet restore BlockCraft.sln
       - name: Build
@@ -72,10 +74,12 @@ jobs:
       - name: Generate assets and publish portable package
         shell: pwsh
         run: |
-          python -m pip install Pillow
+          python -m pip install -r tools/requirements.txt
           python tools/generate_icon.py
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python tools/gen_textures.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python tools/gen_soundtrack.py
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           .\scripts\package.ps1 -Version "0.0.0" -RuntimeIdentifier "win-x64"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
@@ -111,6 +115,11 @@ jobs:
           if (-not (Test-Path (Join-Path $extract "BlockCraft.exe"))) { throw "Portable ZIP is missing BlockCraft.exe." }
           if (-not (Test-Path (Join-Path $extract "assets\generated\block_atlas.png"))) { throw "Portable ZIP is missing the generated texture atlas." }
           if (-not (Test-Path (Join-Path $extract "assets\generated\ambient_loop.wav"))) { throw "Portable ZIP is missing generated audio." }
+          if (-not (Test-Path (Join-Path $extract "Mining_Game.exe"))) { throw "Portable ZIP is missing the monitored Mining_Game.exe launcher." }
+          if (-not (Test-Path (Join-Path $extract "Mining_Game_Error_Checker.exe"))) { throw "Portable ZIP is missing the diagnostic checker executable." }
+          $music = Get-ChildItem (Join-Path $extract "assets\generated\music") -Filter "*.wav" -File
+          $musicBytes = ($music | Measure-Object -Property Length -Sum).Sum
+          if ($music.Count -lt 18 -or $musicBytes -lt 180000000) { throw "Portable ZIP is missing the complete 18-track soundtrack pack." }
       - name: Install and uninstall MSI
         shell: pwsh
         run: |
