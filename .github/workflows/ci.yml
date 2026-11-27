@@ -124,13 +124,19 @@ jobs:
         shell: pwsh
         run: |
           $msi = (Resolve-Path ".\artifacts\installer\BlockCraft-0.0.0-win-x64-setup.msi").Path
-          $installedExe = Join-Path $env:ProgramFiles "BlockCraft\BlockCraft.exe"
+          $installedExe = Join-Path $env:ProgramFiles "Mining Game\BlockCraft.exe"
           $install = Start-Process -FilePath "msiexec.exe" -ArgumentList ('/i "' + $msi + '" /qn /norestart') -Wait -PassThru
           if ($install.ExitCode -notin @(0, 3010)) { throw "MSI installation failed with exit code $($install.ExitCode)." }
           if (-not (Test-Path $installedExe)) { throw "MSI did not install BlockCraft.exe." }
+          $installedLauncher = Join-Path $env:ProgramFiles "Mining Game\Mining_Game.exe"
+          $installedChecker = Join-Path $env:ProgramFiles "Mining Game\Mining_Game_Error_Checker.exe"
+          if (-not (Test-Path $installedLauncher)) { throw "MSI did not install Mining_Game.exe." }
+          if (-not (Test-Path $installedChecker)) { throw "MSI did not install Mining_Game_Error_Checker.exe." }
           $uninstall = Start-Process -FilePath "msiexec.exe" -ArgumentList ('/x "' + $msi + '" /qn /norestart') -Wait -PassThru
           if ($uninstall.ExitCode -notin @(0, 3010)) { throw "MSI uninstall failed with exit code $($uninstall.ExitCode)." }
           if (Test-Path $installedExe) { throw "MSI uninstall left BlockCraft.exe behind." }
+          if (Test-Path $installedLauncher) { throw "MSI uninstall left Mining_Game.exe behind." }
+          if (Test-Path $installedChecker) { throw "MSI uninstall left Mining_Game_Error_Checker.exe behind." }
       - name: Install and uninstall setup.exe
         shell: pwsh
         run: |
@@ -139,6 +145,10 @@ jobs:
           $install = Start-Process -FilePath $setup -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-" -Wait -PassThru
           if ($install.ExitCode -ne 0) { throw "Inno Setup installation failed with exit code $($install.ExitCode)." }
           if (-not (Test-Path $installedExe)) { throw "Inno Setup did not install BlockCraft.exe." }
+          $installedLauncher = Join-Path $env:ProgramFiles "Mining Game\Mining_Game.exe"
+          $installedChecker = Join-Path $env:ProgramFiles "Mining Game\Mining_Game_Error_Checker.exe"
+          if (-not (Test-Path $installedLauncher)) { throw "Inno Setup did not install Mining_Game.exe." }
+          if (-not (Test-Path $installedChecker)) { throw "Inno Setup did not install Mining_Game_Error_Checker.exe." }
           $uninstaller = Join-Path $env:ProgramFiles "BlockCraft\unins000.exe"
           if (-not (Test-Path $uninstaller)) { throw "Inno Setup uninstaller was not installed." }
           $uninstallLog = Join-Path $env:RUNNER_TEMP "blockcraft-inno-uninstall.log"
@@ -147,6 +157,8 @@ jobs:
           if (Test-Path $uninstallLog) { Get-Content $uninstallLog | Write-Host }
           if ($uninstall.ExitCode -ne 0) { throw "Inno Setup uninstaller failed with exit code $($uninstall.ExitCode)." }
           if (Test-Path $installedExe) { throw "Inno Setup uninstall left BlockCraft.exe behind." }
+          if (Test-Path $installedLauncher) { throw "Inno Setup uninstall left Mining_Game.exe behind." }
+          if (Test-Path $installedChecker) { throw "Inno Setup uninstall left Mining_Game_Error_Checker.exe behind." }
       - name: Upload validated release packages
         if: always()
         uses: actions/upload-artifact@v4
