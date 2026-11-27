@@ -10,6 +10,7 @@ public sealed class TerrainGenerator
     private readonly ushort _granite, _diorite, _andesite, _deepslate, _tuff, _lava;
     private readonly ushort _copperOre, _redstoneOre, _lapisOre, _emeraldOre, _ancientDebris;
     private readonly ushort _ironOreDeepslate, _goldOreDeepslate, _diamondOreDeepslate;
+    private readonly ushort _echoOre, _amethystBlock, _calcite, _glowcap, _fossilBlock, _torch, _oakPlanks;
     private readonly ushort _copperOreDeepslate, _redstoneOreDeepslate, _lapisOreDeepslate, _emeraldOreDeepslate;
     private readonly ushort _birchLog, _birchLeaves, _spruceLog, _spruceLeaves;
     private readonly ushort _jungleLog, _jungleLeaves, _acaciaLog, _acaciaLeaves;
@@ -40,6 +41,13 @@ public sealed class TerrainGenerator
         _redstoneOreDeepslate = Optional(blocks, "redstone_ore_deepslate", _redstoneOre);
         _lapisOreDeepslate = Optional(blocks, "lapis_ore_deepslate", _lapisOre);
         _emeraldOreDeepslate = Optional(blocks, "emerald_ore_deepslate", _emeraldOre);
+        _echoOre = Optional(blocks, "echo_ore", _stone);
+        _amethystBlock = Optional(blocks, "amethyst_block", _air);
+        _calcite = Optional(blocks, "calcite", _air);
+        _glowcap = Optional(blocks, "glowcap", _air);
+        _fossilBlock = Optional(blocks, "fossil_block", _air);
+        _torch = Optional(blocks, "torch", _air);
+        _oakPlanks = Optional(blocks, "oak_planks", _dirt);
         _birchLog = Optional(blocks, "birch_log", _log); _birchLeaves = Optional(blocks, "birch_leaves", _leaves);
         _spruceLog = Optional(blocks, "spruce_log", _log); _spruceLeaves = Optional(blocks, "spruce_leaves", _leaves);
         _jungleLog = Optional(blocks, "jungle_log", _log); _jungleLeaves = Optional(blocks, "jungle_leaves", _leaves);
@@ -89,6 +97,9 @@ public sealed class TerrainGenerator
             }
         }
         AddTrees(chunk, seed);
+        AddGeodes(chunk, seed);
+        AddAbandonedMineshaft(chunk, seed);
+        AddCaveFeatures(chunk, seed);
         return chunk;
     }
 
@@ -97,6 +108,7 @@ public sealed class TerrainGenerator
         var chance = MathF.Abs(Noise.Hash(seed + 401, x / 3, y / 2, z / 3));
         var vein = MathF.Abs(Noise.Hash(seed + 521, x / 5, y / 4, z / 5));
         if (y < 12 && chance > 0.9991f) return _ancientDebris;
+        if (y < 42 && chance > 0.9976f && _echoOre != _stone) return _echoOre;
         if (y < 30 && chance > 0.995f) return _diamondOreDeepslate;
         if (y < 48 && chance > 0.992f) return _redstoneOreDeepslate;
         if (y < 48 && chance > 0.988f) return _goldOreDeepslate;
@@ -155,6 +167,121 @@ public sealed class TerrainGenerator
                 var lx = x + dx; var lz = z + dz; var ly = crownY + dy;
                 if ((uint)lx < Chunk.Width && (uint)lz < Chunk.Depth && (uint)ly < Chunk.Height &&
                     chunk.GetBlock(lx, ly, lz) == _air) chunk.SetBlock(lx, ly, lz, treeLeaves);
+            }
+        }
+    }
+
+    /// <summary>
+    /// Adds rare hollow geodes with tuff exteriors, calcite shells, and exposed amethyst.
+    /// Their centers stay inside chunk borders, so generation never depends on neighbor load order.
+    /// </summary>
+    private void AddGeodes(Chunk chunk, int seed)
+    {
+        if (_amethystBlock == _air || _calcite == _air)
+            return;
+        if (Noise.Hash(seed + 2027, chunk.ChunkX, 0, chunk.ChunkZ) < 0.72f)
+            return;
+
+        var centerX = 5 + (int)(MathF.Abs(Noise.Hash(seed + 2039, chunk.ChunkX, 0, chunk.ChunkZ)) * 6f);
+        var centerZ = 5 + (int)(MathF.Abs(Noise.Hash(seed + 2053, chunk.ChunkX, 0, chunk.ChunkZ)) * 6f);
+        var centerY = 24 + (int)(MathF.Abs(Noise.Hash(seed + 2063, chunk.ChunkX, 0, chunk.ChunkZ)) * 42f);
+        var radius = 3.7f + MathF.Abs(Noise.Hash(seed + 2081, chunk.ChunkX, 0, chunk.ChunkZ)) * 1.4f;
+        var outerSquared = radius * radius;
+
+        for (var y = Math.Max(8, centerY - 5); y <= Math.Min(SeaLevel + 8, centerY + 5); y++)
+        for (var z = Math.Max(1, centerZ - 5); z <= Math.Min(Chunk.Depth - 2, centerZ + 5); z++)
+        for (var x = Math.Max(1, centerX - 5); x <= Math.Min(Chunk.Width - 2, centerX + 5); x++)
+        {
+            var dx = x - centerX;
+            var dy = (y - centerY) * 1.08f;
+            var dz = z - centerZ;
+            var distance = dx * dx + dy * dy + dz * dz;
+            if (distance > outerSquared)
+                continue;
+
+            var current = chunk.GetBlock(x, y, z);
+            if (current == _air || current == _water || current == _lava)
+                continue;
+
+            var radialDistance = MathF.Sqrt(distance);
+            var shell = radialDistance >= radius - 0.7f ? _tuff
+                : radialDistance >= radius - 1.55f ? _calcite
+                : radialDistance >= radius - 2.35f ? _amethystBlock
+                : _air;
+            chunk.SetBlock(x, y, z, shell);
+        }
+
+        // Interior crystal points make the hollow cavity visible from more than one angle.
+        for (var crystal = 0; crystal < 4; crystal++)
+        {
+            var x = Math.Clamp(centerX + (int)(Noise.Hash(seed + 2111 + crystal, chunk.ChunkX, 0, chunk.ChunkZ) * 2.2f), 2, Chunk.Width - 3);
+            var z = Math.Clamp(centerZ + (int)(Noise.Hash(seed + 2131 + crystal, chunk.ChunkX, 0, chunk.ChunkZ) * 2.2f), 2, Chunk.Depth - 3);
+            var y = Math.Clamp(centerY + (int)(Noise.Hash(seed + 2153 + crystal, chunk.ChunkX, 0, chunk.ChunkZ) * 1.7f), 10, Chunk.Height - 10);
+            if (chunk.GetBlock(x, y, z) == _air)
+                chunk.SetBlock(x, y, z, _amethystBlock);
+        }
+    }
+
+    /// <summary>Adds occasional timber-supported abandoned mining corridors.</summary>
+    private void AddAbandonedMineshaft(Chunk chunk, int seed)
+    {
+        if (Noise.Hash(seed + 2203, chunk.ChunkX, 0, chunk.ChunkZ) < 0.88f)
+            return;
+
+        var centerZ = 4 + (int)(MathF.Abs(Noise.Hash(seed + 2213, chunk.ChunkX, 0, chunk.ChunkZ)) * 8f);
+        var floorY = 24 + (int)(MathF.Abs(Noise.Hash(seed + 2221, chunk.ChunkX, 0, chunk.ChunkZ)) * 24f);
+        for (var x = 1; x < Chunk.Width - 1; x++)
+        {
+            for (var z = Math.Max(1, centerZ - 2); z <= Math.Min(Chunk.Depth - 2, centerZ + 2); z++)
+            for (var y = floorY; y <= floorY + 3; y++)
+            {
+                var existing = chunk.GetBlock(x, y, z);
+                if (existing != _bedrock && existing != _lava)
+                    chunk.SetBlock(x, y, z, _air);
+            }
+
+            if (x == 2 || x == 6 || x == 10 || x == 14)
+            {
+                chunk.SetBlock(x, floorY - 1, centerZ, _oakPlanks);
+                for (var y = floorY; y <= floorY + 3; y++)
+                {
+                    chunk.SetBlock(x, y, centerZ - 2, _log);
+                    chunk.SetBlock(x, y, centerZ + 2, _log);
+                }
+                for (var z = centerZ - 2; z <= centerZ + 2; z++)
+                    chunk.SetBlock(x, floorY + 3, z, _log);
+            }
+            else if (x % 2 == 0)
+            {
+                chunk.SetBlock(x, floorY - 1, centerZ, _oakPlanks);
+            }
+
+            if ((x == 4 || x == 12) && _torch != _air)
+                chunk.SetBlock(x, floorY + 2, centerZ - 1, _torch);
+            if (x == 12 && _fossilBlock != _air)
+                chunk.SetBlock(x, floorY + 1, centerZ + 1, _fossilBlock);
+        }
+    }
+
+    /// <summary>Seeds bioluminescent glowcaps onto cave ceilings in dark underground pockets.</summary>
+    private void AddCaveFeatures(Chunk chunk, int seed)
+    {
+        if (_glowcap == _air)
+            return;
+        for (var z = 1; z < Chunk.Depth - 1; z++)
+        for (var x = 1; x < Chunk.Width - 1; x++)
+        {
+            var worldX = chunk.ChunkX * Chunk.Width + x;
+            var worldZ = chunk.ChunkZ * Chunk.Depth + z;
+            for (var y = 12; y < 78; y++)
+            {
+                if (chunk.GetBlock(x, y, z) != _air)
+                    continue;
+                var ceiling = chunk.GetBlock(x, y + 1, z);
+                if (ceiling == _air || ceiling == _water || ceiling == _lava)
+                    continue;
+                if (Noise.Hash(seed + 2281, worldX, y, worldZ) > 0.9975f)
+                    chunk.SetBlock(x, y, z, _glowcap);
             }
         }
     }
