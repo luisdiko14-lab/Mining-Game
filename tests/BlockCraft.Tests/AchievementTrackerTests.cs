@@ -44,7 +44,14 @@ public sealed class AchievementTrackerTests
         var second = new AchievementTracker();
         second.Restore(first.CreateSnapshot());
 
-        Assert.Equal(first.CreateSnapshot(), second.CreateSnapshot());
+        var expected = first.CreateSnapshot();
+        var actual = second.CreateSnapshot();
+        Assert.Equal(expected.BlocksMined, actual.BlocksMined);
+        Assert.Equal(expected.EchoOresMined, actual.EchoOresMined);
+        Assert.Equal(expected.FossilBlocksMined, actual.FossilBlocksMined);
+        Assert.Equal(expected.BlocksPlaced, actual.BlocksPlaced);
+        Assert.Equal(expected.DeepestY, actual.DeepestY);
+        Assert.Equal(expected.VisitedChunks, actual.VisitedChunks);
         Assert.Equal(2, second.ChunksVisited);
         Assert.Contains(second.GetAchievements(), achievement => achievement.Id == "echo_resonance" && !achievement.IsUnlocked);
     }
