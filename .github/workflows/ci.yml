@@ -119,6 +119,7 @@ jobs:
           if (-not (Test-Path (Join-Path $extract "BlockCraft.exe"))) { throw "Portable ZIP is missing BlockCraft.exe." }
           if (-not (Test-Path (Join-Path $extract "assets\generated\block_atlas.png"))) { throw "Portable ZIP is missing the generated texture atlas." }
           if (-not (Test-Path (Join-Path $extract "assets\generated\ambient_loop.wav"))) { throw "Portable ZIP is missing generated audio." }
+          if (-not (Test-Path (Join-Path $extract "assets\generated\music\music_manifest.json"))) { throw "Portable ZIP is missing the soundtrack manifest." }
           if (-not (Test-Path (Join-Path $extract "Mining_Game.exe"))) { throw "Portable ZIP is missing the monitored Mining_Game.exe launcher." }
           if (-not (Test-Path (Join-Path $extract "Mining_Game_Error_Checker.exe"))) { throw "Portable ZIP is missing the diagnostic checker executable." }
           $music = Get-ChildItem (Join-Path $extract "assets\generated\music") -Filter "*.wav" -File
