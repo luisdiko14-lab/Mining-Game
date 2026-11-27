@@ -80,7 +80,7 @@ try {
     Write-Host "Added Mining_Game.exe launcher and Mining_Game_Error_Checker.exe."
 
     if (Test-Path $zipPath) { Remove-Item $zipPath -Force }
-    Compress-Archive -Path (Join-Path $publishDir "*") -DestinationPath $zipPath -CompressionLevel Optimal
+    Compress-Archive -Path (Join-Path $publishDir "*") -DestinationPath $zipPath -CompressionLevel NoCompression
     Write-Host "Portable package created: $zipPath"
 }
 finally { Pop-Location }
