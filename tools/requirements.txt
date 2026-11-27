@@ -1,1 +1,3 @@
-# Original asset generation dependencies\nPillow>=11.0,<13\nnumpy>=2.2,<3\n
+# Original procedural asset generation dependencies
+Pillow>=11.0,<13
+numpy>=2.2,<3
