@@ -99,6 +99,10 @@ jobs:
           if (-not $compiler) { throw "Inno Setup compiler was not found." }
           & $compiler.FullName "/DMyAppVersion=0.0.0" ".\installer\BlockCraft.iss"
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          $setupExe = ".\artifacts\installer\BlockCraft-0.0.0-win-x64-setup.exe"
+          if (-not (Test-Path $setupExe) -or (Get-Item $setupExe).Length -lt 167000000) {
+            throw "The self-contained setup.exe must include the uncompressed original soundtrack and exceed 167 MB."
+          }
       - name: Compile setup.msi
         shell: pwsh
         run: |
@@ -120,6 +124,8 @@ jobs:
           $music = Get-ChildItem (Join-Path $extract "assets\generated\music") -Filter "*.wav" -File
           $musicBytes = ($music | Measure-Object -Property Length -Sum).Sum
           if ($music.Count -lt 18 -or $musicBytes -lt 180000000) { throw "Portable ZIP is missing the complete 18-track soundtrack pack." }
+          $zipBytes = (Get-Item $zip).Length
+          if ($zipBytes -lt 167000000) { throw "Portable ZIP is smaller than 167 MB; the generated original soundtrack must remain included in the distribution." }
       - name: Install and uninstall MSI
         shell: pwsh
         run: |
