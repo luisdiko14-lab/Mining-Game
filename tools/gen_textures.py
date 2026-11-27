@@ -64,9 +64,31 @@ PALETTES: dict[str, tuple[int, int, int]] = {
 
 def base_color(name: str) -> tuple[int, int, int]:
     lowered = name.lower()
-    for key, color in PALETTES.items():
-        if key in lowered:
-            return color
+
+    # Semantic suffixes must win over substring matches (e.g. dark_oak_leaves
+    # should be green, not bark brown; blue_wool should be blue, not white).
+    if lowered.endswith("_leaves"):
+        if "cherry" in lowered:
+            return (105, 157, 91)
+        if "birch" in lowered or "spruce" in lowered:
+            return (75, 132, 67)
+        return PALETTES["leaves"]
+
+    if lowered.startswith("mossy_"):
+        return PALETTES["mossy"]
+
+    for suffix in ("_wool", "_concrete", "_terracotta"):
+        if lowered.endswith(suffix):
+            dye = lowered[:-len(suffix)]
+            if dye == "white":
+                return (226, 226, 220) if suffix == "_wool" else (218, 218, 212)
+            if dye in PALETTES:
+                return PALETTES[dye]
+
+    palette_name = lowered.removesuffix("_deepslate") if lowered.endswith("_ore_deepslate") else lowered
+    matches = [(key, color) for key, color in PALETTES.items() if key in palette_name]
+    if matches:
+        return max(matches, key=lambda item: len(item[0]))[1]
     return (150, 150, 150)
 
 

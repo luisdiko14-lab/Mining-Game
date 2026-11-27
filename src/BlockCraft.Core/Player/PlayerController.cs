@@ -125,7 +125,7 @@ public static class BlockRaycaster
         while (distance <= maxDistance)
         {
             var id = world.GetBlock(x, y, z);
-            if (id != 0 && blocks[id].Solid) return new RayHit(new BlockPos(x, y, z), previous, distance);
+            if (id != 0 && blocks[id].Selectable) return new RayHit(new BlockPos(x, y, z), previous, distance);
             previous = new BlockPos(x, y, z);
             if (maxX < maxY && maxX < maxZ) { x += stepX; distance = maxX; maxX += deltaX; }
             else if (maxY < maxZ) { y += stepY; distance = maxY; maxY += deltaY; }

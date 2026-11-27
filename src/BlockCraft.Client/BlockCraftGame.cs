@@ -23,7 +23,7 @@ internal sealed class BlockCraftGame : Game
     private readonly string _settingsPath;
     private readonly string _worldDirectory;
     private readonly ConcurrentDictionary<ChunkPos, byte> _meshJobs = new();
-    private readonly ConcurrentQueue<(ChunkPos Position, int Revision, VertexPositionColorTexture[] Vertices)> _readyMeshes = new();
+    private readonly ConcurrentQueue<(ChunkPos Position, Chunk Chunk, int Revision, VertexPositionColorTexture[] Vertices)> _readyMeshes = new();
     private readonly Dictionary<ChunkPos, (int Revision, VertexPositionColorTexture[] Vertices)> _meshes = [];
     private readonly WorldClock _clock = new();
     private GameSettings _settings;
@@ -61,7 +61,10 @@ internal sealed class BlockCraftGame : Game
     private KeyboardState _previousKeyboard;
     private GameScreen _screen = GameScreen.MainMenu;
     private int _selectedHotbar;
-    private int _lastLoadedChunkCount = -1;
+    private NVector3 _spawnPosition;
+    private readonly HashSet<ChunkPos> _knownLoadedChunks = [];
+    private Task? _chunkUnloadTask;
+    private ChunkPos? _lastChunkUnloadCenter;
     private int _lastBreakX = int.MinValue;
     private int _lastBreakY = int.MinValue;
     private int _lastBreakZ = int.MinValue;
@@ -195,12 +198,14 @@ internal sealed class BlockCraftGame : Game
 
         if (keyboard.IsKeyDown(Keys.Escape) && !_previousKeyboard.IsKeyDown(Keys.Escape))
         {
+            var wasGameOver = _screen == GameScreen.GameOver;
             _screen = _screen switch
             {
                 GameScreen.Playing => GameScreen.Paused,
-                GameScreen.Paused or GameScreen.Inventory => GameScreen.Playing,
+                GameScreen.Paused or GameScreen.Inventory or GameScreen.GameOver => GameScreen.Playing,
                 _ => GameScreen.MainMenu
             };
+            if (wasGameOver) RespawnPlayer();
             IsMouseVisible = _screen != GameScreen.Playing;
         }
 
@@ -289,7 +294,8 @@ internal sealed class BlockCraftGame : Game
                 break;
             }
         }
-        _player = new PlayerController(_blocks, new NVector3(8.5f, surface + 1.05f, 8.5f));
+        _spawnPosition = new NVector3(8.5f, surface + 1.05f, 8.5f);
+        _player = new PlayerController(_blocks, _spawnPosition);
         _survival = new SurvivalStats();
         _fallDistance = 0f;
         _inventory = new Inventory(_items, 36);
@@ -310,17 +316,28 @@ internal sealed class BlockCraftGame : Game
             try
             {
                 var saved = JsonSerializer.Deserialize<PlayerSaveData>(File.ReadAllText(playerSavePath));
-                if (saved is not null && saved.Inventory is not null)
+                if (saved is not null && IsValidPlayerSave(saved))
                 {
-                    _player.Teleport(new NVector3(saved.X, saved.Y, saved.Z));
-                    _player.Yaw = saved.Yaw;
-                    _player.Pitch = saved.Pitch;
-                    _survival.Restore(saved.Health, saved.Hunger, saved.Saturation);
                     for (var index = 0; index < _inventory.Count; index++)
                         _inventory.Set(index, index < saved.Inventory.Length ? saved.Inventory[index] : ItemStack.Empty);
+
+                    if (saved.Health > 0f)
+                    {
+                        _player.Teleport(new NVector3(saved.X, saved.Y, saved.Z));
+                        _player.Yaw = saved.Yaw;
+                        _player.Pitch = Math.Clamp(saved.Pitch, -1.52f, 1.52f);
+                        _survival.Restore(saved.Health, saved.Hunger, saved.Saturation);
+                    }
+                    else
+                    {
+                        _player.Teleport(_spawnPosition);
+                        _player.Yaw = 0f;
+                        _player.Pitch = 0f;
+                        _survival = new SurvivalStats();
+                    }
                 }
             }
-            catch (Exception exception) when (exception is IOException or JsonException or ArgumentException or KeyNotFoundException)
+            catch (Exception exception) when (exception is IOException or JsonException or ArgumentException or KeyNotFoundException or InvalidDataException)
             {
                 Console.Error.WriteLine($"Player save could not be loaded: {exception.Message}");
             }
@@ -329,9 +346,39 @@ internal sealed class BlockCraftGame : Game
         _screen = GameScreen.Playing;
         IsMouseVisible = false;
         _meshes.Clear();
-        _lastLoadedChunkCount = -1;
+        _knownLoadedChunks.Clear();
+        _lastChunkUnloadCenter = null;
+        _chunkUnloadTask = null;
+        while (_readyMeshes.TryDequeue(out _)) { }
         CenterMouse();
         RequestNearbyChunks();
+    }
+
+    private void RespawnPlayer()
+    {
+        if (_player is null) return;
+        _player.Teleport(_spawnPosition);
+        _player.Yaw = 0f;
+        _player.Pitch = 0f;
+        _survival = new SurvivalStats();
+        _fallDistance = 0f;
+        ResetBreakProgress();
+        _touchJumpPressed = false;
+        _touchMinePressed = false;
+        _touchPlaceRequested = false;
+        _screen = GameScreen.Playing;
+        IsMouseVisible = false;
+        CenterMouse();
+    }
+
+    private static bool IsValidPlayerSave(PlayerSaveData saved)
+    {
+        return saved.Inventory is not null && saved.Inventory.Length <= 36 &&
+               float.IsFinite(saved.X) && float.IsFinite(saved.Y) && float.IsFinite(saved.Z) &&
+               float.IsFinite(saved.Yaw) && float.IsFinite(saved.Pitch) &&
+               float.IsFinite(saved.Health) && float.IsFinite(saved.Hunger) && float.IsFinite(saved.Saturation) &&
+               MathF.Abs(saved.X) < 10_000_000f && MathF.Abs(saved.Z) < 10_000_000f &&
+               saved.Y > 0f && saved.Y < Chunk.Height - 1;
     }
 
     private void UpdatePlaying(GameTime gameTime, KeyboardState keyboard, MouseState mouse, bool rightPressed)
@@ -595,17 +642,20 @@ internal sealed class BlockCraftGame : Game
         }
         var speed = 1f;
         var stack = _inventory![_selectedHotbar];
+        ItemDefinition? selectedTool = null;
         if (!stack.IsEmpty)
         {
-            var tool = _items[stack.ItemId];
-            if (tool.ToolType.Equals(definition.RequiredTool, StringComparison.OrdinalIgnoreCase))
-                speed = Math.Max(1f, tool.MiningSpeed);
+            selectedTool = _items[stack.ItemId];
+            if (selectedTool.ToolType.Equals(definition.RequiredTool, StringComparison.OrdinalIgnoreCase))
+                speed = Math.Max(1f, selectedTool.MiningSpeed);
         }
+        var canHarvest = definition.CanHarvestWith(
+            selectedTool?.ToolType ?? "none", selectedTool?.ToolTier ?? "none");
         _breakProgress += elapsed * speed / Math.Max(0.15f, definition.Hardness * 0.62f);
         if (_breakProgress < 1f) return;
         if (_world.SetBlock(position.X, position.Y, position.Z, 0))
         {
-            if (definition.DropItemId != 0)
+            if (definition.DropItemId != 0 && canHarvest)
                 _inventory.Add(definition.DropItemId, 1);
             _blockSound?.Play(_settings.MasterVolume, 0, 0);
         }
@@ -623,7 +673,8 @@ internal sealed class BlockCraftGame : Game
         if (place.Y >= feet.Y && place.Y <= feet.Y + 1.8f &&
             MathF.Abs(place.X + 0.5f - feet.X) < 0.8f && MathF.Abs(place.Z + 0.5f - feet.Z) < 0.8f)
             return;
-        if (_world!.GetBlock(place.X, place.Y, place.Z) != 0) return;
+        var existingBlock = _world!.GetBlock(place.X, place.Y, place.Z);
+        if (existingBlock != 0 && _blocks[existingBlock].Solid) return;
         if (_world.SetBlock(place.X, place.Y, place.Z, item.PlacesBlockId))
         {
             _inventory.Set(_selectedHotbar, stack.Count == 1 ? ItemStack.Empty : stack with { Count = stack.Count - 1 });
@@ -653,22 +704,48 @@ internal sealed class BlockCraftGame : Game
         if (_world is null || _player is null) return;
         var chunkX = ChunkManager.FloorDiv((int)MathF.Floor(_player.Position.X), Chunk.Width);
         var chunkZ = ChunkManager.FloorDiv((int)MathF.Floor(_player.Position.Z), Chunk.Depth);
+        var center = new ChunkPos(chunkX, chunkZ);
         var radius = Math.Min(_settings.RenderDistance, 6);
         for (var z = -radius; z <= radius; z++)
         for (var x = -radius; x <= radius; x++)
             _ = _world.RequestChunkAsync(new ChunkPos(chunkX + x, chunkZ + z));
+
+        if ((_chunkUnloadTask is null || _chunkUnloadTask.IsCompleted) && _lastChunkUnloadCenter != center)
+        {
+            _lastChunkUnloadCenter = center;
+            _chunkUnloadTask = UnloadFarChunksAsync(_world, center, radius + 1);
+        }
+    }
+
+    private async Task UnloadFarChunksAsync(ChunkManager world, ChunkPos center, int keepRadius)
+    {
+        try
+        {
+            await world.UnloadOutsideAsync(center, keepRadius).ConfigureAwait(false);
+        }
+        catch (Exception exception)
+        {
+            Console.Error.WriteLine($"Far chunk cleanup failed: {exception}");
+            _lastChunkUnloadCenter = null;
+        }
     }
 
     private void UpdateChunkMeshes()
     {
         if (_world is null) return;
         var chunks = _world.LoadedChunks;
-        if (chunks.Count != _lastLoadedChunkCount)
+        var currentPositions = chunks.Select(chunk => new ChunkPos(chunk.ChunkX, chunk.ChunkZ)).ToHashSet();
+        foreach (var added in currentPositions.Except(_knownLoadedChunks))
+            InvalidateNeighborMeshes(added);
+        foreach (var removed in _knownLoadedChunks.Except(currentPositions))
         {
-            _lastLoadedChunkCount = chunks.Count;
-            foreach (var key in _meshes.Keys.ToArray())
-                _meshes[key] = (-1, _meshes[key].Vertices);
+            _meshes.Remove(removed);
+            InvalidateNeighborMeshes(removed);
         }
+        foreach (var stale in _meshes.Keys.Where(position => !currentPositions.Contains(position)).ToArray())
+            _meshes.Remove(stale);
+        _knownLoadedChunks.Clear();
+        _knownLoadedChunks.UnionWith(currentPositions);
 
         var world = _world;
         var daylight = _clock.Daylight;
@@ -678,6 +755,8 @@ internal sealed class BlockCraftGame : Game
             if (_meshes.TryGetValue(position, out var existing) && existing.Revision == chunk.Revision)
                 continue;
             if (!_meshJobs.TryAdd(position, 0)) continue;
+            var sourceChunk = chunk;
+            var sourceRevision = sourceChunk.Revision;
             _ = Task.Run(() =>
             {
                 try
@@ -685,7 +764,7 @@ internal sealed class BlockCraftGame : Game
                     var quads = GreedyMesher.Build(
                         (x, y, z) => world.GetBlock(chunk.ChunkX * Chunk.Width + x, y, chunk.ChunkZ * Chunk.Depth + z),
                         _blocks);
-                    var lighting = ChunkLighting.Calculate(chunk, _blocks,
+                    var lighting = ChunkLighting.Calculate(sourceChunk, _blocks,
                         (x, y, z) => world.GetBlock(chunk.ChunkX * Chunk.Width + x, y, chunk.ChunkZ * Chunk.Depth + z));
                     var vertices = new List<VertexPositionColorTexture>(quads.Count * 6);
                     foreach (var quad in quads)
@@ -732,7 +811,7 @@ internal sealed class BlockCraftGame : Game
                         vertices.Add(new VertexPositionColorTexture(p2, color11, uv2));
                         vertices.Add(new VertexPositionColorTexture(p3, color01, uv3));
                     }
-                    _readyMeshes.Enqueue((position, chunk.Revision, vertices.ToArray()));
+                    _readyMeshes.Enqueue((position, sourceChunk, sourceRevision, vertices.ToArray()));
                 }
                 catch (Exception exception)
                 {
@@ -749,7 +828,29 @@ internal sealed class BlockCraftGame : Game
     private void PumpMeshResults()
     {
         while (_readyMeshes.TryDequeue(out var mesh))
-            _meshes[mesh.Position] = (mesh.Revision, mesh.Vertices);
+        {
+            if (_world is not null &&
+                _world.TryGetChunk(mesh.Position, out var current) &&
+                current is not null &&
+                ReferenceEquals(current, mesh.Chunk) &&
+                current.Revision == mesh.Revision)
+                _meshes[mesh.Position] = (mesh.Revision, mesh.Vertices);
+        }
+    }
+
+    private void InvalidateNeighborMeshes(ChunkPos position)
+    {
+        foreach (var neighbor in new[]
+                 {
+                     new ChunkPos(position.X - 1, position.Z),
+                     new ChunkPos(position.X + 1, position.Z),
+                     new ChunkPos(position.X, position.Z - 1),
+                     new ChunkPos(position.X, position.Z + 1)
+                 })
+        {
+            if (_meshes.TryGetValue(neighbor, out var mesh))
+                _meshes[neighbor] = (-1, mesh.Vertices);
+        }
     }
 
     private static Color ShadeColor(Color color, float light, float faceShade, byte ambientOcclusion)

@@ -6,6 +6,11 @@ namespace BlockCraft.Core.Blocks;
 /// <summary>Validated, immutable lookup table for data-driven block definitions.</summary>
 public sealed class BlockRegistry
 {
+    private static readonly HashSet<string> ValidToolTiers = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "none", "wood", "gold", "stone", "copper", "iron", "diamond", "netherite"
+    };
+
     private readonly Dictionary<ushort, BlockDefinition> _byId = [];
     private readonly Dictionary<string, BlockDefinition> _byName = new(StringComparer.OrdinalIgnoreCase);
 
@@ -15,8 +20,11 @@ public sealed class BlockRegistry
         {
             if (string.IsNullOrWhiteSpace(definition.Name))
                 throw new InvalidDataException($"Block {definition.Id} has no name.");
-            if (definition.Hardness < 0 || float.IsNaN(definition.Hardness))
+            if (definition.Hardness < 0 || !float.IsFinite(definition.Hardness))
                 throw new InvalidDataException($"Block {definition.Name} has invalid hardness.");
+            if (string.IsNullOrWhiteSpace(definition.RequiredToolTier) ||
+                !ValidToolTiers.Contains(definition.RequiredToolTier))
+                throw new InvalidDataException($"Block {definition.Name} has an invalid required tool tier.");
             if (definition.LightEmission > 15)
                 throw new InvalidDataException($"Block {definition.Name} emits more than 15 light.");
             if (!_byId.TryAdd(definition.Id, definition))

@@ -36,7 +36,11 @@ public sealed class ChunkManager
     private async Task<Chunk> AwaitAndRemoveAsync(ChunkPos position, Task<Chunk> task)
     {
         try { return await task.ConfigureAwait(false); }
-        finally { _pending.TryRemove(position, out _); }
+        finally
+        {
+            ((ICollection<KeyValuePair<ChunkPos, Task<Chunk>>>)_pending)
+                .Remove(new KeyValuePair<ChunkPos, Task<Chunk>>(position, task));
+        }
     }
 
     /// <summary>Returns whether a chunk is currently available.</summary>
@@ -72,11 +76,34 @@ public sealed class ChunkManager
     /// <summary>Unloads a chunk after persisting its current contents.</summary>
     public async Task UnloadAsync(ChunkPos position, CancellationToken cancellationToken = default)
     {
-        if (_chunks.TryGetValue(position, out var chunk))
+        if (!_chunks.TryGetValue(position, out var chunk)) return;
+        await _storage.SaveChunkAsync(chunk, cancellationToken).ConfigureAwait(false);
+        ((ICollection<KeyValuePair<ChunkPos, Chunk>>)_chunks)
+            .Remove(new KeyValuePair<ChunkPos, Chunk>(position, chunk));
+    }
+
+    /// <summary>Saves and unloads chunks outside a square keep radius.</summary>
+    public async Task<IReadOnlyList<ChunkPos>> UnloadOutsideAsync(
+        ChunkPos center, int keepRadius, CancellationToken cancellationToken = default)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegative(keepRadius);
+        var candidates = _chunks
+            .Where(pair => Math.Abs((long)pair.Key.X - center.X) > keepRadius ||
+                           Math.Abs((long)pair.Key.Z - center.Z) > keepRadius)
+            .ToArray();
+        if (candidates.Length == 0) return Array.Empty<ChunkPos>();
+
+        await _storage.SaveChunksAsync(candidates.Select(pair => pair.Value), cancellationToken)
+            .ConfigureAwait(false);
+
+        var unloaded = new List<ChunkPos>(candidates.Length);
+        foreach (var candidate in candidates)
         {
-            await _storage.SaveChunkAsync(chunk, cancellationToken).ConfigureAwait(false);
-            _chunks.TryRemove(position, out _);
+            cancellationToken.ThrowIfCancellationRequested();
+            if (((ICollection<KeyValuePair<ChunkPos, Chunk>>)_chunks).Remove(candidate))
+                unloaded.Add(candidate.Key);
         }
+        return unloaded;
     }
 
     /// <summary>Converts a world coordinate to its chunk coordinate using mathematical floor division.</summary>

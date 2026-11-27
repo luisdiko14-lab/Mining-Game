@@ -48,43 +48,71 @@ public sealed class WorldStorage
     }
 
     /// <summary>Atomically replaces one chunk record in its region file.</summary>
-    public async Task SaveChunkAsync(Chunk chunk, CancellationToken cancellationToken = default)
+    public Task SaveChunkAsync(Chunk chunk, CancellationToken cancellationToken = default)
     {
         ArgumentNullException.ThrowIfNull(chunk);
-        var region = RegionOf(new ChunkPos(chunk.ChunkX, chunk.ChunkZ));
-        var gate = _regionLocks.GetOrAdd(region, static _ => new SemaphoreSlim(1, 1));
-        await gate.WaitAsync(cancellationToken).ConfigureAwait(false);
-        try
-        {
-            var path = RegionPath(region.X, region.Z);
-            var records = File.Exists(path) ? ReadRegion(path) : new Dictionary<int, byte[]>();
-            using var input = new MemoryStream(chunk.Serialize());
-            using var compressed = new MemoryStream();
-            using (var brotli = new BrotliStream(compressed, CompressionLevel.Optimal, leaveOpen: true))
-                await input.CopyToAsync(brotli, cancellationToken).ConfigureAwait(false);
-            records[LocalKey(new ChunkPos(chunk.ChunkX, chunk.ChunkZ))] = compressed.ToArray();
-
-            Directory.CreateDirectory(Path.GetDirectoryName(path)!);
-            var temporary = path + ".tmp";
-            await using (var stream = new FileStream(temporary, FileMode.Create, FileAccess.Write, FileShare.None, 81920, useAsync: true))
-            using (var writer = new BinaryWriter(stream, System.Text.Encoding.UTF8, leaveOpen: true))
-            {
-                writer.Write(Magic);
-                writer.Write(records.Count);
-                foreach (var record in records.OrderBy(pair => pair.Key))
-                {
-                    writer.Write(record.Key);
-                    writer.Write(record.Value.Length);
-                    writer.Write(record.Value);
-                }
-                await stream.FlushAsync(cancellationToken).ConfigureAwait(false);
-            }
-            File.Move(temporary, path, overwrite: true);
-        }
-        finally { gate.Release(); }
+        return SaveChunksAsync([chunk], cancellationToken);
     }
 
-    private static Dictionary<int, byte[]> ReadRegion(string path)
+    /// <summary>Atomically saves several chunks while rewriting each affected region only once.</summary>
+    public async Task SaveChunksAsync(IEnumerable<Chunk> chunks, CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(chunks);
+        var batch = chunks.ToArray();
+        if (batch.Any(chunk => chunk is null))
+            throw new ArgumentException("Chunk batches cannot contain null values.", nameof(chunks));
+
+        var groups = batch.GroupBy(chunk => RegionOf(new ChunkPos(chunk.ChunkX, chunk.ChunkZ)))
+            .OrderBy(group => group.Key.X).ThenBy(group => group.Key.Z);
+        foreach (var group in groups)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            var region = group.Key;
+            var gate = _regionLocks.GetOrAdd(region, static _ => new SemaphoreSlim(1, 1));
+            await gate.WaitAsync(cancellationToken).ConfigureAwait(false);
+            try
+            {
+                var path = RegionPath(region.X, region.Z);
+                var records = File.Exists(path) ? ReadRegion(path) : new Dictionary<int, byte[]>();
+                foreach (var chunk in group)
+                {
+                    using var input = new MemoryStream(chunk.Serialize(), writable: false);
+                    using var compressed = new MemoryStream();
+                    using (var brotli = new BrotliStream(compressed, CompressionLevel.Optimal, leaveOpen: true))
+                        await input.CopyToAsync(brotli, cancellationToken).ConfigureAwait(false);
+                    records[LocalKey(new ChunkPos(chunk.ChunkX, chunk.ChunkZ))] = compressed.ToArray();
+                }
+
+                Directory.CreateDirectory(Path.GetDirectoryName(path)!);
+                var temporary = path + "." + Guid.NewGuid().ToString("N") + ".tmp";
+                try
+                {
+                    await using (var stream = new FileStream(temporary, FileMode.CreateNew, FileAccess.Write,
+                                     FileShare.None, 81920, useAsync: true))
+                    using (var writer = new BinaryWriter(stream, System.Text.Encoding.UTF8, leaveOpen: true))
+                    {
+                        writer.Write(Magic);
+                        writer.Write(records.Count);
+                        foreach (var record in records.OrderBy(pair => pair.Key))
+                        {
+                            writer.Write(record.Key);
+                            writer.Write(record.Value.Length);
+                            writer.Write(record.Value);
+                        }
+                        await stream.FlushAsync(cancellationToken).ConfigureAwait(false);
+                    }
+                    File.Move(temporary, path, overwrite: true);
+                }
+                finally
+                {
+                    if (File.Exists(temporary)) File.Delete(temporary);
+                }
+            }
+            finally { gate.Release(); }
+        }
+    }
+
+        private static Dictionary<int, byte[]> ReadRegion(string path)
     {
         using var stream = File.OpenRead(path);
         using var reader = new BinaryReader(stream);

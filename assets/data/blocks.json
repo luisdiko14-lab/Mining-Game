@@ -8,7 +8,8 @@
     "hardness": 0,
     "dropItemId": 0,
     "transparent": true,
-    "solid": false
+    "solid": false,
+    "selectable": false
   },
   {
     "id": 1,
@@ -101,7 +102,8 @@
     },
     "hardness": 3,
     "requiredTool": "pickaxe",
-    "dropItemId": 55
+    "dropItemId": 55,
+    "requiredToolTier": "stone"
   },
   {
     "id": 10,
@@ -111,7 +113,8 @@
     },
     "hardness": 3,
     "requiredTool": "pickaxe",
-    "dropItemId": 56
+    "dropItemId": 56,
+    "requiredToolTier": "iron"
   },
   {
     "id": 11,
@@ -121,7 +124,8 @@
     },
     "hardness": 3,
     "requiredTool": "pickaxe",
-    "dropItemId": 12
+    "dropItemId": 12,
+    "requiredToolTier": "iron"
   },
   {
     "id": 12,
@@ -141,7 +145,8 @@
     "hardness": 100,
     "transparent": true,
     "solid": false,
-    "dropItemId": 0
+    "dropItemId": 0,
+    "selectable": false
   },
   {
     "id": 14,
@@ -153,7 +158,8 @@
     "transparent": true,
     "solid": false,
     "lightEmission": 15,
-    "dropItemId": 0
+    "dropItemId": 0,
+    "selectable": false
   },
   {
     "id": 15,
@@ -315,7 +321,8 @@
     },
     "hardness": 50,
     "requiredTool": "pickaxe",
-    "dropItemId": 27
+    "dropItemId": 27,
+    "requiredToolTier": "diamond"
   },
   {
     "id": 31,
@@ -323,7 +330,7 @@
     "textures": {
       "all": "torch"
     },
-    "hardness": 0,
+    "hardness": 0.2,
     "transparent": true,
     "solid": false,
     "lightEmission": 14,
@@ -347,7 +354,8 @@
     },
     "hardness": 3,
     "requiredTool": "pickaxe",
-    "dropItemId": 30
+    "dropItemId": 30,
+    "requiredToolTier": "iron"
   },
   {
     "id": 34,
@@ -357,7 +365,8 @@
     },
     "hardness": 3,
     "requiredTool": "pickaxe",
-    "dropItemId": 31
+    "dropItemId": 31,
+    "requiredToolTier": "iron"
   },
   {
     "id": 35,
@@ -367,7 +376,8 @@
     },
     "hardness": 3,
     "requiredTool": "pickaxe",
-    "dropItemId": 57
+    "dropItemId": 57,
+    "requiredToolTier": "stone"
   },
   {
     "id": 36,
@@ -448,7 +458,8 @@
     },
     "hardness": 5,
     "requiredTool": "pickaxe",
-    "dropItemId": 40
+    "dropItemId": 40,
+    "requiredToolTier": "iron"
   },
   {
     "id": 44,
@@ -820,7 +831,8 @@
     },
     "hardness": 3,
     "requiredTool": "pickaxe",
-    "dropItemId": 58
+    "dropItemId": 58,
+    "requiredToolTier": "iron"
   },
   {
     "id": 80,
@@ -830,7 +842,8 @@
     },
     "hardness": 3,
     "requiredTool": "pickaxe",
-    "dropItemId": 146
+    "dropItemId": 146,
+    "requiredToolTier": "iron"
   },
   {
     "id": 81,
@@ -870,7 +883,8 @@
     },
     "hardness": 30,
     "requiredTool": "pickaxe",
-    "dropItemId": 149
+    "dropItemId": 149,
+    "requiredToolTier": "diamond"
   },
   {
     "id": 85,
@@ -1000,7 +1014,8 @@
     },
     "hardness": 4,
     "requiredTool": "pickaxe",
-    "dropItemId": 55
+    "dropItemId": 55,
+    "requiredToolTier": "stone"
   },
   {
     "id": 98,
@@ -1010,7 +1025,8 @@
     },
     "hardness": 4,
     "requiredTool": "pickaxe",
-    "dropItemId": 56
+    "dropItemId": 56,
+    "requiredToolTier": "iron"
   },
   {
     "id": 99,
@@ -1020,7 +1036,8 @@
     },
     "hardness": 4,
     "requiredTool": "pickaxe",
-    "dropItemId": 12
+    "dropItemId": 12,
+    "requiredToolTier": "iron"
   },
   {
     "id": 100,
@@ -1030,7 +1047,8 @@
     },
     "hardness": 4,
     "requiredTool": "pickaxe",
-    "dropItemId": 57
+    "dropItemId": 57,
+    "requiredToolTier": "stone"
   },
   {
     "id": 101,
@@ -1040,7 +1058,8 @@
     },
     "hardness": 4,
     "requiredTool": "pickaxe",
-    "dropItemId": 30
+    "dropItemId": 30,
+    "requiredToolTier": "iron"
   },
   {
     "id": 102,
@@ -1050,7 +1069,8 @@
     },
     "hardness": 4,
     "requiredTool": "pickaxe",
-    "dropItemId": 31
+    "dropItemId": 31,
+    "requiredToolTier": "iron"
   },
   {
     "id": 103,
@@ -1060,7 +1080,8 @@
     },
     "hardness": 4,
     "requiredTool": "pickaxe",
-    "dropItemId": 58
+    "dropItemId": 58,
+    "requiredToolTier": "iron"
   },
   {
     "id": 104,
@@ -1231,7 +1252,7 @@
     "textures": {
       "all": "honey_block"
     },
-    "hardness": 0,
+    "hardness": 0.3,
     "requiredTool": "none",
     "dropItemId": 177,
     "transparent": true
@@ -1242,7 +1263,7 @@
     "textures": {
       "all": "slime_block"
     },
-    "hardness": 0,
+    "hardness": 0.3,
     "requiredTool": "none",
     "dropItemId": 178,
     "transparent": true
