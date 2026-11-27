@@ -5,7 +5,7 @@
     <RootNamespace>BlockCraft.Client</RootNamespace>
     <AssemblyName>BlockCraft</AssemblyName>
     <ApplicationManifest>app.manifest</ApplicationManifest>
-    <ApplicationIcon>..\\..\\assets\\generated\\BlockCraft.ico</ApplicationIcon>
+    <ApplicationIcon>..\..\assets\generated\\BlockCraft.ico</ApplicationIcon>
     <PublishSingleFile>true</PublishSingleFile>
     <SelfContained>true</SelfContained>
     <!-- MonoGame loads SDL2.dll/soft_oal.dll with a plain LoadLibrary(), which only finds files placed
