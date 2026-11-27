@@ -21,6 +21,7 @@ OutputBaseFilename=BlockCraft-{#MyAppVersion}-win-x64-setup
 Compression=lzma2
 SolidCompression=yes
 WizardStyle=modern
+SetupIconFile=..\\assets\\generated\\BlockCraft.ico
 UninstallDisplayIcon={app}\BlockCraft.exe
 SetupLogging=yes
 CloseApplications=yes
