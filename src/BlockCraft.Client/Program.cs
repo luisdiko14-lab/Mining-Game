@@ -23,6 +23,8 @@ internal static class Program
         }
         catch (Exception exception)
         {
+            // The external launch monitor uses this exit code to detect caught startup failures.
+            Environment.ExitCode = 1;
             var report = WriteCrashReport(exception);
             var message = "BlockCraft could not start.\n\n" +
                           exception.GetType().FullName + ": " + exception.Message +
