@@ -8,20 +8,24 @@ try {
     if (-not (Get-Command dotnet -ErrorAction SilentlyContinue)) { throw ".NET 10 SDK is required." }
     $python = Get-Command python -ErrorAction SilentlyContinue
     if ($python) {
-        & python -m pip install --quiet Pillow
+        & python -m pip install --quiet -r .\tools\requirements.txt
         if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
         & python .\tools\generate_icon.py
         if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
         & python .\tools\gen_textures.py
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        & python .\tools\gen_soundtrack.py
     }
     else {
         $pyLauncher = Get-Command py -ErrorAction SilentlyContinue
         if (-not $pyLauncher) { throw "Python 3 is required to generate original game assets." }
-        & py -3 -m pip install --quiet Pillow
+        & py -3 -m pip install --quiet -r .\tools\requirements.txt
         if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
         & py -3 .\tools\generate_icon.py
         if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
         & py -3 .\tools\gen_textures.py
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        & py -3 .\tools\gen_soundtrack.py
     }
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
     if (-not $NoRestore) {
