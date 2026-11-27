@@ -8,6 +8,10 @@ try {
     if (-not (Get-Command dotnet -ErrorAction SilentlyContinue)) { throw ".NET 10 SDK is required." }
     $python = Get-Command python -ErrorAction SilentlyContinue
     if ($python) {
+        & python -m pip install --quiet Pillow
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        & python .\\tools\\generate_icon.py
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
         & python .\tools\gen_textures.py
     }
     else {
