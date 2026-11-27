@@ -33,6 +33,7 @@ internal sealed class BlockCraftGame : Game
     private Inventory? _inventory;
     private int _selectedRecipe;
     private SurvivalStats _survival = new();
+    private AchievementTracker _achievements = new();
     private float _fallDistance;
     private ChunkManager? _world;
     private PlayerController? _player;
@@ -203,7 +204,7 @@ internal sealed class BlockCraftGame : Game
             _screen = _screen switch
             {
                 GameScreen.Playing => GameScreen.Paused,
-                GameScreen.Paused or GameScreen.Inventory or GameScreen.GameOver => GameScreen.Playing,
+                GameScreen.Paused or GameScreen.Inventory or GameScreen.GameOver or GameScreen.Achievements => GameScreen.Playing,
                 _ => GameScreen.MainMenu
             };
             if (wasGameOver) RespawnPlayer();
@@ -347,6 +348,21 @@ internal sealed class BlockCraftGame : Game
                 Console.Error.WriteLine($"Player save could not be loaded: {exception.Message}");
             }
         }
+        var achievementsPath = Path.Combine(_worldDirectory, "achievements.json");
+        _achievements = new AchievementTracker();
+        if (File.Exists(achievementsPath))
+        {
+            try
+            {
+                var progress = JsonSerializer.Deserialize<AchievementSnapshot>(File.ReadAllText(achievementsPath));
+                if (progress is not null) _achievements.Restore(progress);
+            }
+            catch (Exception exception) when (exception is IOException or JsonException or InvalidDataException or ArgumentException)
+            {
+                Console.Error.WriteLine($"Achievement progress could not be loaded: {exception.Message}");
+            }
+        }
+
         var playerChunkX = ChunkManager.FloorDiv((int)MathF.Floor(_player.Position.X), Chunk.Width);
         var playerChunkZ = ChunkManager.FloorDiv((int)MathF.Floor(_player.Position.Z), Chunk.Depth);
         for (var z = -1; z <= 1; z++)
@@ -432,6 +448,10 @@ internal sealed class BlockCraftGame : Game
             _fallDistance = 0f;
         }
         _survival.Update(elapsed, horizontal != 0f || vertical != 0f, sprinting);
+        var visitedChunkX = ChunkManager.FloorDiv((int)MathF.Floor(_player.Position.X), Chunk.Width);
+        var visitedChunkZ = ChunkManager.FloorDiv((int)MathF.Floor(_player.Position.Z), Chunk.Depth);
+        _achievements.RecordChunkVisit(visitedChunkX, visitedChunkZ);
+        _achievements.RecordDepth((int)MathF.Floor(_player.Position.Y));
         if (!_survival.IsAlive)
         {
             _screen = GameScreen.GameOver;
@@ -447,6 +467,11 @@ internal sealed class BlockCraftGame : Game
             _player.IsFlying = !_player.IsFlying;
         if (keyboard.IsKeyDown(Keys.F3) && !_previousKeyboard.IsKeyDown(Keys.F3))
             _showDebug = !_showDebug;
+        if (keyboard.IsKeyDown(Keys.J) && !_previousKeyboard.IsKeyDown(Keys.J))
+        {
+            _screen = GameScreen.Achievements;
+            IsMouseVisible = true;
+        }
         if (keyboard.IsKeyDown(Keys.F2) && !_previousKeyboard.IsKeyDown(Keys.F2))
             SaveScreenshot();
         if (keyboard.IsKeyDown(Keys.E) && !_previousKeyboard.IsKeyDown(Keys.E))
@@ -669,6 +694,7 @@ internal sealed class BlockCraftGame : Game
         if (_world.SetBlock(position.X, position.Y, position.Z, 0))
         {
             InvalidateBoundaryNeighborMeshes(position);
+            _achievements.RecordMine(definition.Name, position.Y);
             if (definition.DropItemId != 0 && canHarvest)
                 _inventory.Add(definition.DropItemId, 1);
             _blockSound?.Play(_settings.MasterVolume, 0, 0);
@@ -693,6 +719,7 @@ internal sealed class BlockCraftGame : Game
         {
             InvalidateBoundaryNeighborMeshes(place);
             _inventory.Set(_selectedHotbar, stack.Count == 1 ? ItemStack.Empty : stack with { Count = stack.Count - 1 });
+            _achievements.RecordPlace();
             _blockSound?.Play(_settings.MasterVolume * 0.55f, -0.15f, 0);
         }
     }
@@ -998,6 +1025,7 @@ internal sealed class BlockCraftGame : Game
             DrawHotbar(width, height);
             DrawSurvivalMeters(height);
             DrawTouchControls(width, height);
+            _font.Draw(_spriteBatch, "J: JOURNAL", new Vector2(width - 126, 18), new Color(220, 235, 197), 1.0f);
             DrawRect(new Rectangle(width / 2 - 1, height / 2 - 9, 2, 18), Color.White);
             DrawRect(new Rectangle(width / 2 - 9, height / 2 - 1, 18, 2), Color.White);
             if (_showDebug && _player is not null && _world is not null)
@@ -1021,6 +1049,10 @@ internal sealed class BlockCraftGame : Game
             _font.Draw(_spriteBatch, "YOU DIED", new Vector2(width / 2 - 88, height / 2 - 45), new Color(238, 111, 102), 3);
             _font.Draw(_spriteBatch, "WORLD SAVED  -  PRESS ESC", new Vector2(width / 2 - 125, height / 2 + 25), Color.White, 1.5f);
         }
+        else if (_screen == GameScreen.Achievements)
+        {
+            DrawAchievementJournal(width, height);
+        }
         else if (_screen == GameScreen.Inventory && _inventory is not null)
         {
             DrawPanel(new Rectangle(width / 2 - 260, height / 2 - 210, 520, 420), new Color(10, 16, 28, 238));
@@ -1040,6 +1072,39 @@ internal sealed class BlockCraftGame : Game
             _font.Draw(_spriteBatch, "E OR ESC: RETURN", new Vector2(width / 2 - 78, height / 2 + 186), new Color(137, 155, 179), 1.0f);
         }
         _spriteBatch.End();
+    }
+
+    private void DrawAchievementJournal(int width, int height)
+    {
+        var panelWidth = Math.Min(760, width - 28);
+        var panelHeight = Math.Min(520, height - 28);
+        var panel = new Rectangle((width - panelWidth) / 2, (height - panelHeight) / 2, panelWidth, panelHeight);
+        DrawPanel(panel, new Color(9, 17, 27, 245));
+        _font.Draw(_spriteBatch, "WORLD JOURNAL", new Vector2(panel.X + 28, panel.Y + 22), new Color(231, 245, 220), 2.5f);
+        _font.Draw(_spriteBatch, "EXPLORATION MILESTONES", new Vector2(panel.X + 30, panel.Y + 59), new Color(133, 206, 112), 1.05f);
+        var achievements = _achievements.GetAchievements();
+        var rowHeight = Math.Max(34, (panel.Height - 125) / achievements.Count);
+        for (var index = 0; index < achievements.Count; index++)
+        {
+            var achievement = achievements[index];
+            var y = panel.Y + 92 + index * rowHeight;
+            var unlocked = achievement.IsUnlocked;
+            _font.Draw(_spriteBatch, unlocked ? "★" : "·", new Vector2(panel.X + 26, y + 1),
+                unlocked ? new Color(255, 211, 98) : new Color(130, 145, 155), 1.5f);
+            _font.Draw(_spriteBatch, achievement.Title.ToUpperInvariant(), new Vector2(panel.X + 54, y),
+                unlocked ? new Color(218, 244, 186) : Color.White, 1.05f);
+            _font.Draw(_spriteBatch, achievement.Description, new Vector2(panel.X + 54, y + 14),
+                new Color(156, 176, 188), 0.8f);
+            var progress = $"{Math.Min(achievement.Progress, achievement.Goal)}/{achievement.Goal}";
+            _font.Draw(_spriteBatch, unlocked ? "UNLOCKED" : progress,
+                new Vector2(panel.Right - 116, y + 3), unlocked ? new Color(139, 229, 116) : new Color(203, 215, 219), 0.85f);
+            var bar = new Rectangle(panel.Right - 116, y + 19, 88, 4);
+            DrawRect(bar, new Color(38, 52, 61));
+            DrawRect(new Rectangle(bar.X, bar.Y, (int)(bar.Width * achievement.Completion), bar.Height),
+                unlocked ? new Color(115, 218, 86) : new Color(82, 155, 190));
+        }
+        _font.Draw(_spriteBatch, "ESC: RETURN TO YOUR WORLD", new Vector2(panel.X + 28, panel.Bottom - 25),
+            new Color(158, 182, 196), 0.95f);
     }
 
     private void DrawHotbar(int width, int height)
@@ -1141,6 +1206,15 @@ internal sealed class BlockCraftGame : Game
         catch (Exception exception) { Console.Error.WriteLine($"World save failed: {exception}"); }
         try { _settings.Save(_settingsPath); }
         catch (IOException exception) { Console.Error.WriteLine($"Settings save failed: {exception.Message}"); }
+        try
+        {
+            File.WriteAllText(Path.Combine(_worldDirectory, "achievements.json"),
+                JsonSerializer.Serialize(_achievements.CreateSnapshot(), new JsonSerializerOptions { WriteIndented = true }));
+        }
+        catch (Exception exception) when (exception is IOException or UnauthorizedAccessException or JsonException)
+        {
+            Console.Error.WriteLine($"Achievement save failed: {exception.Message}");
+        }
         if (_player is not null && _inventory is not null)
         {
             try
@@ -1206,5 +1280,5 @@ internal sealed class BlockCraftGame : Game
     private sealed record PlayerSaveData(
         float X, float Y, float Z, float Yaw, float Pitch, ItemStack[] Inventory,
         float Health = 20f, float Hunger = 20f, float Saturation = 5f);
-    private enum GameScreen { MainMenu, Playing, Paused, Inventory, GameOver }
+    private enum GameScreen { MainMenu, Playing, Paused, Inventory, Achievements, GameOver }
 }
