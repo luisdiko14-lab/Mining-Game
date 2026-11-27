@@ -19,13 +19,17 @@ try {
     if ($python) {
         & python -m pip install --quiet Pillow
         if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
-        & python .\\tools\\generate_icon.py
+        & python .\tools\generate_icon.py
         if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
         & python .\tools\gen_textures.py
     }
     else {
         $pyLauncher = Get-Command py -ErrorAction SilentlyContinue
         if (-not $pyLauncher) { throw "Python 3 is required to generate original game assets." }
+        & py -3 -m pip install --quiet Pillow
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+        & py -3 .\tools\generate_icon.py
+        if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
         & py -3 .\tools\gen_textures.py
     }
     if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
