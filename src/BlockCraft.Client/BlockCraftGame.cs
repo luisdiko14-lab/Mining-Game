@@ -98,7 +98,7 @@ internal sealed class BlockCraftGame : Game
         Content.RootDirectory = "Content";
         IsMouseVisible = true;
         IsFixedTimeStep = false;
-        Window.Title = "BlockCraft";
+        Window.Title = "Mining Game";
         Window.AllowUserResizing = true;
         Exiting += HandleExiting;
     }
@@ -1027,6 +1027,11 @@ internal sealed class BlockCraftGame : Game
         "gold_ore" => new Color(218, 181, 54),
         "diamond_ore" => new Color(67, 210, 204),
         "glass" => new Color(173, 218, 228, 110),
+        "echo_ore" => new Color(77, 212, 226),
+        "glowcap" => new Color(103, 220, 163),
+        "fossil_block" => new Color(178, 151, 115),
+        "resonance_lantern" => new Color(81, 226, 215),
+        "ancient_relic" => new Color(225, 184, 83),
         "snow_block" => new Color(230, 237, 245),
         "bedrock" => new Color(57, 59, 66),
         "oak_planks" => new Color(174, 127, 76),
@@ -1084,7 +1089,7 @@ internal sealed class BlockCraftGame : Game
     {
         var sky = Color.Lerp(new Color(7, 12, 24), new Color(85, 154, 218), _clock.Daylight);
         GraphicsDevice.Clear(sky);
-        if (_screen is GameScreen.Playing or GameScreen.Paused or GameScreen.Inventory or GameScreen.GameOver)
+        if (_screen is GameScreen.Playing or GameScreen.Paused or GameScreen.Inventory or GameScreen.Achievements or GameScreen.GameOver)
             DrawWorld();
         DrawInterface();
         base.Draw(gameTime);
@@ -1099,7 +1104,7 @@ internal sealed class BlockCraftGame : Game
         if (_screen == GameScreen.MainMenu)
         {
             DrawPanel(new Rectangle(width / 2 - 235, height / 2 - 180, 470, 360), new Color(11, 17, 30, 235));
-            _font.Draw(_spriteBatch, "BLOCKCRAFT", new Vector2(width / 2 - 160, height / 2 - 125), Color.White, 4);
+            _font.Draw(_spriteBatch, "MINING GAME", new Vector2(width / 2 - 160, height / 2 - 125), Color.White, 4);
             _font.Draw(_spriteBatch, "A VOXEL WORLD TO MAKE YOURS", new Vector2(width / 2 - 155, height / 2 - 58), new Color(145, 183, 224), 1.4f);
             DrawButton("NEW WORLD", Button("NEW WORLD"), width, height);
             DrawButton("EXIT", Button("EXIT"), width, height);
