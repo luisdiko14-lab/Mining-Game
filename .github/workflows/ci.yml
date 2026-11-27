@@ -122,6 +122,8 @@ jobs:
           if (-not (Test-Path (Join-Path $extract "assets\generated\music\music_manifest.json"))) { throw "Portable ZIP is missing the soundtrack manifest." }
           if (-not (Test-Path (Join-Path $extract "Mining_Game.exe"))) { throw "Portable ZIP is missing the monitored Mining_Game.exe launcher." }
           if (-not (Test-Path (Join-Path $extract "Mining_Game_Error_Checker.exe"))) { throw "Portable ZIP is missing the diagnostic checker executable." }
+          $monitorSelfTest = Start-Process -FilePath (Join-Path $extract "Mining_Game_Error_Checker.exe") -ArgumentList "--self-test-monitor" -Wait -PassThru
+          if ($monitorSelfTest.ExitCode -ne 0) { throw "The launch monitor failed its normal/crash child-process self-test." }
           $music = Get-ChildItem (Join-Path $extract "assets\generated\music") -Filter "*.wav" -File
           $musicBytes = ($music | Measure-Object -Property Length -Sum).Sum
           if ($music.Count -lt 18 -or $musicBytes -lt 180000000) { throw "Portable ZIP is missing the complete 18-track soundtrack pack." }
