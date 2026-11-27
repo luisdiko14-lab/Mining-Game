@@ -87,6 +87,10 @@ public sealed class ChunkManager
         ChunkPos center, int keepRadius, CancellationToken cancellationToken = default)
     {
         ArgumentOutOfRangeException.ThrowIfNegative(keepRadius);
+        var pending = _pending.Values.ToArray();
+        if (pending.Length > 0)
+            await Task.WhenAll(pending).WaitAsync(cancellationToken).ConfigureAwait(false);
+
         var candidates = _chunks
             .Where(pair => Math.Abs((long)pair.Key.X - center.X) > keepRadius ||
                            Math.Abs((long)pair.Key.Z - center.Z) > keepRadius)
