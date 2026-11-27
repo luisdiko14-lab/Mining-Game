@@ -141,7 +141,7 @@ jobs:
         shell: pwsh
         run: |
           $setup = (Resolve-Path ".\artifacts\installer\BlockCraft-0.0.0-win-x64-setup.exe").Path
-          $installedExe = Join-Path $env:ProgramFiles "BlockCraft\BlockCraft.exe"
+          $installedExe = Join-Path $env:ProgramFiles "Mining Game\BlockCraft.exe"
           $install = Start-Process -FilePath $setup -ArgumentList "/VERYSILENT /SUPPRESSMSGBOXES /NORESTART /SP-" -Wait -PassThru
           if ($install.ExitCode -ne 0) { throw "Inno Setup installation failed with exit code $($install.ExitCode)." }
           if (-not (Test-Path $installedExe)) { throw "Inno Setup did not install BlockCraft.exe." }
