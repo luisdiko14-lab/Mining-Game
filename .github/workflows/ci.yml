@@ -24,6 +24,10 @@ jobs:
         uses: actions/setup-python@v5
         with:
           python-version: "3.13"
+      - name: Install Pillow and generate game icon
+        run: |
+          python -m pip install Pillow
+          python tools/generate_icon.py
       - name: Set up Java 21 content-pack tools
         uses: actions/setup-java@v4
         with:
@@ -68,6 +72,9 @@ jobs:
       - name: Generate assets and publish portable package
         shell: pwsh
         run: |
+          python -m pip install Pillow
+          python tools/generate_icon.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           python tools/gen_textures.py
           if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           .\scripts\package.ps1 -Version "0.0.0" -RuntimeIdentifier "win-x64"
