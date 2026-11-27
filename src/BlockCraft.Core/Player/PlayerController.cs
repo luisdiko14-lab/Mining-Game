@@ -51,7 +51,12 @@ public sealed class PlayerController
         }
 
         Velocity = new Vector3(wish.X * speed, Velocity.Y, wish.Z * speed);
-        if (jump && IsGrounded) { Velocity = new Vector3(Velocity.X, 8.6f, Velocity.Z); IsGrounded = false; }
+        var wasGrounded = IsGrounded;
+        if (jump && wasGrounded)
+            Velocity = new Vector3(Velocity.X, 8.6f, Velocity.Z);
+        // Ground contact is recomputed by this frame's downward collision test.
+        // Leaving this true after walking off an edge permits unintended mid-air jumps.
+        IsGrounded = false;
         Velocity = new Vector3(Velocity.X, Math.Max(-48f, Velocity.Y - 24f * dt), Velocity.Z);
         var movement = Velocity * dt;
         MoveAxis(world, movement.X, 0);
