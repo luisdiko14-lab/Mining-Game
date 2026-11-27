@@ -1,22 +1,17 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>WinExe</OutputType>
-    <TargetFramework>net10.0</TargetFramework>
+    <TargetFramework>net10.0-windows</TargetFramework>
     <RootNamespace>BlockCraft.Client</RootNamespace>
     <AssemblyName>BlockCraft</AssemblyName>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <ApplicationIcon>..\..\assets\generated\BlockCraft.ico</ApplicationIcon>
     <PublishSingleFile>true</PublishSingleFile>
     <SelfContained>true</SelfContained>
-    <!-- MonoGame loads SDL2.dll/soft_oal.dll with a plain LoadLibrary(), which only finds files placed
-         next to BlockCraft.exe. Bundling them into the single file and self-extracting to %TEMP% makes
-         startup fail with "Failed to load library: SDL2.dll", so keep the native libraries beside the exe. -->
-    <IncludeNativeLibrariesForSelfExtract>false</IncludeNativeLibrariesForSelfExtract>
-    <IncludeNativeLibrariesInSingleFile>false</IncludeNativeLibrariesInSingleFile>
     <EnableCompressionInSingleFile>true</EnableCompressionInSingleFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="MonoGame.Framework.DesktopGL" Version="3.8.6.1" />
+    <PackageReference Include="MonoGame.Framework.WindowsDX" Version="3.8.6.1" />
     <ProjectReference Include="..\BlockCraft.Core\BlockCraft.Core.csproj" />
   </ItemGroup>
   <ItemGroup>
