@@ -42,8 +42,8 @@ try {
     if (-not (Test-Path (Join-Path $publishDir "BlockCraft.exe")) -and $RuntimeIdentifier -eq "win-x64") {
         throw "Publish output does not contain BlockCraft.exe."
     }
-    if ($RuntimeIdentifier -eq "win-x64" -and -not (Test-Path (Join-Path $publishDir "SDL2.dll"))) {
-        throw "Publish output does not contain SDL2.dll next to BlockCraft.exe; the game would crash at startup."
+    if ($RuntimeIdentifier -eq "win-x64" -and -not (Test-Path (Join-Path $publishDir "SharpDX.Direct3D11.dll"))) {
+        throw "Publish output is missing the Direct3D 11 backend dependency; the Windows graphics backend is incomplete."
     }
     if (Test-Path $zipPath) { Remove-Item $zipPath -Force }
     Compress-Archive -Path (Join-Path $publishDir "*") -DestinationPath $zipPath -CompressionLevel Optimal
