@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Wix xmlns="http://wixtoolset.org/schemas/v4/wxs">
   <Package
-    Name="BlockCraft"
-    Manufacturer="BlockCraft Project"
+    Name="Mining Game"
+    Manufacturer="Mining Game"
     Version="$(var.ProductVersion)"
     UpgradeCode="{1B0A9EB5-6DC4-4FB1-A0A9-6EF5E9EEC07D}"
     Scope="perMachine"
@@ -18,7 +18,7 @@
 
   <Fragment>
     <StandardDirectory Id="ProgramFiles64Folder">
-      <Directory Id="INSTALLFOLDER" Name="BlockCraft" />
+      <Directory Id="INSTALLFOLDER" Name="Mining Game" />
     </StandardDirectory>
     <ComponentGroup Id="GameFiles" Directory="INSTALLFOLDER">
       <Files Include="$(var.PublishDir)\**" />
@@ -31,7 +31,7 @@
     </StandardDirectory>
     <ComponentGroup Id="StartMenuShortcuts">
       <Component Id="StartMenuShortcut" Directory="ProgramMenuBlockCraft" Guid="*">
-        <Shortcut Id="StartMenuBlockCraft" Name="BlockCraft" Target="[INSTALLFOLDER]BlockCraft.exe" WorkingDirectory="INSTALLFOLDER" />
+        <Shortcut Id="StartMenuBlockCraft" Name="Mining Game" Target="[INSTALLFOLDER]Mining_Game.exe" WorkingDirectory="INSTALLFOLDER" />
         <RemoveFolder Id="RemoveBlockCraftStartMenu" On="uninstall" />
         <RegistryValue Root="HKLM" Key="Software\BlockCraft" Name="installed" Type="integer" Value="1" KeyPath="yes" />
       </Component>
