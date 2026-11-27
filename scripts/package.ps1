@@ -60,7 +60,8 @@ try {
     if ($RuntimeIdentifier -eq "win-x64") {
         $requiredAssets = @(
             (Join-Path $publishDir "assets\generated\block_atlas.png"),
-            (Join-Path $publishDir "assets\generated\ambient_loop.wav")
+            (Join-Path $publishDir "assets\generated\ambient_loop.wav"),
+            (Join-Path $publishDir "assets\generated\music\music_manifest.json")
         )
         foreach ($asset in $requiredAssets) {
             if (-not (Test-Path $asset)) { throw "Publish output is missing required game asset: $asset" }
