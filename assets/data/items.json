@@ -1323,5 +1323,41 @@
     "name": "black_terracotta",
     "maxStack": 64,
     "placesBlockId": 157
+  },
+  {
+    "id": 215,
+    "name": "echo_shard",
+    "maxStack": 64
+  },
+  {
+    "id": 216,
+    "name": "glowcap",
+    "maxStack": 64,
+    "foodValue": 2
+  },
+  {
+    "id": 217,
+    "name": "fossil_fragment",
+    "maxStack": 64
+  },
+  {
+    "id": 218,
+    "name": "resonance_lantern",
+    "maxStack": 64,
+    "placesBlockId": 161
+  },
+  {
+    "id": 219,
+    "name": "echo_pickaxe",
+    "maxStack": 1,
+    "toolType": "pickaxe",
+    "toolTier": "netherite",
+    "miningSpeed": 11
+  },
+  {
+    "id": 220,
+    "name": "ancient_relic",
+    "maxStack": 16,
+    "placesBlockId": 162
   }
 ]
