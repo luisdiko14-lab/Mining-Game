@@ -812,5 +812,55 @@
       "item": "netherite_scrap",
       "count": 1
     }
+  },
+  {
+    "id": "resonance_lantern",
+    "pattern": [
+      "EGE",
+      "GIG",
+      "EGE"
+    ],
+    "ingredients": {
+      "E": "echo_shard",
+      "G": "glowcap",
+      "I": "iron_ingot"
+    },
+    "result": {
+      "item": "resonance_lantern",
+      "count": 1
+    }
+  },
+  {
+    "id": "echo_pickaxe",
+    "pattern": [
+      "EEE",
+      " D ",
+      " S "
+    ],
+    "ingredients": {
+      "E": "echo_shard",
+      "D": "diamond",
+      "S": "stick"
+    },
+    "result": {
+      "item": "echo_pickaxe",
+      "count": 1
+    }
+  },
+  {
+    "id": "ancient_relic",
+    "pattern": [
+      "FFF",
+      "FAF",
+      "FFF"
+    ],
+    "ingredients": {
+      "F": "fossil_fragment",
+      "A": "amethyst_shard"
+    },
+    "result": {
+      "item": "ancient_relic",
+      "count": 1
+    }
   }
 ]
