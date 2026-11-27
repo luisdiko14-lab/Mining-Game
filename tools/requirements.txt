@@ -1,1 +1,1 @@
-# No third-party dependencies. Texture and audio generation use Python 3 standard library only.
+# Original asset generation dependencies\nPillow>=11.0,<13\nnumpy>=2.2,<3\n
