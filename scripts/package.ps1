@@ -42,8 +42,17 @@ try {
     if (-not (Test-Path (Join-Path $publishDir "BlockCraft.exe")) -and $RuntimeIdentifier -eq "win-x64") {
         throw "Publish output does not contain BlockCraft.exe."
     }
-    if ($RuntimeIdentifier -eq "win-x64" -and -not (Test-Path (Join-Path $publishDir "SharpDX.Direct3D11.dll"))) {
-        throw "Publish output is missing the Direct3D 11 backend dependency; the Windows graphics backend is incomplete."
+    # WindowsDX uses managed assemblies that are bundled into BlockCraft.exe by PublishSingleFile.
+    # Direct3D itself is provided by Windows; SharpDX.Direct3D11.dll is therefore not expected
+    # as a loose file beside the executable. Validate the actual published app and game assets.
+    if ($RuntimeIdentifier -eq "win-x64") {
+        $requiredAssets = @(
+            (Join-Path $publishDir "assets\generated\block_atlas.png"),
+            (Join-Path $publishDir "assets\generated\ambient_loop.wav")
+        )
+        foreach ($asset in $requiredAssets) {
+            if (-not (Test-Path $asset)) { throw "Publish output is missing required game asset: $asset" }
+        }
     }
     if (Test-Path $zipPath) { Remove-Item $zipPath -Force }
     Compress-Archive -Path (Join-Path $publishDir "*") -DestinationPath $zipPath -CompressionLevel Optimal
